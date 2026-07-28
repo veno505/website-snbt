@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tryout SM Tulis UNNES 2026</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax for rendering Mathematics -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        
+        .radio-custom:checked + label {
+            background-color: #ebf8ff; /* Tailwind blue-50 */
+            border-color: #3b82f6; /* Tailwind blue-500 */
+        }
+        
+        .radio-custom:checked + label .option-letter {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        .nav-btn.answered {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .nav-btn.active {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+            border-color: #2563eb;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- INTRO SCREEN -->
+    <div id="intro-screen" class="flex-grow flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full p-8 md:p-12 text-center border-t-8 border-blue-600">
+            <img src="https://placehold.co/100x100/2563eb/ffffff?text=UNNES" alt="Logo" class="mx-auto rounded-full mb-6 shadow-md hidden">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-100 text-blue-600 rounded-full mb-6">
+                <i class="fas fa-graduation-cap text-4xl"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Tryout SM Tulis UNNES 2026</h1>
+            <h2 class="text-xl text-blue-600 font-medium mb-6">Gelombang 2 — Paket 1</h2>
+            
+            <div class="bg-blue-50 text-left p-6 rounded-xl mb-8 border border-blue-100">
+                <h3 class="font-semibold text-blue-800 mb-3 flex items-center"><i class="fas fa-info-circle mr-2"></i> Informasi Ujian</h3>
+                <ul class="space-y-2 text-sm text-blue-900">
+                    <li><i class="fas fa-check-circle w-5 text-blue-500"></i> <strong>Materi:</strong> TPA, Literasi Bahasa Indonesia, Literasi Bahasa Inggris, Matematika Dasar</li>
+                    <li><i class="fas fa-check-circle w-5 text-blue-500"></i> <strong>Jumlah Soal:</strong> 50 Butir</li>
+                    <li><i class="fas fa-check-circle w-5 text-blue-500"></i> <strong>Waktu:</strong> 120 Menit</li>
+                    <li><i class="fas fa-check-circle w-5 text-blue-500"></i> <strong>Sistem Penilaian:</strong> Benar (+2), Salah/Kosong (0)</li>
+                </ul>
+            </div>
+            
+            <p class="text-sm text-gray-500 mb-8 px-4">
+                Paket ini disusun secara orisinal dengan meniru pola kemampuan yang muncul dalam kumpulan rekonstruksi publik tahun sebelumnya. Gunakan simulasi ini untuk mengukur kesiapan Anda.
+            </p>
+            
+            <button onclick="startQuiz()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 text-lg">
+                <i class="fas fa-play mr-2"></i> Mulai Tryout
+            </button>
+        </div>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quiz-screen" class="hidden flex-col h-screen max-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b px-4 py-3 flex justify-between items-center shrink-0 z-10">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 text-white p-2 rounded-lg">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-gray-800 leading-tight hidden sm:block">Tryout SM Tulis UNNES 2026</h1>
+                    <div id="section-title" class="text-xs text-blue-600 font-semibold tracking-wide uppercase">Bagian</div>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="flex items-center bg-red-50 text-red-600 px-4 py-2 rounded-full font-mono font-bold text-lg shadow-inner border border-red-100">
+                    <i class="far fa-clock mr-2 animate-pulse"></i>
+                    <span id="timer">120:00</span>
+                </div>
+                <button onclick="confirmSubmit()" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium transition-colors text-sm shadow-md">
+                    Selesai
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <div class="flex flex-1 overflow-hidden">
+            <!-- Left: Question Area -->
+            <main class="flex-1 overflow-y-auto p-4 md:p-8 relative scroll-smooth" id="question-container">
+                <div class="max-w-4xl mx-auto">
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-gray-200 rounded-full h-1.5 mb-8">
+                        <div id="progress-bar" class="bg-blue-600 h-1.5 rounded-full transition-all duration-300" style="width: 2%"></div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-10 mb-20">
+                        <div class="flex justify-between items-start mb-6 border-b pb-4">
+                            <span class="text-sm font-bold bg-blue-100 text-blue-800 py-1 px-3 rounded-full" id="q-number-badge">Soal No. 1</span>
+                            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider" id="q-type-badge">Tipe Soal</span>
+                        </div>
+                        
+                        <!-- Passage (if any) -->
+                        <div id="passage-container" class="hidden mb-6 p-5 bg-gray-50 border-l-4 border-gray-400 rounded-r-lg text-gray-700 text-sm md:text-base leading-relaxed">
+                        </div>
+
+                        <!-- Question Text -->
+                        <div id="question-text" class="text-lg md:text-xl font-medium text-gray-800 mb-8 leading-snug">
+                            Loading question...
+                        </div>
+                        
+                        <!-- Options -->
+                        <div id="options-container" class="space-y-3">
+                            <!-- Options will be injected here via JS -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bottom Navigation Floating -->
+                <div class="fixed bottom-0 left-0 right-0 lg:right-80 bg-white border-t p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] flex justify-between items-center z-10">
+                    <button onclick="prevQuestion()" id="btn-prev" class="flex items-center px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fas fa-chevron-left mr-2"></i> Sebelumnya
+                    </button>
+                    <button onclick="nextQuestion()" id="btn-next" class="flex items-center px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-md">
+                        Selanjutnya <i class="fas fa-chevron-right ml-2"></i>
+                    </button>
+                </div>
+            </main>
+
+            <!-- Right: Navigation Sidebar -->
+            <aside class="w-80 bg-white border-l shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] hidden lg:flex flex-col z-20">
+                <div class="p-4 border-b bg-gray-50 flex justify-between items-center">
+                    <h3 class="font-bold text-gray-700">Navigasi Soal</h3>
+                    <span id="answered-count" class="text-xs font-semibold bg-green-100 text-green-800 py-1 px-2 rounded-full">0/50 Terjawab</span>
+                </div>
+                <div class="p-4 overflow-y-auto flex-1">
+                    <div id="nav-grid" class="grid grid-cols-5 gap-2">
+                        <!-- Navigation buttons injected via JS -->
+                    </div>
+                    
+                    <div class="mt-8 mb-4 border-t pt-4">
+                        <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">Legenda</h4>
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="w-4 h-4 rounded bg-white border border-gray-300"></div>
+                            <span class="text-xs text-gray-600">Belum Dijawab</span>
+                        </div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <div class="w-4 h-4 rounded bg-blue-500 border border-blue-600"></div>
+                            <span class="text-xs text-gray-600">Sudah Dijawab</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded border-2 border-blue-500"></div>
+                            <span class="text-xs text-gray-600">Posisi Saat Ini</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- Mobile Sidebar Toggle -->
+            <button onclick="toggleMobileNav()" class="lg:hidden fixed bottom-20 right-4 bg-gray-800 text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center z-50">
+                <i class="fas fa-th"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Nav Modal (Hidden by default) -->
+        <div id="mobile-nav-modal" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden flex-col justify-end">
+            <div class="bg-white rounded-t-2xl p-4 max-h-[70vh] flex flex-col">
+                <div class="flex justify-between items-center mb-4 border-b pb-2">
+                    <h3 class="font-bold text-gray-800">Navigasi Soal</h3>
+                    <button onclick="toggleMobileNav()" class="text-gray-500 hover:text-gray-800 p-2"><i class="fas fa-times text-xl"></i></button>
+                </div>
+                <div class="overflow-y-auto p-2">
+                    <div id="mobile-nav-grid" class="grid grid-cols-5 gap-2">
+                        <!-- Cloned from desktop grid -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div id="result-screen" class="hidden bg-gray-50 min-h-screen p-4 md:p-8">
+        <div class="max-w-5xl mx-auto space-y-6">
+            <!-- Score Card -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border-t-8 border-green-500">
+                <div class="p-8 md:p-12 text-center">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Tryout Selesai!</h2>
+                    <p class="text-gray-500 mb-8">Berikut adalah hasil simulasi Anda untuk Paket 1 Gelombang 2.</p>
+                    
+                    <div class="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 mb-8">
+                        <div class="relative w-48 h-48 flex items-center justify-center bg-green-50 rounded-full border-8 border-green-500 shadow-inner">
+                            <div class="text-center">
+                                <span class="block text-5xl font-black text-green-600" id="final-score">0</span>
+                                <span class="text-sm font-bold text-green-800 uppercase tracking-wide">Skor Total</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 text-left">
+                            <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                                <p class="text-sm text-blue-600 font-semibold mb-1">Benar (+2)</p>
+                                <p class="text-2xl font-bold text-blue-800" id="stat-correct">0</p>
+                            </div>
+                            <div class="bg-red-50 p-4 rounded-xl border border-red-100">
+                                <p class="text-sm text-red-600 font-semibold mb-1">Salah (0)</p>
+                                <p class="text-2xl font-bold text-red-800" id="stat-wrong">0</p>
+                            </div>
+                            <div class="bg-gray-100 p-4 rounded-xl border border-gray-200 col-span-2">
+                                <p class="text-sm text-gray-500 font-semibold mb-1">Kosong (0)</p>
+                                <p class="text-2xl font-bold text-gray-700" id="stat-blank">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pembahasan Section -->
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center border-b pb-4">
+                    <i class="fas fa-book-open text-blue-600 mr-3"></i> Kunci Jawaban & Pembahasan
+                </h3>
+                
+                <div id="review-container" class="space-y-6">
+                    <!-- Review items injected via JS -->
+                </div>
+            </div>
+            
+            <div class="text-center pb-12">
+                <button onclick="location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition-colors">
+                    <i class="fas fa-redo mr-2"></i> Kembali ke Beranda
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-60 z-50 hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl mx-4 transform scale-95 transition-transform duration-300" id="modal-content">
+            <div class="text-center mb-6">
+                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-yellow-100 mb-4">
+                    <i class="fas fa-exclamation-triangle text-2xl text-yellow-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Akhiri Tryout?</h3>
+                <p class="text-gray-500" id="unanswered-warning">Anda masih memiliki sisa waktu. Apakah Anda yakin ingin mengumpulkan jawaban sekarang?</p>
+            </div>
+            <div class="flex gap-3 justify-center">
+                <button onclick="closeConfirmModal()" class="px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium rounded-lg transition-colors w-1/2">
+                    Batal
+                </button>
+                <button onclick="finishQuiz()" class="px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors shadow-md w-1/2">
+                    Ya, Kumpulkan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const passage_BI_1 = "Pemanfaatan data terbuka sering dianggap cukup dengan memublikasikan data di sebuah portal. Padahal, nilai data baru muncul jika data tersebut mutakhir, memiliki metadata yang jelas, dapat dibaca mesin, dan dapat dipadukan dengan sumber lain. Tanpa standar yang konsisten, pengguna akan lebih banyak menghabiskan waktu untuk membersihkan data daripada menganalisisnya. Karena itu, keberhasilan kebijakan data terbuka tidak hanya diukur dari jumlah set data yang dipublikasikan, tetapi juga dari kualitas dan keterpakaiannya.";
+        const passage_BI_2 = "Penanaman pohon di kawasan perkotaan tidak hanya bertujuan memperindah lingkungan. Tajuk pohon dapat mengurangi paparan sinar matahari langsung, sedangkan proses penguapan air dari daun membantu menurunkan suhu udara. Namun, manfaat tersebut tidak akan optimal apabila pemilihan jenis pohon mengabaikan kondisi tanah, ketersediaan air, dan ruang tumbuh. Perencanaan ruang hijau karena itu harus mempertimbangkan fungsi ekologis sekaligus karakteristik lokasi.";
+        const passage_EN_1 = "Many students rely on rereading because it feels familiar and efficient. However, familiarity is not the same as mastery. Retrieval practice—trying to recall information without looking at the material—usually feels more difficult, but it strengthens memory and reveals gaps in understanding. Short, low-stakes quizzes can therefore support learning when they are used as feedback rather than punishment.";
+        const passage_EN_2 = "Small solar mini-grids can expand electricity access in remote communities. Their success, however, depends on more than installing panels. Local technicians must be trained, tariffs must cover basic maintenance, and communities need clear rules for managing shared equipment. Projects that ignore these institutional factors may fail even when the technology works.";
+
+        const questionsData = [
+            // A. Tes Potensi Akademik
+            { id: 1, section: 'A. Tes Potensi Akademik', type: 'Sinonim', text: 'Kata yang memiliki makna paling dekat dengan komprehensif adalah ....', options: { A: 'terbatas', B: 'menyeluruh', C: 'sederhana', D: 'berlebihan', E: 'terpisah' }, answer: 'B' },
+            { id: 2, section: 'A. Tes Potensi Akademik', type: 'Antonim', text: 'Lawan kata yang paling tepat untuk sporadis adalah ....', options: { A: 'acak', B: 'sementara', C: 'terputus-putus', D: 'berkelanjutan', E: 'tidak menentu' }, answer: 'D' },
+            { id: 3, section: 'A. Tes Potensi Akademik', type: 'Analogi', text: 'Kompas : arah memiliki hubungan yang sama dengan ....', options: { A: 'kamera : cahaya', B: 'jam : angka', C: 'termometer : suhu', D: 'buku : halaman', E: 'peta : jalan' }, answer: 'C' },
+            { id: 4, section: 'A. Tes Potensi Akademik', type: 'Pengelompokan kata', text: 'Kata yang tidak termasuk dalam kelompok yang sama adalah ....', options: { A: 'hipotesis', B: 'variabel', C: 'populasi', D: 'sampel', E: 'metafora' }, answer: 'E' },
+            { id: 5, section: 'A. Tes Potensi Akademik', type: 'Analogi', text: 'Arsip : dokumen memiliki hubungan yang setara dengan ....', options: { A: 'pasar : pedagang', B: 'perpustakaan : buku', C: 'sekolah : guru', D: 'laboratorium : peneliti', E: 'terminal : penumpang' }, answer: 'B' },
+            { id: 6, section: 'A. Tes Potensi Akademik', type: 'Penalaran logis', text: 'Semua penerima beasiswa akademik telah lolos verifikasi dokumen. Sebagian siswa kelas XII merupakan penerima beasiswa akademik.<br><br>Kesimpulan yang pasti benar adalah ....', options: { A: 'Semua siswa kelas XII lolos verifikasi dokumen.', B: 'Semua peserta yang lolos verifikasi merupakan siswa kelas XII.', C: 'Sebagian siswa kelas XII lolos verifikasi dokumen.', D: 'Sebagian penerima beasiswa tidak lolos verifikasi.', E: 'Tidak ada siswa kelas XII yang gagal verifikasi.' }, answer: 'C' },
+            { id: 7, section: 'A. Tes Potensi Akademik', type: 'Implikasi logis', text: 'Jika server pendaftaran mengalami gangguan, laman pendaftaran tidak dapat diakses. Saat ini laman pendaftaran dapat diakses.<br><br>Kesimpulan yang paling tepat adalah ....', options: { A: 'Server pasti baru diperbaiki.', B: 'Laman pendaftaran tidak menggunakan server.', C: 'Server pendaftaran tidak sedang mengalami gangguan.', D: 'Semua peserta telah selesai mendaftar.', E: 'Gangguan server tidak memengaruhi laman pendaftaran.' }, answer: 'C', explanation: 'Jika gangguan server menyebabkan laman tidak dapat diakses, sedangkan laman dapat diakses, berarti server tidak sedang mengalami gangguan. Ini menggunakan pola modus tollens.' },
+            { id: 8, section: 'A. Tes Potensi Akademik', type: 'Susunan posisi', text: 'Lima peserta, yaitu P, Q, R, S, dan T, duduk dalam satu baris. P berada di sebelah kiri Q. R berada di sebelah kanan Q. S berada di sebelah kiri P.<br><br>Susunan yang mungkin adalah ....', options: { A: 'P – S – Q – R – T', B: 'S – P – R – Q – T', C: 'S – P – Q – T – R', D: 'Q – S – P – R – T', E: 'S – Q – P – T – R' }, answer: 'C' },
+            { id: 9, section: 'A. Tes Potensi Akademik', type: 'Deret huruf', text: 'A, C, F, J, O, ....', options: { A: 'S', B: 'T', C: 'U', D: 'V', E: 'W' }, answer: 'C', explanation: 'Selisih posisi huruf bertambah: +2, +3, +4, +5, sehingga berikutnya +6. Huruf O ditambah enam menjadi U.' },
+            { id: 10, section: 'A. Tes Potensi Akademik', type: 'Deret angka', text: '3, 7, 15, 31, 63, ....', options: { A: '95', B: '111', C: '125', D: '127', E: '129' }, answer: 'D', explanation: 'Polanya adalah dikali 2 lalu ditambah 1: 3 &rarr; 7 &rarr; 15 &rarr; 31 &rarr; 63 &rarr; 127.' },
+            { id: 11, section: 'A. Tes Potensi Akademik', type: 'Deret campuran', text: '96, 48, 52, 26, 30, 15, ....', options: { A: '17', B: '18', C: '19', D: '20', E: '21' }, answer: 'C', explanation: 'Pola bergantian antara dibagi 2 dan ditambah 4: <br> 96 &divide; 2 = 48, 48 + 4 = 52 <br> 52 &divide; 2 = 26, 26 + 4 = 30 <br> 30 &divide; 2 = 15, 15 + 4 = 19' },
+            { id: 12, section: 'A. Tes Potensi Akademik', type: 'Persentase', text: 'Setelah mendapat diskon 20%, sebuah buku dijual seharga Rp240.000,00. Harga buku sebelum diskon adalah ....', options: { A: 'Rp270.000,00', B: 'Rp280.000,00', C: 'Rp288.000,00', D: 'Rp300.000,00', E: 'Rp320.000,00' }, answer: 'D', explanation: '80% &times; harga awal = 240.000<br>Harga awal = 240.000 / 0,8 = 300.000.' },
+            { id: 13, section: 'A. Tes Potensi Akademik', type: 'Perbandingan kerja', text: 'Enam pekerja dapat menyelesaikan suatu pekerjaan dalam 15 hari. Dengan kemampuan kerja yang sama, pekerjaan tersebut dapat diselesaikan oleh 10 pekerja dalam ....', options: { A: '6 hari', B: '8 hari', C: '9 hari', D: '10 hari', E: '12 hari' }, answer: 'C', explanation: 'Jumlah beban kerja tetap: 6 &times; 15 = 90 hari-orang.<br>Jika dikerjakan 10 pekerja: 90 &divide; 10 = 9 hari.' },
+            { id: 14, section: 'A. Tes Potensi Akademik', type: 'Rata-rata', text: 'Nilai rata-rata lima peserta adalah 72. Setelah nilai seorang peserta tambahan dimasukkan, rata-ratanya menjadi 74. Nilai peserta tambahan tersebut adalah ....', options: { A: '78', B: '80', C: '82', D: '84', E: '86' }, answer: 'D', explanation: 'Total nilai lima peserta: 5 &times; 72 = 360.<br>Total nilai enam peserta: 6 &times; 74 = 444.<br>Nilai peserta tambahan: 444 - 360 = 84.' },
+            { id: 15, section: 'A. Tes Potensi Akademik', type: 'Perbandingan', text: 'Jumlah peserta kelompok A dan kelompok B adalah 64 orang. Jika perbandingan jumlah peserta A dan B adalah 3 : 5, jumlah peserta kelompok A adalah ....', options: { A: '16', B: '20', C: '24', D: '32', E: '40' }, answer: 'C', explanation: 'Jumlah bagian: 3 + 5 = 8.<br>Jumlah kelompok A: (3/8) &times; 64 = 24.' },
+            { id: 16, section: 'A. Tes Potensi Akademik', type: 'Pola simbol', text: 'Perhatikan pola berikut.<br>&#9632;, &#9650;, &#9632;&#9632;, &#9650;&#9650;, &#9632;&#9632;&#9632;, ....', options: { A: '&#9650;&#9650;&#9650;', B: '&#9632;&#9632;&#9632;&#9632;', C: '&#9650;&#9632;&#9632;', D: '&#9632;&#9650;&#9632;', E: '&#9650;&#9650;&#9650;&#9650;' }, answer: 'A' },
+            { id: 17, section: 'A. Tes Potensi Akademik', type: 'Rotasi arah', text: '&uarr;, &rarr;, &darr;, &larr;, &uarr;, ....', options: { A: '&larr;', B: '&rarr;', C: '&darr;', D: '&nearr;', E: '&swarrow;' }, answer: 'B' },
+            { id: 18, section: 'A. Tes Potensi Akademik', type: 'Pola matriks', text: 'Perhatikan susunan berikut.<br>2 &nbsp; 6 &nbsp; 18<br>3 &nbsp; 9 &nbsp; 27<br>4 &nbsp; 12 &nbsp; ?<br><br>Nilai yang tepat untuk menggantikan tanda tanya adalah ....', options: { A: '24', B: '30', C: '32', D: '36', E: '48' }, answer: 'D', explanation: 'Setiap baris menggunakan pola dikali 3:<br>2 &rarr; 6 &rarr; 18<br>3 &rarr; 9 &rarr; 27<br>4 &rarr; 12 &rarr; 36.' },
+            { id: 19, section: 'A. Tes Potensi Akademik', type: 'Silogisme', text: 'Semua anggota kelompok A merupakan anggota kelompok B. Tidak ada anggota kelompok B yang merupakan anggota kelompok C.<br><br>Kesimpulan yang benar adalah ....', options: { A: 'Sebagian anggota A merupakan anggota C.', B: 'Semua anggota C merupakan anggota A.', C: 'Tidak ada anggota A yang merupakan anggota C.', D: 'Sebagian anggota B bukan anggota A.', E: 'Semua anggota B merupakan anggota A.' }, answer: 'C' },
+            { id: 20, section: 'A. Tes Potensi Akademik', type: 'Urutan peringkat', text: 'Nilai Nia lebih tinggi daripada Raka. Nilai Sinta lebih rendah daripada Raka, tetapi lebih tinggi daripada Dito. Nilai Bayu lebih tinggi daripada Nia.<br><br>Peserta dengan nilai tertinggi adalah ....', options: { A: 'Bayu', B: 'Nia', C: 'Raka', D: 'Sinta', E: 'Dito' }, answer: 'A' },
+
+            // B. Literasi Bahasa Indonesia
+            { id: 21, section: 'B. Literasi Bahasa Indonesia', passage: passage_BI_1, type: 'Gagasan Utama', text: 'Gagasan utama teks tersebut adalah ....', options: { A: 'Portal data merupakan satu-satunya sarana publikasi data.', B: 'Pengguna data membutuhkan kemampuan pemrograman.', C: 'Keberhasilan data terbuka ditentukan oleh kualitas dan keterpakaian data.', D: 'Semua data pemerintah harus dibuka kepada masyarakat.', E: 'Pembersihan data lebih penting daripada analisis data.' }, answer: 'C' },
+            { id: 22, section: 'B. Literasi Bahasa Indonesia', passage: passage_BI_1, type: 'Simpulan Tersirat', text: 'Pernyataan yang dapat disimpulkan dari teks adalah ....', options: { A: 'Semakin banyak data dipublikasikan, semakin berhasil kebijakannya.', B: 'Data yang banyak belum tentu bermanfaat apabila kualitasnya rendah.', C: 'Metadata hanya dibutuhkan oleh pengelola portal.', D: 'Data terbuka tidak perlu diperbarui secara berkala.', E: 'Pengguna tidak diperbolehkan menggabungkan beberapa sumber data.' }, answer: 'B' },
+            { id: 23, section: 'B. Literasi Bahasa Indonesia', passage: passage_BI_1, type: 'Makna Kata', text: 'Makna kata metadata dalam konteks teks adalah ....', options: { A: 'data yang telah dihapus', B: 'hasil akhir analisis data', C: 'informasi yang menjelaskan karakteristik suatu data', D: 'data yang hanya berisi angka', E: 'perangkat lunak pengolah data' }, answer: 'C' },
+            { id: 24, section: 'B. Literasi Bahasa Indonesia', passage: passage_BI_2, type: 'Tujuan Penulis', text: 'Tujuan utama penulis adalah ....', options: { A: 'menjelaskan bahwa semua jenis pohon cocok ditanam di kota', B: 'menunjukkan bahwa pohon kota hanya berfungsi sebagai hiasan', C: 'menjelaskan manfaat pohon dan pentingnya perencanaan penanamannya', D: 'membandingkan suhu kota dengan suhu pedesaan', E: 'menyarankan agar seluruh jalan ditanami pohon besar' }, answer: 'C' },
+            { id: 25, section: 'B. Literasi Bahasa Indonesia', passage: passage_BI_2, type: 'Konjungsi', text: 'Kata <i>namun</i> dalam teks menyatakan hubungan ....', options: { A: 'penambahan', B: 'sebab-akibat', C: 'pertentangan', D: 'perincian', E: 'persamaan' }, answer: 'C' },
+            { id: 26, section: 'B. Literasi Bahasa Indonesia', passage: passage_BI_2, type: 'Simpulan Teks', text: 'Simpulan yang paling tepat adalah ....', options: { A: 'Penanaman pohon perlu disesuaikan dengan kondisi lingkungan setempat.', B: 'Pohon berukuran besar selalu paling efektif menurunkan suhu.', C: 'Ruang hijau tidak berhubungan dengan suhu perkotaan.', D: 'Ketersediaan air tidak memengaruhi pertumbuhan pohon.', E: 'Fungsi utama pohon perkotaan adalah memperindah jalan.' }, answer: 'A' },
+            { id: 27, section: 'B. Literasi Bahasa Indonesia', type: 'Kalimat Efektif', text: 'Kalimat efektif terdapat pada pilihan ....', options: { A: 'Para peserta-peserta diwajibkan hadir lebih awal.', B: 'Penelitian ini bertujuan menganalisis pengaruh literasi digital terhadap kesiapan belajar mahasiswa.', C: 'Berdasarkan hasil penelitian menunjukkan adanya peningkatan.', D: 'Data tersebut adalah merupakan data sekunder.', E: 'Meskipun hujan deras, tetapi kegiatan tetap dilaksanakan.' }, answer: 'B' },
+            { id: 28, section: 'B. Literasi Bahasa Indonesia', type: 'Kata Baku', text: 'Kalimat yang menggunakan kata baku secara tepat adalah ....', options: { A: 'Resiko kesalahan meningkat karena aktifitas pemeriksaan dihentikan.', B: 'Risiko kesalahan meningkat karena aktivitas pemeriksaan dihentikan.', C: 'Resiko kesalahan meningkat karena aktivitas pemeriksaan diberhentikan.', D: 'Risiko kesalahan meningkat karena aktifitas pemeriksaan dihentikan.', E: 'Resiko kesalahan meningkat karena aktifitas pemeriksaan diberhentikan.' }, answer: 'B' },
+            { id: 29, section: 'B. Literasi Bahasa Indonesia', type: 'Tanda Baca', text: 'Penggunaan tanda baca yang tepat terdapat pada kalimat ....', options: { A: 'Menurut panitia peserta harus membawa, kartu ujian identitas diri dan alat tulis.', B: 'Menurut panitia, peserta harus membawa kartu ujian, identitas diri, dan alat tulis.', C: 'Menurut panitia peserta, harus membawa kartu ujian, identitas diri dan alat tulis.', D: 'Menurut panitia: peserta harus membawa, kartu ujian, identitas diri dan alat tulis.', E: 'Menurut panitia, peserta harus membawa; kartu ujian, identitas diri dan alat tulis.' }, answer: 'B' },
+            { id: 30, section: 'B. Literasi Bahasa Indonesia', type: 'Kepaduan Paragraf', text: 'Perhatikan kalimat-kalimat berikut.<br>1. Hasil analisis selanjutnya disajikan dalam bentuk tabel dan grafik.<br>2. Data terlebih dahulu dikumpulkan dari sumber resmi.<br>3. Setelah itu, data dibersihkan dan divalidasi.<br>4. Tahap terakhir adalah menarik kesimpulan berdasarkan hasil analisis.<br><br>Urutan yang paling logis adalah ....', options: { A: '1–2–3–4', B: '2–1–3–4', C: '2–3–1–4', D: '3–2–4–1', E: '4–2–3–1' }, answer: 'C' },
+
+            // C. Literasi Bahasa Inggris
+            { id: 31, section: 'C. Literasi Bahasa Inggris', passage: passage_EN_1, type: 'Main Idea', text: 'What is the main idea of the passage?', options: { A: 'Rereading is the most difficult learning strategy.', B: 'Students should avoid all forms of quizzes.', C: 'Retrieval practice can improve learning even though it feels difficult.', D: 'Familiarity always indicates complete understanding.', E: 'Punishment is necessary to improve students’ memory.' }, answer: 'C' },
+            { id: 32, section: 'C. Literasi Bahasa Inggris', passage: passage_EN_1, type: 'Vocabulary', text: 'The word <i>strengthens</i> is closest in meaning to ....', options: { A: 'weakens', B: 'improves', C: 'removes', D: 'measures', E: 'replaces' }, answer: 'B' },
+            { id: 33, section: 'C. Literasi Bahasa Inggris', passage: passage_EN_1, type: 'Inference', text: 'What can be inferred from the passage?', options: { A: 'A learning method that feels easy is always effective.', B: 'Difficulty during retrieval practice does not mean the method is ineffective.', C: 'Students should only study immediately before an examination.', D: 'Rereading completely prevents gaps in understanding.', E: 'All quizzes must contribute to final grades.' }, answer: 'B' },
+            { id: 34, section: 'C. Literasi Bahasa Inggris', passage: passage_EN_1, type: 'Specific Information', text: 'According to the passage, low-stakes quizzes should primarily be used to ....', options: { A: 'punish students who forget information', B: 'replace all classroom instruction', C: 'provide feedback and identify learning gaps', D: 'determine university admission', E: 'reduce the amount of material studied' }, answer: 'C' },
+            { id: 35, section: 'C. Literasi Bahasa Inggris', passage: passage_EN_2, type: 'Specific Information', text: 'According to the passage, a solar mini-grid project may fail because ....', options: { A: 'solar panels never work in remote areas', B: 'communities consume no electricity', C: 'maintenance and management arrangements are inadequate', D: 'local technicians are unnecessary', E: 'electricity tariffs are always too high' }, answer: 'C' },
+            { id: 36, section: 'C. Literasi Bahasa Inggris', passage: passage_EN_2, type: 'Reference', text: 'The word <i>their</i> in the first sentence refers to ....', options: { A: 'remote communities', B: 'solar mini-grids', C: 'local technicians', D: 'electricity tariffs', E: 'shared equipment' }, answer: 'B' },
+            { id: 37, section: 'C. Literasi Bahasa Inggris', passage: passage_EN_2, type: 'Summary', text: 'Which statement best summarizes the passage?', options: { A: 'Appropriate technology alone guarantees project success.', B: 'Solar energy is unsuitable for remote communities.', C: 'Successful mini-grids require both technology and effective local management.', D: 'Communities should receive electricity without paying maintenance costs.', E: 'Only foreign technicians should manage solar projects.' }, answer: 'C' },
+            { id: 38, section: 'C. Literasi Bahasa Inggris', type: 'Grammar', text: 'Complete the sentence.<br>If the researchers _____ the data earlier, they would have avoided the error.', options: { A: 'check', B: 'checked', C: 'had checked', D: 'have checked', E: 'would check' }, answer: 'C' },
+            { id: 39, section: 'C. Literasi Bahasa Inggris', type: 'Grammar', text: 'Complete the sentence.<br>The data, along with the field notes, _____ stored in a secure database.', options: { A: 'is', B: 'are', C: 'was', D: 'has', E: 'be' }, answer: 'B' },
+            { id: 40, section: 'C. Literasi Bahasa Inggris', type: 'Grammar', text: 'Complete the sentence.<br>Neither the lecturer nor the students _____ aware of the schedule change.', options: { A: 'was', B: 'is', C: 'has been', D: 'were', E: 'be' }, answer: 'D' },
+
+            // D. Kemampuan Matematika Dasar
+            { id: 41, section: 'D. Kemampuan Matematika Dasar', type: 'Persamaan linear', text: 'Nilai \\(x\\) yang memenuhi <br> \\( 2x - 3 = 5x + 9 \\) <br> adalah ....', options: { A: '\\( -6 \\)', B: '\\( -4 \\)', C: '\\( -2 \\)', D: '2', E: '4' }, answer: 'B' },
+            { id: 42, section: 'D. Kemampuan Matematika Dasar', type: 'Sistem persamaan', text: 'Diketahui \\( x + y = 11 \\) dan \\( 2x - y = 7 \\).<br>Nilai \\( x - y \\) adalah ....', options: { A: '\\( -1 \\)', B: '0', C: '1', D: '2', E: '3' }, answer: 'C', explanation: 'Jumlahkan kedua persamaan:<br>\\( x + y = 11 \\)<br>\\( 2x - y = 7 \\)<br>---------------- +<br>\\( 3x = 18 \\Rightarrow x = 6 \\).<br>Maka \\( y = 5 \\), sehingga:\\( x - y = 6 - 5 = 1 \\).' },
+            { id: 43, section: 'D. Kemampuan Matematika Dasar', type: 'Fungsi', text: 'Jika \\( f(x) = 2x^2 - 3x + 1 \\), maka nilai \\( f(2) \\) adalah ....', options: { A: '1', B: '2', C: '3', D: '4', E: '5' }, answer: 'C' },
+            { id: 44, section: 'D. Kemampuan Matematika Dasar', type: 'Pertidaksamaan', text: 'Himpunan penyelesaian dari \\( |2x - 5| < 3 \\) adalah ....', options: { A: '\\( x < 1 \\)', B: '\\( x > 4 \\)', C: '\\( 1 < x < 4 \\)', D: '\\( -4 < x < -1 \\)', E: '\\( x < 1 \\) atau \\( x > 4 \\)' }, answer: 'C', explanation: '\\( |2x - 5| < 3 \\)<br>\\( -3 < 2x - 5 < 3 \\)<br>\\( 2 < 2x < 8 \\)<br>\\( 1 < x < 4 \\).' },
+            { id: 45, section: 'D. Kemampuan Matematika Dasar', type: 'Himpunan', text: 'Dalam sebuah kelas, 25 siswa menyukai Matematika, 18 siswa menyukai Bahasa Inggris, dan 7 siswa menyukai keduanya.<br>Jumlah siswa yang menyukai sedikitnya salah satu mata pelajaran tersebut adalah ....', options: { A: '32', B: '34', C: '36', D: '43', E: '50' }, answer: 'C', explanation: 'Gunakan rumus gabungan:<br>\\( n(A \\cup B) = n(A) + n(B) - n(A \\cap B) \\)<br>\\( = 25 + 18 - 7 = 36 \\).' },
+            { id: 46, section: 'D. Kemampuan Matematika Dasar', type: 'Geometri', text: 'Sebuah segitiga siku-siku memiliki panjang dua sisi siku-siku 6 cm dan 8 cm. Panjang sisi miringnya adalah ....', options: { A: '9 cm', B: '10 cm', C: '11 cm', D: '12 cm', E: '14 cm' }, answer: 'B', explanation: 'Berdasarkan Teorema Pythagoras:<br>\\( c = \\sqrt{6^2 + 8^2} \\)<br>\\( = \\sqrt{36 + 64} \\)<br>\\( = \\sqrt{100} = 10 \\).' },
+            { id: 47, section: 'D. Kemampuan Matematika Dasar', type: 'Lingkaran', text: 'Luas lingkaran dengan jari-jari 7 cm adalah .... Gunakan \\( \\pi = \\frac{22}{7} \\).', options: { A: '44 cm²', B: '77 cm²', C: '144 cm²', D: '154 cm²', E: '308 cm²' }, answer: 'D', explanation: '\\( L = \\pi r^2 \\)<br>\\( = \\frac{22}{7} \\times 7^2 \\)<br>\\( = 154 \\text{ cm}^2 \\).' },
+            { id: 48, section: 'D. Kemampuan Matematika Dasar', type: 'Barisan aritmetika', text: 'Dalam suatu barisan aritmetika diketahui suku ketiga adalah 11 dan suku ketujuh adalah 27. Suku kesepuluh adalah ....', options: { A: '35', B: '37', C: '39', D: '41', E: '43' }, answer: 'C', explanation: '\\( a_3 = a_1 + 2b = 11 \\)<br>\\( a_7 = a_1 + 6b = 27 \\).<br>Selisih kedua persamaan:<br>\\( 4b = 16 \\Rightarrow b = 4 \\).<br>Kemudian:<br>\\( a_1 = 11 - 8 = 3 \\)<br>\\( a_{10} = a_1 + 9b = 3 + 36 = 39 \\).' },
+            { id: 49, section: 'D. Kemampuan Matematika Dasar', type: 'Peluang', text: 'Dua buah dadu dilempar secara bersamaan. Peluang jumlah mata dadu yang muncul sama dengan 8 adalah ....', options: { A: '\\( \\frac{1}{12} \\)', B: '\\( \\frac{1}{9} \\)', C: '\\( \\frac{5}{36} \\)', D: '\\( \\frac{1}{6} \\)', E: '\\( \\frac{7}{36} \\)' }, answer: 'C', explanation: 'Pasangan mata dadu yang berjumlah 8 adalah:<br>(2,6), (3,5), (4,4), (5,3), (6,2).<br>Terdapat 5 hasil dari 36 kemungkinan, sehingga peluangnya: \\( \\frac{5}{36} \\).' },
+            { id: 50, section: 'D. Kemampuan Matematika Dasar', type: 'Statistika', text: 'Median dari data berikut adalah ....<br>4, 6, 6, 7, 9, 10', options: { A: '6', B: '6,5', C: '7', D: '7,5', E: '8' }, answer: 'B', explanation: 'Karena terdapat enam data (genap), median adalah rata-rata data ketiga dan keempat:<br>\\( \\frac{6 + 7}{2} = 6,5 \\).' }
+        ];
+
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let timeLeft = 120 * 60; // 120 minutes in seconds
+        let timerInterval;
+
+        function startQuiz() {
+            document.getElementById('intro-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.replace('hidden', 'flex');
+            
+            buildNavGrid();
+            renderQuestion();
+            startTimer();
+        }
+
+        function buildNavGrid() {
+            const gridDesktop = document.getElementById('nav-grid');
+            const gridMobile = document.getElementById('mobile-nav-grid');
+            
+            gridDesktop.innerHTML = '';
+            gridMobile.innerHTML = '';
+            
+            questionsData.forEach((q, index) => {
+                const btnHTML = `<button onclick="jumpToQuestion(${index})" id="nav-btn-${index}" class="nav-btn w-full aspect-square border border-gray-200 text-gray-600 rounded-md text-sm font-semibold hover:bg-gray-100 transition-colors">${index + 1}</button>`;
+                gridDesktop.insertAdjacentHTML('beforeend', btnHTML);
+                
+                const btnMobileHTML = `<button onclick="jumpToQuestion(${index}); toggleMobileNav();" id="nav-btn-mobile-${index}" class="nav-btn w-full aspect-square border border-gray-200 text-gray-600 rounded-md text-sm font-semibold hover:bg-gray-100 transition-colors">${index + 1}</button>`;
+                gridMobile.insertAdjacentHTML('beforeend', btnMobileHTML);
+            });
+        }
+
+        function renderQuestion() {
+            const q = questionsData[currentQuestionIndex];
+            
+            // Update Headers
+            document.getElementById('section-title').textContent = q.section;
+            document.getElementById('q-number-badge').textContent = `Soal No. ${q.id}`;
+            document.getElementById('q-type-badge').textContent = q.type || '';
+            
+            // Update Progress bar
+            const progress = ((currentQuestionIndex + 1) / questionsData.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            // Render Passage if exists
+            const passageEl = document.getElementById('passage-container');
+            if (q.passage) {
+                passageEl.innerHTML = q.passage;
+                passageEl.classList.remove('hidden');
+            } else {
+                passageEl.classList.add('hidden');
+            }
+
+            // Render Question Text
+            document.getElementById('question-text').innerHTML = q.text;
+
+            // Render Options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            for (const [key, value] of Object.entries(q.options)) {
+                const isChecked = userAnswers[currentQuestionIndex] === key ? 'checked' : '';
+                
+                const optionHTML = `
+                    <div class="relative">
+                        <input type="radio" id="opt-${key}" name="question-option" value="${key}" class="radio-custom sr-only" ${isChecked} onchange="selectOption('${key}')">
+                        <label for="opt-${key}" class="flex items-start p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors gap-4">
+                            <div class="option-letter shrink-0 w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center text-sm font-bold text-gray-600 transition-colors">
+                                ${key}
+                            </div>
+                            <div class="pt-1 text-gray-700 w-full option-text">
+                                ${value}
+                            </div>
+                        </label>
+                    </div>
+                `;
+                optionsContainer.insertAdjacentHTML('beforeend', optionHTML);
+            }
+
+            // Update Nav Buttons State
+            document.getElementById('btn-prev').disabled = currentQuestionIndex === 0;
+            const btnNext = document.getElementById('btn-next');
+            if (currentQuestionIndex === questionsData.length - 1) {
+                btnNext.innerHTML = 'Selesai <i class="fas fa-check ml-2"></i>';
+                btnNext.classList.replace('bg-blue-600', 'bg-green-600');
+                btnNext.classList.replace('hover:bg-blue-700', 'hover:bg-green-700');
+                btnNext.onclick = confirmSubmit;
+            } else {
+                btnNext.innerHTML = 'Selanjutnya <i class="fas fa-chevron-right ml-2"></i>';
+                btnNext.classList.replace('bg-green-600', 'bg-blue-600');
+                btnNext.classList.replace('hover:bg-green-700', 'hover:bg-blue-700');
+                btnNext.onclick = nextQuestion;
+            }
+
+            // Update active state in nav grid
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`nav-btn-${currentQuestionIndex}`).classList.add('active');
+            document.getElementById(`nav-btn-mobile-${currentQuestionIndex}`).classList.add('active');
+
+            // Tell MathJax to re-render equations
+            if(window.MathJax) {
+                MathJax.typesetPromise([document.getElementById('question-container')]).catch((err) => console.log('MathJax error:', err));
+            }
+        }
+
+        function selectOption(val) {
+            userAnswers[currentQuestionIndex] = val;
+            
+            // Mark nav button as answered
+            document.getElementById(`nav-btn-${currentQuestionIndex}`).classList.add('answered');
+            document.getElementById(`nav-btn-mobile-${currentQuestionIndex}`).classList.add('answered');
+            
+            updateAnsweredCount();
+        }
+
+        function updateAnsweredCount() {
+            const count = Object.keys(userAnswers).length;
+            document.getElementById('answered-count').textContent = `${count}/${questionsData.length} Terjawab`;
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < questionsData.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+                document.getElementById('question-container').scrollTop = 0;
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+                document.getElementById('question-container').scrollTop = 0;
+            }
+        }
+
+        function jumpToQuestion(index) {
+            currentQuestionIndex = index;
+            renderQuestion();
+            document.getElementById('question-container').scrollTop = 0;
+        }
+
+        function toggleMobileNav() {
+            const modal = document.getElementById('mobile-nav-modal');
+            if(modal.classList.contains('hidden')) {
+                modal.classList.replace('hidden', 'flex');
+            } else {
+                modal.classList.replace('flex', 'hidden');
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                document.getElementById('timer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 300) { // 5 minutes warning
+                    document.getElementById('timer').parentElement.classList.replace('text-gray-700', 'text-red-600');
+                    document.getElementById('timer').parentElement.classList.replace('bg-gray-100', 'bg-red-100');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    finishQuiz();
+                }
+            }, 1000);
+        }
+
+        function confirmSubmit() {
+            const unanswered = questionsData.length - Object.keys(userAnswers).length;
+            if(unanswered > 0) {
+                document.getElementById('unanswered-warning').innerHTML = `Anda masih memiliki sisa waktu, namun <strong>${unanswered} soal</strong> belum dijawab.<br>Apakah Anda yakin ingin mengumpulkan?`;
+            } else {
+                document.getElementById('unanswered-warning').innerHTML = `Anda telah menjawab semua soal.<br>Apakah Anda yakin ingin mengumpulkan sekarang?`;
+            }
+            document.getElementById('confirm-modal').classList.replace('hidden', 'flex');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.replace('flex', 'hidden');
+        }
+
+        function finishQuiz() {
+            clearInterval(timerInterval);
+            closeConfirmModal();
+            
+            document.getElementById('quiz-screen').classList.replace('flex', 'hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            calculateScore();
+            renderReview();
+        }
+
+        function calculateScore() {
+            let correct = 0;
+            let wrong = 0;
+            let blank = 0;
+
+            questionsData.forEach((q, i) => {
+                if (!userAnswers[i]) {
+                    blank++;
+                } else if (userAnswers[i] === q.answer) {
+                    correct++;
+                } else {
+                    wrong++;
+                }
+            });
+
+            // UNNES SM Tulis: Benar +2, Salah/Kosong 0
+            const totalScore = correct * 2; 
+
+            document.getElementById('final-score').textContent = totalScore;
+            document.getElementById('stat-correct').textContent = correct;
+            document.getElementById('stat-wrong').textContent = wrong;
+            document.getElementById('stat-blank').textContent = blank;
+        }
+
+        function renderReview() {
+            const container = document.getElementById('review-container');
+            container.innerHTML = '';
+            
+            questionsData.forEach((q, i) => {
+                const userAnswer = userAnswers[i];
+                const isCorrect = userAnswer === q.answer;
+                const isBlank = !userAnswer;
+                
+                let statusBadge = '';
+                if (isCorrect) statusBadge = '<span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded border border-green-200">BENAR</span>';
+                else if (isBlank) statusBadge = '<span class="bg-gray-100 text-gray-700 text-xs font-bold px-2 py-1 rounded border border-gray-200">KOSONG</span>';
+                else statusBadge = '<span class="bg-red-100 text-red-700 text-xs font-bold px-2 py-1 rounded border border-red-200">SALAH</span>';
+
+                let html = `
+                    <div class="border rounded-xl p-5 md:p-6 mb-6 bg-white shadow-sm">
+                        <div class="flex justify-between items-start mb-4 border-b pb-3">
+                            <div>
+                                <span class="font-bold text-gray-700 mr-2">Soal ${q.id}.</span>
+                                <span class="text-xs text-gray-500 uppercase">${q.section}</span>
+                            </div>
+                            ${statusBadge}
+                        </div>
+                        
+                        ${q.passage ? `<div class="mb-4 p-3 bg-gray-50 border-l-4 border-gray-300 text-sm text-gray-600">${q.passage.substring(0, 150)}...</div>` : ''}
+                        
+                        <div class="text-gray-800 font-medium mb-4">${q.text}</div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                `;
+
+                for (const [key, value] of Object.entries(q.options)) {
+                    let optClass = "border border-gray-200 rounded-lg p-3 flex text-sm text-gray-700";
+                    if (key === q.answer) {
+                        optClass = "border-2 border-green-500 bg-green-50 rounded-lg p-3 flex text-sm font-semibold text-green-800"; // Correct answer styling
+                    } else if (key === userAnswer && !isCorrect) {
+                        optClass = "border-2 border-red-400 bg-red-50 rounded-lg p-3 flex text-sm text-red-800 line-through"; // User's wrong answer styling
+                    }
+
+                    html += `
+                        <div class="${optClass}">
+                            <span class="mr-3 font-bold ${key === q.answer ? 'text-green-600' : ''}">${key}.</span> 
+                            <div>${value}</div>
+                            ${key === q.answer ? '<i class="fas fa-check-circle ml-auto text-green-500 text-lg"></i>' : ''}
+                            ${key === userAnswer && !isCorrect ? '<i class="fas fa-times-circle ml-auto text-red-400 text-lg"></i>' : ''}
+                        </div>
+                    `;
+                }
+
+                html += `</div>`; // Close options grid
+
+                if (q.explanation) {
+                    html += `
+                        <div class="mt-4 bg-blue-50 border border-blue-100 rounded-lg p-4">
+                            <h4 class="text-sm font-bold text-blue-800 mb-2"><i class="fas fa-lightbulb text-yellow-500 mr-2"></i> Pembahasan:</h4>
+                            <div class="text-sm text-gray-700 leading-relaxed">${q.explanation}</div>
+                        </div>
+                    `;
+                }
+
+                html += `</div>`; // Close card
+                container.insertAdjacentHTML('beforeend', html);
+            });
+
+            // Re-run MathJax for review container
+            if(window.MathJax) {
+                MathJax.typesetPromise([document.getElementById('review-container')]).catch((err) => console.log('MathJax error:', err));
+            }
+        }
+    </script>
+</body>
+</html>
