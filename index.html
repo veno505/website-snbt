@@ -254,7 +254,7 @@
                     <i class="fa-solid fa-house-laptop"></i>
                     <span class="hidden md:inline">Dashboard</span>
                 </button>
-                <button onclick="app.navigate('builder')" id="nav-btn-builder" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted">
+                <button onclick="app.navigate('builder')" id="nav-btn-builder" class="hidden px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted">
                     <i class="fa-solid fa-screwdriver-wrench"></i>
                     <span class="hidden md:inline">App Builder</span>
                     <span id="header-question-badge" class="px-1.5 py-0.5 text-xs rounded-md bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage font-bold">130</span>
@@ -262,6 +262,17 @@
                 <button onclick="app.navigate('history')" id="nav-btn-history" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted">
                     <i class="fa-solid fa-chart-line"></i>
                     <span class="hidden md:inline">Riwayat</span>
+                </button>
+                <button onclick="app.navigate('admin')" id="nav-btn-admin" class="hidden px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted">
+                    <i class="fa-solid fa-user-shield text-soft-amber"></i>
+                    <span class="hidden md:inline">Panel Admin</span>
+                    <span id="header-admin-pending-badge" class="hidden px-1.5 py-0.5 text-[10px] rounded-full bg-soft-amber text-white font-extrabold">0</span>
+                </button>
+
+                <!-- Plan Badge / Upgrade CTA in Header -->
+                <button onclick="app.openUpgradeModal()" id="header-plan-btn" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-sm" title="Status Paket & Upgrade Plan">
+                    <i class="fa-solid fa-crown" id="header-plan-icon"></i>
+                    <span id="header-plan-label">Upgrade Plan</span>
                 </button>
 
                 <div class="h-6 w-[1px] bg-soft-border dark:bg-night-border mx-0.5 sm:mx-1"></div>
@@ -300,8 +311,13 @@
     <main class="flex-1 flex flex-col">
 
         <!-- ==================== VIEW 1: DASHBOARD ==================== -->
-        <section id="view-dashboard" class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8 animate-fade">
+        <section id="view-dashboard" class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 animate-fade">
             
+            <!-- Subscription / Freemium Status Banner -->
+            <div id="dashboard-plan-banner" class="rounded-3xl border border-amber-300/80 dark:border-amber-700/50 bg-gradient-to-r from-amber-50 via-soft-amberLight to-emerald-50/70 dark:from-amber-950/40 dark:via-night-surface dark:to-night-sageLight/30 p-4 sm:p-5 soft-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <!-- Populated dynamically via app.renderSubscriptionUI() -->
+            </div>
+
             <!-- Hero Banner & Simulator Config -->
             <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-6 sm:p-8 soft-shadow relative overflow-hidden">
                 <div class="absolute -right-12 -top-12 w-56 h-56 rounded-full bg-soft-sageLight/60 dark:bg-night-sageLight/30 blur-2xl pointer-events-none"></div>
@@ -380,11 +396,11 @@
                         <div class="pt-2 space-y-2.5">
                             <button onclick="app.startFullExam()" class="w-full py-3.5 px-5 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white font-bold text-sm sm:text-base shadow-sm transition-all flex items-center justify-center gap-2.5">
                                 <i class="fa-solid fa-play"></i>
-                                <span>Mulai Simulasi Utuh 7 Subtes</span>
+                                <span id="btn-start-full-label">Mulai Simulasi Utuh 7 Subtes</span>
                             </button>
-                            <button onclick="app.navigate('builder')" class="w-full py-2.5 px-4 rounded-xl bg-soft-surface dark:bg-night-surface hover:bg-soft-muted dark:hover:bg-night-muted text-soft-charcoal dark:text-night-text border border-soft-border dark:border-night-border font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-file-circle-plus text-soft-sage dark:text-night-sage"></i>
-                                <span>Tambah / Edit Soal Sendiri di App Builder</span>
+                            <button id="dashboard-secondary-cta" onclick="app.openUpgradeModal()" class="w-full py-2.5 px-4 rounded-xl bg-soft-amberLight dark:bg-amber-950/40 hover:bg-soft-amber hover:text-white text-amber-900 dark:text-amber-300 border border-soft-amber/40 font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-crown text-soft-amber"></i>
+                                <span>Upgrade ke Premium (Mulai Rp 7.000/Minggu)</span>
                             </button>
                         </div>
                     </div>
@@ -867,6 +883,133 @@
             </div>
         </section>
 
+        <!-- ==================== VIEW 7: ADMIN PANEL (MEMBER & PAYMENT MANAGER) ==================== -->
+        <section id="view-admin" class="hidden max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 animate-fade">
+            <!-- Admin Header -->
+            <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-6 soft-shadow flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-soft-amber mb-1">
+                        <i class="fa-solid fa-user-shield"></i> Panel Kontrol Owner & Monetisasi
+                    </div>
+                    <h1 class="text-2xl font-extrabold text-soft-charcoal dark:text-night-text">Manajemen Member Premium, QRIS & Harga Paket</h1>
+                    <p class="text-xs sm:text-sm text-soft-slate dark:text-night-subtext">Kelola aktivasi masa aktif member SNBT, verifikasi pembayaran WhatsApp, dan pengaturan QRIS di Cloud.</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="app.refreshAdminData()" class="px-4 py-2.5 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white font-bold text-xs sm:text-sm transition-all flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        <span>Sinkronkan Daftar Member</span>
+                    </button>
+                    <button onclick="app.openUpgradeModal()" class="px-3.5 py-2.5 rounded-xl bg-soft-bg dark:bg-night-bg hover:bg-soft-muted dark:hover:bg-night-muted border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text font-semibold text-xs sm:text-sm transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-eye text-soft-amber"></i>
+                        <span>Preview Tampilan Upgrade</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Summary Metrics -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-soft-surface dark:bg-night-surface rounded-2xl border border-soft-border dark:border-night-border p-4 soft-shadow">
+                    <div class="text-xs text-soft-slate dark:text-night-subtext font-semibold">Total Akun Terdaftar</div>
+                    <div class="text-2xl font-extrabold text-soft-charcoal dark:text-night-text mt-1" id="admin-stat-total-users">0</div>
+                </div>
+                <div class="bg-soft-surface dark:bg-night-surface rounded-2xl border border-amber-300/70 dark:border-amber-700/50 p-4 soft-shadow">
+                    <div class="text-xs text-amber-800 dark:text-amber-300 font-bold">Menunggu Verifikasi (Pending)</div>
+                    <div class="text-2xl font-extrabold text-soft-amber mt-1" id="admin-stat-pending-users">0</div>
+                </div>
+                <div class="bg-soft-surface dark:bg-night-surface rounded-2xl border border-soft-sageBorder/70 p-4 soft-shadow">
+                    <div class="text-xs text-soft-sage dark:text-night-sage font-bold">Member Premium Aktif</div>
+                    <div class="text-2xl font-extrabold text-soft-sage dark:text-night-sage mt-1" id="admin-stat-premium-users">0</div>
+                </div>
+                <div class="bg-soft-surface dark:bg-night-surface rounded-2xl border border-soft-border dark:border-night-border p-4 soft-shadow">
+                    <div class="text-xs text-soft-slate dark:text-night-subtext font-semibold">Member Free Trial</div>
+                    <div class="text-2xl font-extrabold text-soft-charcoal dark:text-night-text mt-1" id="admin-stat-free-users">0</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- Left 8 cols: Member List & Manual Activation -->
+                <div class="lg:col-span-8 bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-5 sm:p-6 soft-shadow space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-soft-border dark:border-night-border pb-4">
+                        <div>
+                            <h2 class="text-lg font-extrabold text-soft-charcoal dark:text-night-text">Daftar Akun Peserta & Aktivasi Masa Aktif</h2>
+                            <p class="text-xs text-soft-slate dark:text-night-subtext">Klik tombol paket pada baris peserta untuk langsung mengaktifkan akses Premium secara real-time</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <select id="admin-user-filter" onchange="app.renderAdminPanel()" class="px-3 py-2 rounded-xl text-xs font-bold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
+                                <option value="ALL">Semua Peserta</option>
+                                <option value="PENDING">⏳ Menunggu Verifikasi</option>
+                                <option value="PREMIUM">👑 Premium Aktif</option>
+                                <option value="FREE">🔒 Free Trial</option>
+                            </select>
+                            <input type="text" id="admin-user-search" oninput="app.renderAdminPanel()" placeholder="Cari nama / email..." class="px-3 py-2 rounded-xl text-xs bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text focus:outline-none focus:border-soft-sage">
+                        </div>
+                    </div>
+
+                    <div id="admin-users-list" class="space-y-3 max-h-[650px] overflow-y-auto pr-1">
+                        <!-- Injected via app.renderAdminPanel() -->
+                    </div>
+                </div>
+
+                <!-- Right 4 cols: QRIS, WhatsApp & Pricing Settings -->
+                <div class="lg:col-span-4 bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-5 sm:p-6 soft-shadow space-y-4">
+                    <div class="border-b border-soft-border dark:border-night-border pb-3">
+                        <h2 class="text-base font-extrabold text-soft-charcoal dark:text-night-text"><i class="fa-solid fa-qrcode text-soft-sage mr-1.5"></i>Pengaturan QRIS & WhatsApp</h2>
+                        <p class="text-xs text-soft-slate dark:text-night-subtext">Tampil otomatis di jendela Upgrade Plan seluruh peserta</p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-soft-slate dark:text-night-subtext mb-1">Nomor WhatsApp Admin (Format 628...)</label>
+                            <input type="text" id="admin-cfg-wa" placeholder="6281229923834" class="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-soft-slate dark:text-night-subtext mb-1">Upload Gambar Barcode QRIS (Otomatis Kompres)</label>
+                            <input type="file" id="admin-qris-file" accept="image/*" onchange="app.handleAdminQrisUpload(event)" class="block w-full text-xs text-soft-slate file:mr-2.5 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-soft-sage file:text-white hover:file:bg-soft-sageHover cursor-pointer">
+                            <input type="text" id="admin-cfg-qris-url" placeholder="Atau tempel URL gambar QRIS (https://...)" class="mt-2 w-full px-3.5 py-2 rounded-xl text-xs bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
+                            <div id="admin-qris-preview-wrap" class="hidden mt-2 p-2.5 rounded-xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-center space-y-2">
+                                <img id="admin-qris-preview-img" src="" alt="Preview QRIS" class="max-h-40 mx-auto rounded-lg object-contain">
+                                <button type="button" onclick="app.clearAdminQrisImage()" class="text-[11px] font-bold text-soft-terra hover:underline"><i class="fa-solid fa-trash-can mr-1"></i>Hapus Gambar QRIS</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-soft-slate dark:text-night-subtext mb-1">Info Rekening / E-Wallet Pendukung</label>
+                            <input type="text" id="admin-cfg-bank" placeholder="QRIS / DANA / GoPay / BCA / SeaBank" class="w-full px-3.5 py-2 rounded-xl text-xs bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-soft-slate dark:text-night-subtext mb-1">Catatan Instruksi Pembayaran</label>
+                            <textarea id="admin-cfg-notes" rows="2" class="w-full p-3 rounded-xl text-xs bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text"></textarea>
+                        </div>
+
+                        <div class="pt-2 border-t border-soft-border dark:border-night-border space-y-2.5">
+                            <div class="text-xs font-extrabold uppercase tracking-wider text-soft-sage dark:text-night-sage">Harga Paket Upgrade (Rp)</div>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-soft-slate mb-1">Mingguan (7Hr)</label>
+                                    <input type="number" id="admin-price-weekly" step="500" class="w-full px-2.5 py-2 rounded-xl text-xs font-bold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-soft-slate mb-1">Bulanan (30Hr)</label>
+                                    <input type="number" id="admin-price-monthly" step="1000" class="w-full px-2.5 py-2 rounded-xl text-xs font-bold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-soft-slate mb-1">90 Hari (SNBT)</label>
+                                    <input type="number" id="admin-price-intensive" step="1000" class="w-full px-2.5 py-2 rounded-xl text-xs font-bold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button onclick="app.saveAdminPaymentConfig()" class="w-full py-3 px-4 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white font-bold text-xs sm:text-sm shadow-sm transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-floppy-disk"></i>
+                            <span>Simpan Pengaturan ke Cloud</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- ==================== MODAL: ADD / EDIT QUESTION ==================== -->
@@ -968,6 +1111,121 @@
         </div>
     </div>
 
+    <!-- ==================== MODAL: EXAM PAYWALL PROMPT (SOAL #4+ LOCKED) ==================== -->
+    <div id="modal-exam-paywall" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-amber-300/80 dark:border-amber-700/60 max-w-md w-full p-6 sm:p-7 soft-shadow space-y-5 text-center animate-fade">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-white mx-auto flex items-center justify-center text-2xl shadow-md">
+                <i class="fa-solid fa-crown"></i>
+            </div>
+            <div class="space-y-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-soft-amberLight dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 text-xs font-extrabold uppercase tracking-wider">
+                    <i class="fa-solid fa-lock"></i> Batas Mode Free Trial (3 Soal/Subtes)
+                </span>
+                <h3 class="text-xl font-extrabold text-soft-charcoal dark:text-night-text" id="paywall-modal-title">Buka Seluruh Soal & Pembahasan</h3>
+                <p class="text-xs sm:text-sm text-soft-slate dark:text-night-subtext leading-relaxed" id="paywall-modal-desc">
+                    Akun Gratis dibatasi untuk mencoba <strong>3 soal pertama</strong> pada setiap subtes. Upgrade ke <strong>Member Premium</strong> mulai <strong>Rp 7.000/minggu</strong> untuk membuka seluruh 130+ bank soal, simulasi penuh, dan pembahasan detail!
+                </p>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-left text-xs space-y-1.5 text-soft-charcoal dark:text-night-text">
+                <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-soft-sage"></i> <span>Buka penuh seluruh <strong>7 Subtes Resmi (130+ Soal)</strong> tanpa gembok</span></div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-soft-sage"></i> <span>Akses penuh <strong>Kunci Jawaban & Pembahasan Langkah demi Langkah</strong></span></div>
+                <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-soft-sage"></i> <span>Latihan ulang dengan <strong>Smart Randomizer</strong> tanpa batas</span></div>
+            </div>
+
+            <div class="space-y-2.5 pt-1">
+                <button onclick="app.closeExamPaywallModal(); app.openUpgradeModal();" class="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-extrabold text-sm shadow-sm transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-crown"></i>
+                    <span>Upgrade ke Premium Sekarang</span>
+                </button>
+                <button onclick="app.closeExamPaywallModal(); app.advanceOrFinishExam();" class="w-full py-2.5 px-4 rounded-xl bg-soft-sageLight dark:bg-night-sageLight hover:bg-soft-sage hover:text-white text-soft-sage dark:text-night-sage font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-check-double"></i>
+                    <span id="paywall-finish-trial-label">Kumpulkan 3 Soal Trial Ini & Lihat Hasil</span>
+                </button>
+                <button onclick="app.closeExamPaywallModal()" class="w-full py-2 text-xs font-semibold text-soft-slate hover:text-soft-charcoal dark:hover:text-night-text">
+                    Kembali ke Soal #1–#3
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL: UPGRADE PLAN (PRICING & QRIS CHECKOUT) ==================== -->
+    <div id="modal-upgrade-plan" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border max-w-4xl w-full p-5 sm:p-8 soft-shadow space-y-6 max-h-[94vh] overflow-y-auto animate-fade">
+            <div class="flex items-start justify-between gap-4 border-b border-soft-border dark:border-night-border pb-4">
+                <div>
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-soft-amberLight dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 text-[11px] font-extrabold uppercase tracking-wider mb-1">
+                        <i class="fa-solid fa-crown"></i> EduSoft SNBT Premium Pass
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-soft-charcoal dark:text-night-text">Upgrade Plan untuk Belajar SNBT Tanpa Batas</h2>
+                    <p class="text-xs sm:text-sm text-soft-slate dark:text-night-subtext">Pilih paket belajar, scan QRIS, dan kirim konfirmasi WhatsApp agar akun langsung aktif</p>
+                </div>
+                <button onclick="app.closeUpgradeModal()" class="w-9 h-9 rounded-xl bg-soft-bg dark:bg-night-bg hover:bg-soft-muted flex items-center justify-center text-soft-slate shrink-0">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Current User Status Bar inside Modal -->
+            <div id="upgrade-modal-status-bar" class="p-3.5 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+                <!-- Populated via JS -->
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                <!-- Left 7 cols: 3 Pricing Cards -->
+                <div class="lg:col-span-7 space-y-3">
+                    <div class="text-xs font-extrabold uppercase tracking-wider text-soft-slate dark:text-night-subtext">1. Pilih Paket Langganan</div>
+                    <div id="upgrade-plans-grid" class="space-y-3">
+                        <!-- Populated via app.renderUpgradeModalContent() -->
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-soft-sageLight/50 dark:bg-night-sageLight/30 border border-soft-sageBorder/50 space-y-2 text-xs text-soft-charcoal dark:text-night-text">
+                        <div class="font-extrabold text-soft-sage dark:text-night-sage"><i class="fa-solid fa-unlock-keyhole mr-1"></i> Keuntungan Member Premium:</div>
+                        <ul class="space-y-1 text-soft-slate dark:text-night-subtext">
+                            <li>• Membuka seluruh <strong>130+ soal resmi di semua 7 subtes</strong> (TPS & Literasi) tanpa batasan 3 soal.</li>
+                            <li>• Akses penuh <strong>Kunci Jawaban & Pembahasan Lengkap</strong> di setiap nomor.</li>
+                            <li>• Simulasi Full UTBK dengan <strong>Smart Passage-Aware Randomizer</strong> & Skor IRT sepuasnya.</li>
+                            <li>• Sinkronisasi progres otomatis di HP & Laptop via Cloud.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Right 5 cols: QRIS & WhatsApp Confirmation -->
+                <div class="lg:col-span-5 bg-soft-bg dark:bg-night-bg rounded-2xl border border-soft-border dark:border-night-border p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-soft-border dark:border-night-border pb-3">
+                        <div>
+                            <div class="text-xs font-extrabold uppercase tracking-wider text-soft-sage dark:text-night-sage">2. Pembayaran QRIS</div>
+                            <div class="text-sm font-bold text-soft-charcoal dark:text-night-text" id="checkout-selected-plan-name">Paket Mingguan (7 Hari)</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[11px] text-soft-slate">Total Bayar</div>
+                            <div class="text-lg font-extrabold font-mono text-soft-sage dark:text-night-sage" id="checkout-selected-plan-price">Rp 7.000</div>
+                        </div>
+                    </div>
+
+                    <!-- QRIS Image / Placeholder Box -->
+                    <div id="checkout-qris-box" class="bg-white rounded-2xl border border-soft-border p-4 text-center space-y-2 shadow-inner">
+                        <!-- Populated via JS -->
+                    </div>
+
+                    <div class="space-y-1.5 text-xs">
+                        <div class="font-bold text-soft-charcoal dark:text-night-text flex items-center gap-1.5">
+                            <i class="fa-solid fa-wallet text-soft-sage"></i>
+                            <span id="checkout-bank-info">QRIS Semua E-Wallet & M-Banking</span>
+                        </div>
+                        <p class="text-soft-slate dark:text-night-subtext leading-relaxed" id="checkout-payment-notes">
+                            Scan QRIS sesuai nominal paket, lalu klik tombol di bawah untuk mengirim bukti pembayaran ke WhatsApp Admin.
+                        </p>
+                    </div>
+
+                    <button onclick="app.submitUpgradeRequestAndOpenWA()" class="w-full py-3.5 px-5 rounded-xl bg-[#25D366] hover:bg-[#1ebe5d] text-white font-extrabold text-xs sm:text-sm shadow-sm transition-all flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>Sudah Bayar? Konfirmasi via WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ==================== TOAST NOTIFICATION ==================== -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
@@ -975,7 +1233,7 @@
     <script type="module">
         // 1. Import Firebase SDK versi CDN Modular
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
         // 2. Konfigurasi Firebase milik Anda
@@ -994,9 +1252,45 @@
         const db = getFirestore(firebaseApp);
         const auth = getAuth(firebaseApp);
 
-        // Referensi dokumen Cloud per-user (diatur otomatis saat user login)
+        // Referensi dokumen Cloud per-user & Master Global Config
         let DATABASE_REF = null;
+        const MASTER_DOC_REF = doc(db, "uangku_data", "edusoft_snbt_master");
         let STORAGE_KEY = "edusoft_snbt_backup_guest";
+        const OWNER_EMAILS = ["marveyno@gmail.com", "marveyno@gmail.comm"];
+        const FREE_TRIAL_LIMIT = 3; // Akun Free hanya bisa akses 3 soal pertama per subtes
+
+        const DEFAULT_PAYMENT_CONFIG = {
+            whatsapp: "6281229923834",
+            qrisImageUrl: "",
+            bankInfo: "QRIS Semua E-Wallet & M-Banking (GoPay, OVO, DANA, ShopeePay, BCA, Mandiri, BRI, SeaBank)",
+            paymentNotes: "Scan kode QRIS di atas sesuai nominal paket pilihan Anda, lalu klik tombol Konfirmasi WhatsApp untuk mengirim bukti pembayaran agar langsung diaktifkan Admin.",
+            plans: {
+                weekly: {
+                    id: "weekly",
+                    name: "Paket Mingguan",
+                    price: 7000,
+                    days: 7,
+                    badge: "Coba Intensif",
+                    desc: "Buka seluruh 7 subtes, 130+ bank soal, & pembahasan lengkap selama 7 hari penuh."
+                },
+                monthly: {
+                    id: "monthly",
+                    name: "Paket Bulanan",
+                    price: 20000,
+                    days: 30,
+                    badge: "Paling Populer • Hemat 28%",
+                    desc: "Akses penuh seluruh 7 subtes, analisis skor IRT, & pembahasan selama 30 hari."
+                },
+                intensive: {
+                    id: "intensive",
+                    name: "Paket Lulus SNBT",
+                    price: 45000,
+                    days: 90,
+                    badge: "Best Value • 90 Hari",
+                    desc: "Akses penuh 90 hari sampai siap menghadapi UTBK-SNBT tanpa batas latihan."
+                }
+            }
+        };
 
         /**
          * ============================================================================
@@ -1242,9 +1536,21 @@
             attempts: [],
             subtestBestScores: {},
 
-            // Auth state
+            // Auth & Subscription state
             currentUser: null,
             authMode: 'login', // 'login' | 'register'
+            subscription: {
+                plan: 'free',
+                planLabel: 'Free Trial',
+                premiumUntil: 0,
+                requestedPlan: '',
+                requestedAt: ''
+            },
+            paymentConfig: JSON.parse(JSON.stringify(DEFAULT_PAYMENT_CONFIG)),
+            usersIndex: {},
+            selectedUpgradePlan: 'weekly',
+            userDocUnsubscribe: null,
+            masterDocUnsubscribe: null,
 
             // UI & Readability preferences
             currentView: 'dashboard',
@@ -1276,12 +1582,52 @@
 
             init() {
                 this.populateFilterDropdowns();
+                this.renderSubscriptionUI();
                 this.renderDashboard();
                 this.renderBuilderQuestions();
                 this.renderBuilderSubtestsConfig();
                 this.renderHistoryView();
                 this.setupKeyboardShortcuts();
                 this.setupAuthListeners();
+            },
+
+            // ---------------- ROLE & PREMIUM ACCESS HELPERS ----------------
+            isAdmin() {
+                const email = (this.currentUser?.email || '').toLowerCase().trim();
+                return OWNER_EMAILS.includes(email);
+            },
+
+            isPremiumActive() {
+                if (this.isAdmin()) return true;
+                return Number(this.subscription?.premiumUntil || 0) > Date.now();
+            },
+
+            getRemainingPremiumDays() {
+                if (this.isAdmin()) return 999;
+                const diff = Number(this.subscription?.premiumUntil || 0) - Date.now();
+                return diff > 0 ? Math.ceil(diff / (1000 * 60 * 60 * 24)) : 0;
+            },
+
+            isQuestionUnlocked(questionIdx) {
+                if (this.isPremiumActive()) return true;
+                return questionIdx < FREE_TRIAL_LIMIT;
+            },
+
+            formatRupiah(value) {
+                return 'Rp ' + Number(value || 0).toLocaleString('id-ID');
+            },
+
+            formatDateId(ms) {
+                if (!ms || Number(ms) <= 0) return '-';
+                try {
+                    return new Date(Number(ms)).toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+                } catch {
+                    return '-';
+                }
             },
 
             // ---------------- FIREBASE CLOUD DATABASE (LOAD & SAVE) ----------------
@@ -1307,6 +1653,7 @@
                     updatedAt: new Date().toISOString(),
                     userEmail: this.currentUser?.email || '',
                     userName: this.currentUser?.displayName || '',
+                    subscription: this.subscription,
                     subtests: this.subtests,
                     passages: this.passages,
                     questions: this.questions,
@@ -1323,18 +1670,28 @@
                 };
             },
 
-            applyLoadedPayload(saved) {
+            applyLoadedPayload(saved, isAdminUser = false) {
                 if (!saved || typeof saved !== 'object') return;
 
-                this.subtests = Array.isArray(saved.subtests) && saved.subtests.length > 0
-                    ? saved.subtests
-                    : JSON.parse(JSON.stringify(DEFAULT_SUBTESTS));
-                this.passages = saved.passages && Object.keys(saved.passages).length > 0
-                    ? { ...JSON.parse(JSON.stringify(PASSAGES)), ...saved.passages }
-                    : JSON.parse(JSON.stringify(PASSAGES));
-                this.questions = Array.isArray(saved.questions) && saved.questions.length > 0
-                    ? saved.questions
-                    : JSON.parse(JSON.stringify(INITIAL_QUESTIONS));
+                if (saved.subscription && typeof saved.subscription === 'object') {
+                    this.subscription = {
+                        plan: saved.subscription.plan || 'free',
+                        planLabel: saved.subscription.planLabel || 'Free Trial',
+                        premiumUntil: Number(saved.subscription.premiumUntil) || 0,
+                        requestedPlan: saved.subscription.requestedPlan || '',
+                        requestedAt: saved.subscription.requestedAt || ''
+                    };
+                }
+
+                // Hanya ambil bank soal dari dokumen user jika dia Admin atau jika Master belum ada
+                if (isAdminUser) {
+                    if (Array.isArray(saved.subtests) && saved.subtests.length > 0) this.subtests = saved.subtests;
+                    if (saved.passages && Object.keys(saved.passages).length > 0) {
+                        this.passages = { ...JSON.parse(JSON.stringify(PASSAGES)), ...saved.passages };
+                    }
+                    if (Array.isArray(saved.questions) && saved.questions.length > 0) this.questions = saved.questions;
+                }
+
                 this.attempts = Array.isArray(saved.attempts) ? saved.attempts : [];
                 this.subtestBestScores = saved.subtestBestScores || {};
 
@@ -1358,24 +1715,161 @@
                 }
             },
 
+            applyMasterPayload(masterData) {
+                if (!masterData || typeof masterData !== 'object') return;
+                if (Array.isArray(masterData.subtests) && masterData.subtests.length > 0) {
+                    this.subtests = masterData.subtests;
+                }
+                if (masterData.passages && Object.keys(masterData.passages).length > 0) {
+                    this.passages = { ...JSON.parse(JSON.stringify(PASSAGES)), ...masterData.passages };
+                }
+                if (Array.isArray(masterData.questions) && masterData.questions.length > 0) {
+                    this.questions = masterData.questions;
+                }
+                if (masterData.paymentConfig && typeof masterData.paymentConfig === 'object') {
+                    this.paymentConfig = {
+                        ...JSON.parse(JSON.stringify(DEFAULT_PAYMENT_CONFIG)),
+                        ...masterData.paymentConfig,
+                        plans: {
+                            ...JSON.parse(JSON.stringify(DEFAULT_PAYMENT_CONFIG.plans)),
+                            ...(masterData.paymentConfig.plans || {})
+                        }
+                    };
+                }
+                if (masterData.usersIndex && typeof masterData.usersIndex === 'object') {
+                    this.usersIndex = masterData.usersIndex;
+                }
+            },
+
+            async syncUserToMasterIndex() {
+                if (!this.currentUser) return;
+                const uid = this.currentUser.uid;
+                const entry = {
+                    uid,
+                    email: this.currentUser.email || '',
+                    displayName: this.currentUser.displayName || (this.currentUser.email ? this.currentUser.email.split('@')[0] : 'Peserta'),
+                    plan: this.subscription.plan || 'free',
+                    planLabel: this.subscription.planLabel || 'Free Trial',
+                    premiumUntil: Number(this.subscription.premiumUntil) || 0,
+                    requestedPlan: this.subscription.requestedPlan || '',
+                    requestedAt: this.subscription.requestedAt || '',
+                    updatedAt: new Date().toISOString()
+                };
+                this.usersIndex[uid] = entry;
+                try {
+                    await setDoc(MASTER_DOC_REF, { usersIndex: { [uid]: entry } }, { merge: true });
+                } catch (e) {
+                    console.warn("Gagal sinkron indeks member:", e);
+                }
+            },
+
+            stopRealtimeListeners() {
+                if (typeof this.userDocUnsubscribe === 'function') {
+                    this.userDocUnsubscribe();
+                    this.userDocUnsubscribe = null;
+                }
+                if (typeof this.masterDocUnsubscribe === 'function') {
+                    this.masterDocUnsubscribe();
+                    this.masterDocUnsubscribe = null;
+                }
+            },
+
+            setupRealtimeListeners() {
+                this.stopRealtimeListeners();
+                if (!DATABASE_REF || !this.currentUser) return;
+
+                // Listener real-time dokumen user (agar saat Admin mengaktifkan Premium, user langsung terbuka otomatis)
+                this.userDocUnsubscribe = onSnapshot(DATABASE_REF, (snap) => {
+                    if (!snap.exists()) return;
+                    const data = snap.data();
+                    if (data?.subscription) {
+                        const prevActive = this.isPremiumActive();
+                        const prevUntil = Number(this.subscription?.premiumUntil || 0);
+                        this.subscription = {
+                            plan: data.subscription.plan || 'free',
+                            planLabel: data.subscription.planLabel || 'Free Trial',
+                            premiumUntil: Number(data.subscription.premiumUntil) || 0,
+                            requestedPlan: data.subscription.requestedPlan || '',
+                            requestedAt: data.subscription.requestedAt || ''
+                        };
+                        const nowActive = this.isPremiumActive();
+                        if (!prevActive && nowActive && !this.isAdmin()) {
+                            this.closeUpgradeModal();
+                            this.closeExamPaywallModal();
+                            this.showToast('🎉 Akun Premium Anda telah aktif! Seluruh soal & pembahasan terbuka penuh.', 'success');
+                        } else if (prevUntil !== this.subscription.premiumUntil) {
+                            this.renderSubscriptionUI();
+                        }
+                        this.renderSubscriptionUI();
+                        if (this.currentView === 'dashboard') this.renderDashboard();
+                        if (this.currentView === 'exam') {
+                            this.renderCurrentExamQuestion();
+                            this.renderExamNavigatorGrid();
+                        }
+                        if (this.currentView === 'result') this.renderReviewList();
+                    }
+                });
+
+                // Listener real-time dokumen master (agar update QRIS/soal/daftar member masuk real-time)
+                this.masterDocUnsubscribe = onSnapshot(MASTER_DOC_REF, (snap) => {
+                    if (!snap.exists()) return;
+                    this.applyMasterPayload(snap.data());
+                    this.renderSubscriptionUI();
+                    if (this.currentView === 'admin') this.renderAdminPanel();
+                    if (this.currentView === 'dashboard') this.renderDashboard();
+                });
+            },
+
             // 4. Tarik Data dari Firebase Cloud
             async loadData() {
                 if (!DATABASE_REF) return;
                 this.setCloudSyncStatus('syncing');
 
                 try {
+                    // 1) Tarik konfigurasi Master (Bank Soal Global, QRIS, Daftar Member)
+                    try {
+                        const masterSnap = await getDoc(MASTER_DOC_REF);
+                        if (masterSnap.exists()) {
+                            this.applyMasterPayload(masterSnap.data());
+                        } else if (this.isAdmin()) {
+                            await setDoc(MASTER_DOC_REF, {
+                                updatedAt: new Date().toISOString(),
+                                subtests: this.subtests,
+                                passages: this.passages,
+                                questions: this.questions,
+                                paymentConfig: this.paymentConfig
+                            }, { merge: true });
+                        }
+                    } catch (mErr) {
+                        console.warn("Gagal memuat dokumen master:", mErr);
+                    }
+
+                    // 2) Tarik dokumen pribadi user
                     const docSnap = await getDoc(DATABASE_REF);
                     if (docSnap.exists()) {
                         const saved = docSnap.data();
-                        this.applyLoadedPayload(saved);
+                        this.applyLoadedPayload(saved, this.isAdmin());
+                        // Jika master belum punya bank soal tapi Admin punya di dokumennya, gunakan milik Admin
+                        const masterSnapCheck = await getDoc(MASTER_DOC_REF).catch(() => null);
+                        if (masterSnapCheck && masterSnapCheck.exists()) {
+                            this.applyMasterPayload(masterSnapCheck.data());
+                        }
                         localStorage.setItem(STORAGE_KEY, JSON.stringify(this.buildCloudPayload()));
                     } else {
                         // Pengguna baru: inisialisasi dokumen default di Cloud
                         this.resetStateToDefaults();
+                        const masterSnapCheck = await getDoc(MASTER_DOC_REF).catch(() => null);
+                        if (masterSnapCheck && masterSnapCheck.exists()) {
+                            this.applyMasterPayload(masterSnapCheck.data());
+                        }
                         const initialPayload = this.buildCloudPayload();
                         localStorage.setItem(STORAGE_KEY, JSON.stringify(initialPayload));
                         await setDoc(DATABASE_REF, initialPayload);
                     }
+
+                    // 3) Daftarkan/perbarui user ke indeks member agar muncul di Panel Admin
+                    await this.syncUserToMasterIndex();
+                    this.setupRealtimeListeners();
                     this.setCloudSyncStatus('synced');
                 } catch (error) {
                     console.error("Gagal menarik data dari Firebase:", error);
@@ -1383,7 +1877,7 @@
                     const localBackup = localStorage.getItem(STORAGE_KEY);
                     if (localBackup) {
                         try {
-                            this.applyLoadedPayload(JSON.parse(localBackup));
+                            this.applyLoadedPayload(JSON.parse(localBackup), this.isAdmin());
                             this.showToast("Mode Offline: Memuat data cadangan lokal.", "warning");
                         } catch (e) {
                             console.error("Backup lokal rusak:", e);
@@ -1394,10 +1888,12 @@
                 }
 
                 this.populateFilterDropdowns();
+                this.renderSubscriptionUI();
                 this.renderDashboard();
                 this.renderBuilderQuestions();
                 this.renderBuilderSubtestsConfig();
                 this.renderHistoryView();
+                if (this.isAdmin()) this.renderAdminPanel();
             },
 
             // 5. Simpan Data ke Firebase Cloud
@@ -1410,17 +1906,29 @@
                 }
 
                 if (render) {
+                    this.renderSubscriptionUI();
                     this.renderDashboard();
                     this.renderBuilderQuestions();
                     this.renderBuilderSubtestsConfig();
                     this.renderHistoryView();
+                    if (this.isAdmin()) this.renderAdminPanel();
                 }
 
                 if (!DATABASE_REF) return;
                 this.setCloudSyncStatus('syncing');
 
                 try {
-                    await setDoc(DATABASE_REF, payload);
+                    await setDoc(DATABASE_REF, payload, { merge: true });
+                    if (this.isAdmin()) {
+                        await setDoc(MASTER_DOC_REF, {
+                            updatedAt: new Date().toISOString(),
+                            subtests: this.subtests,
+                            passages: this.passages,
+                            questions: this.questions,
+                            paymentConfig: this.paymentConfig
+                        }, { merge: true });
+                    }
+                    await this.syncUserToMasterIndex();
                     this.setCloudSyncStatus('synced');
                 } catch (error) {
                     console.error("Gagal menyimpan ke Firebase:", error);
@@ -1436,6 +1944,13 @@
                 this.attempts = [];
                 this.subtestBestScores = {};
                 this.activeReviewAttempt = null;
+                this.subscription = {
+                    plan: 'free',
+                    planLabel: 'Free Trial',
+                    premiumUntil: 0,
+                    requestedPlan: '',
+                    requestedAt: ''
+                };
             },
 
             onConfigToggleChange() {
@@ -1615,12 +2130,14 @@
                         await this.loadData();
                     } else {
                         this.stopAllTimers();
+                        this.stopRealtimeListeners();
                         this.session.active = false;
                         this.currentUser = null;
                         DATABASE_REF = null;
                         STORAGE_KEY = "edusoft_snbt_backup_guest";
 
                         this.resetStateToDefaults();
+                        this.renderSubscriptionUI();
                         this.switchView('dashboard');
 
                         if (authForm) authForm.reset();
@@ -1675,6 +2192,10 @@
 
             // ---------------- NAVIGATION & THEME ----------------
             navigate(view) {
+                if ((view === 'builder' || view === 'admin') && !this.isAdmin()) {
+                    this.showToast('Halaman ini khusus untuk Admin / Owner.', 'error');
+                    return;
+                }
                 if (this.session.active && view !== 'exam' && view !== 'transition') {
                     this.showConfirm(
                         'Keluar dari Sesi Ujian?',
@@ -1691,8 +2212,11 @@
             },
 
             switchView(view) {
+                if ((view === 'builder' || view === 'admin') && !this.isAdmin()) {
+                    view = 'dashboard';
+                }
                 this.currentView = view;
-                const views = ['dashboard', 'exam', 'transition', 'result', 'builder', 'history'];
+                const views = ['dashboard', 'exam', 'transition', 'result', 'builder', 'history', 'admin'];
                 views.forEach(v => {
                     const el = document.getElementById(`view-${v}`);
                     if (el) el.classList.toggle('hidden', v !== view);
@@ -1705,13 +2229,14 @@
                 }
 
                 // Update nav active states
-                ['dashboard', 'builder', 'history'].forEach(nav => {
+                ['dashboard', 'builder', 'history', 'admin'].forEach(nav => {
                     const btn = document.getElementById(`nav-btn-${nav}`);
                     if (!btn) return;
+                    const isHidden = !this.isAdmin() && (nav === 'builder' || nav === 'admin');
                     if (nav === view) {
-                        btn.className = 'px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 bg-soft-sage text-white';
+                        btn.className = `${isHidden ? 'hidden ' : ''}px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 bg-soft-sage text-white`;
                     } else {
-                        btn.className = 'px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted';
+                        btn.className = `${isHidden ? 'hidden ' : ''}px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted`;
                     }
                 });
 
@@ -1721,6 +2246,7 @@
                     this.renderBuilderSubtestsConfig();
                 }
                 if (view === 'history') this.renderHistoryView();
+                if (view === 'admin') this.renderAdminPanel();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             },
 
@@ -1765,10 +2291,159 @@
                 }
             },
 
+            // ---------------- SUBSCRIPTION, FREEMIUM & HEADER UI ----------------
+            renderSubscriptionUI() {
+                const isAdmin = this.isAdmin();
+                const isPrem = this.isPremiumActive();
+                const remDays = this.getRemainingPremiumDays();
+
+                const builderBtn = document.getElementById('nav-btn-builder');
+                const adminBtn = document.getElementById('nav-btn-admin');
+                if (builderBtn) builderBtn.classList.toggle('hidden', !isAdmin);
+                if (adminBtn) adminBtn.classList.toggle('hidden', !isAdmin);
+
+                // Pending badge count for Admin
+                const pendingBadge = document.getElementById('header-admin-pending-badge');
+                if (pendingBadge) {
+                    const now = Date.now();
+                    const pendingCount = Object.values(this.usersIndex || {}).filter(u =>
+                        u && u.requestedPlan && !(Number(u.premiumUntil || 0) > now)
+                    ).length;
+                    pendingBadge.textContent = pendingCount;
+                    pendingBadge.classList.toggle('hidden', !isAdmin || pendingCount === 0);
+                }
+
+                // Header Plan Button
+                const planBtn = document.getElementById('header-plan-btn');
+                const planLabel = document.getElementById('header-plan-label');
+                if (planBtn && planLabel) {
+                    if (isAdmin) {
+                        planBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-soft-sage text-white text-xs font-extrabold shadow-sm hover:opacity-95 transition-all';
+                        planBtn.onclick = () => this.navigate('admin');
+                        planLabel.textContent = 'Admin Owner';
+                    } else if (isPrem) {
+                        planBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs font-extrabold shadow-sm hover:opacity-95 transition-all';
+                        planBtn.onclick = () => this.openUpgradeModal();
+                        planLabel.textContent = `Premium (${remDays} Hari)`;
+                    } else if (this.subscription?.requestedPlan) {
+                        planBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 text-white text-xs font-extrabold shadow-sm hover:opacity-95 transition-all animate-pulse';
+                        planBtn.onclick = () => this.openUpgradeModal();
+                        planLabel.textContent = 'Menunggu Verifikasi';
+                    } else {
+                        planBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-extrabold shadow-sm transition-all';
+                        planBtn.onclick = () => this.openUpgradeModal();
+                        planLabel.textContent = 'Upgrade Plan';
+                    }
+                }
+
+                // Secondary CTA in Dashboard Config Panel
+                const secCta = document.getElementById('dashboard-secondary-cta');
+                const secCtaLabel = document.getElementById('dashboard-secondary-cta-label');
+                if (secCta && secCtaLabel) {
+                    if (isAdmin) {
+                        secCta.onclick = () => this.navigate('builder');
+                        secCtaLabel.textContent = 'Kelola Bank Soal (App Builder)';
+                    } else if (isPrem) {
+                        secCta.onclick = () => this.openUpgradeModal();
+                        secCtaLabel.textContent = `Perpanjang Paket Premium (${remDays} Hari Tersisa)`;
+                    } else {
+                        secCta.onclick = () => this.openUpgradeModal();
+                        secCtaLabel.textContent = `Upgrade ke Premium (Mulai ${this.formatRupiah(this.paymentConfig.weeklyPrice)}/Minggu)`;
+                    }
+                }
+
+                // Dashboard Plan Banner
+                const bannerEl = document.getElementById('dashboard-plan-banner');
+                if (bannerEl) {
+                    if (isAdmin) {
+                        const totalUsers = Object.keys(this.usersIndex || {}).length;
+                        const now = Date.now();
+                        const pendingUsers = Object.values(this.usersIndex || {}).filter(u => u && u.requestedPlan && !(Number(u.premiumUntil || 0) > now)).length;
+                        bannerEl.innerHTML = `
+                            <div class="bg-soft-surface dark:bg-night-surface rounded-2xl border-2 border-soft-sage/50 p-4 sm:p-5 soft-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div class="flex items-start sm:items-center gap-3.5">
+                                    <div class="w-11 h-11 rounded-2xl bg-soft-sage text-white flex items-center justify-center text-lg shrink-0">
+                                        <i class="fa-solid fa-user-shield"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <span class="px-2.5 py-0.5 rounded-full bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage text-[11px] font-extrabold uppercase">Mode Admin / Owner Aktif</span>
+                                            ${pendingUsers > 0 ? `<span class="px-2.5 py-0.5 rounded-full bg-soft-terra text-white text-[11px] font-extrabold">${pendingUsers} Menunggu Aktivasi</span>` : ''}
+                                        </div>
+                                        <p class="text-xs sm:text-sm text-soft-charcoal dark:text-night-text font-semibold mt-1">
+                                            Akses penuh ke seluruh soal, <strong>App Builder</strong>, dan <strong>Panel Admin</strong> (${totalUsers} peserta terdaftar).
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <button onclick="app.navigate('admin')" class="px-4 py-2.5 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white font-bold text-xs sm:text-sm transition-all flex items-center gap-2">
+                                        <i class="fa-solid fa-crown"></i>
+                                        <span>Buka Panel Admin</span>
+                                    </button>
+                                    <button onclick="app.navigate('builder')" class="px-3.5 py-2.5 rounded-xl bg-soft-bg dark:bg-night-bg hover:bg-soft-muted dark:hover:bg-night-muted border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text font-bold text-xs sm:text-sm transition-all">
+                                        <i class="fa-solid fa-Sliders mr-1"></i>App Builder
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    } else if (isPrem) {
+                        bannerEl.innerHTML = `
+                            <div class="bg-gradient-to-r from-emerald-900/90 to-teal-800/90 text-white rounded-2xl p-4 sm:p-5 soft-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div class="flex items-start sm:items-center gap-3.5">
+                                    <div class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center text-amber-300 text-lg shrink-0">
+                                        <i class="fa-solid fa-crown"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[11px] font-extrabold uppercase">Member Premium Aktif</span>
+                                            <span class="text-xs text-emerald-100 font-semibold">Sisa ${remDays} Hari (s/d ${this.formatDateId(this.subscription.premiumUntil)})</span>
+                                        </div>
+                                        <p class="text-xs sm:text-sm text-emerald-50 mt-1">
+                                            Seluruh bank soal 7 subtes, mode Tryout UTBK penuh, dan kunci pembahasan lengkap telah terbuka untuk akun Anda.
+                                        </p>
+                                    </div>
+                                </div>
+                                <button onclick="app.openUpgradeModal()" class="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 border border-white/25 text-white font-bold text-xs sm:text-sm transition-all shrink-0">
+                                    <i class="fa-solid fa-rotate mr-1.5"></i>Perpanjang Paket
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        const isPending = !!this.subscription?.requestedPlan;
+                        bannerEl.innerHTML = `
+                            <div class="bg-gradient-to-r from-amber-50 via-orange-50/80 to-amber-50 dark:from-amber-950/40 dark:via-night-surface dark:to-amber-950/30 rounded-2xl border-2 border-amber-400/70 dark:border-amber-600/60 p-4 sm:p-5 soft-shadow flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div class="flex items-start gap-3.5">
+                                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white flex items-center justify-center text-lg shrink-0 shadow-sm">
+                                        <i class="fa-solid fa-crown"></i>
+                                    </div>
+                                    <div>
+                                        <div class="flex flex-wrap items-center gap-2">
+                                            <span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-900 dark:text-amber-300 text-[11px] font-extrabold uppercase">Akun Free Trial (${FREE_TRIAL_LIMIT} Soal / Subtes)</span>
+                                            ${isPending ? `<span class="px-2.5 py-0.5 rounded-full bg-amber-500 text-white text-[11px] font-extrabold animate-pulse">Menunggu Konfirmasi Admin (${this.escapeHtml(this.subscription.requestedPlan)})</span>` : ''}
+                                        </div>
+                                        <p class="text-xs sm:text-sm text-soft-charcoal dark:text-night-text font-medium mt-1 leading-relaxed">
+                                            Anda dapat mencoba <strong>${FREE_TRIAL_LIMIT} soal pertama gratis</strong> di setiap subtes. Untuk membuka seluruh <strong>${this.questions.length}+ bank soal SNBT</strong> & pembahasan lengkap, silakan upgrade ke <strong>Premium mulai ${this.formatRupiah(this.paymentConfig.weeklyPrice)}/minggu</strong>.
+                                        </p>
+                                    </div>
+                                </div>
+                                <button onclick="app.openUpgradeModal()" class="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 shrink-0">
+                                    <i class="fa-solid fa-bolt"></i>
+                                    <span>${isPending ? 'Lihat Status / Konfirmasi WA' : 'Upgrade ke Premium'}</span>
+                                </button>
+                            </div>
+                        `;
+                    }
+                }
+            },
+
             // ---------------- DASHBOARD RENDERING ----------------
             renderDashboard() {
+                this.renderSubscriptionUI();
+
                 const totalQ = this.questions.length;
                 const totalMin = this.subtests.reduce((acc, s) => acc + Number(s.minutes || 0), 0);
+                const isPrem = this.isPremiumActive();
+                const isAdmin = this.isAdmin();
 
                 document.getElementById('stat-total-questions').textContent = `${totalQ} Soal`;
                 document.getElementById('stat-total-time').textContent = `${totalMin} Menit`;
@@ -1786,10 +2461,20 @@
                 const grid = document.getElementById('subtest-cards-grid');
                 grid.innerHTML = this.subtests.map(sub => {
                     const qCount = this.questions.filter(q => q.subtest === sub.id).length;
+                    const unlockedCount = isPrem ? qCount : Math.min(FREE_TRIAL_LIMIT, qCount);
+                    const lockedCount = Math.max(0, qCount - unlockedCount);
                     const best = this.subtestBestScores[sub.id];
                     const categoryBadge = sub.category === 'TPS'
                         ? `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage">TPS • Subtes ${sub.order}</span>`
                         : `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100/80 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300">Literasi • Subtes ${sub.order}</span>`;
+
+                    const quotaInfo = isPrem
+                        ? `<span class="text-soft-sage dark:text-night-sage font-bold"><i class="fa-solid fa-unlock mr-1"></i>Akses Penuh (${qCount} Soal)</span>`
+                        : `<span class="text-soft-slate dark:text-night-subtext font-medium"><i class="fa-solid fa-lock-open text-soft-sage mr-1"></i><strong>${unlockedCount} Trial</strong> • <i class="fa-solid fa-lock text-amber-500 ml-1 mr-1"></i>${lockedCount} Premium</span>`;
+
+                    const actionBtnLabel = isPrem
+                        ? `Latihan Subtes (${qCount} Soal)`
+                        : `Coba Trial (${unlockedCount}/${qCount} Soal)`;
 
                     return `
                         <div class="bg-soft-surface dark:bg-night-surface rounded-2xl border border-soft-border dark:border-night-border p-5 soft-shadow flex flex-col justify-between gap-4 hover:border-soft-sage/60 transition-all">
@@ -1811,19 +2496,25 @@
 
                             <div class="pt-3 border-t border-soft-border dark:border-night-border space-y-3">
                                 <div class="flex items-center justify-between text-xs">
-                                    <span class="text-soft-slate dark:text-night-subtext font-medium"><i class="fa-solid fa-database mr-1"></i> Tersedia <strong>${qCount} Soal</strong></span>
+                                    ${quotaInfo}
                                     <span class="font-bold ${best ? 'text-soft-sage dark:text-night-sage' : 'text-soft-slate'}">
-                                        ${best ? `Skor Terbaik: ${best}` : 'Belum dikerjakan'}
+                                        ${best ? `Skor: ${best}` : 'Belum dikerjakan'}
                                     </span>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <button onclick="app.startSingleSubtest('${sub.id}')" class="flex-1 py-2.5 px-3.5 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5">
-                                        <i class="fa-solid fa-shuffle"></i>
-                                        <span>Latihan Acak (${qCount})</span>
+                                        <i class="fa-solid fa-play"></i>
+                                        <span>${actionBtnLabel}</span>
                                     </button>
-                                    <button onclick="app.openBuilderForSubtest('${sub.id}')" class="p-2.5 rounded-xl bg-soft-bg dark:bg-night-bg hover:bg-soft-muted dark:hover:bg-night-muted border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text text-xs font-semibold transition-colors" title="Kelola Soal Subtes Ini">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
+                                    ${isAdmin ? `
+                                        <button onclick="app.openBuilderForSubtest('${sub.id}')" class="p-2.5 rounded-xl bg-soft-bg dark:bg-night-bg hover:bg-soft-muted dark:hover:bg-night-muted border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text text-xs font-semibold transition-colors" title="Kelola Soal Subtes Ini (Admin)">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                    ` : `
+                                        <button onclick="app.openUpgradeModal()" class="p-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-semibold transition-colors" title="Buka Semua Soal dengan Premium">
+                                            <i class="fa-solid fa-crown"></i>
+                                        </button>
+                                    `}
                                 </div>
                             </div>
                         </div>
@@ -2132,7 +2823,12 @@
 
                 const nextLabel = document.getElementById('btn-next-label');
                 if (nextLabel) {
-                    nextLabel.textContent = idx === qList.length - 1 ? 'Selesai Subtes' : 'Selanjutnya';
+                    const isPrem = this.isPremiumActive();
+                    if (!isPrem && idx === FREE_TRIAL_LIMIT - 1 && qList.length > FREE_TRIAL_LIMIT) {
+                        nextLabel.textContent = 'Buka Soal #4+ (Premium 🔒)';
+                    } else {
+                        nextLabel.textContent = idx === qList.length - 1 ? 'Selesai Subtes' : 'Selanjutnya';
+                    }
                 }
 
                 this.renderExamNavigatorGrid();
@@ -2141,15 +2837,27 @@
             renderExamNavigatorGrid() {
                 const qList = this.session.activeQuestions;
                 const currentIdx = this.session.currentQuestionIdx;
+                const isPrem = this.isPremiumActive();
+                const unlockedCount = isPrem ? qList.length : Math.min(FREE_TRIAL_LIMIT, qList.length);
                 let answeredCount = 0;
 
                 const gridEl = document.getElementById('exam-number-grid');
                 gridEl.innerHTML = qList.map((q, idx) => {
-                    const isAnswered = !!this.session.answers[q.id];
-                    const isDoubt = !!this.session.doubts[q.id];
+                    const isLocked = !this.isQuestionUnlocked(idx);
+                    const isAnswered = !isLocked && !!this.session.answers[q.id];
+                    const isDoubt = !isLocked && !!this.session.doubts[q.id];
                     const isCurrent = idx === currentIdx;
 
                     if (isAnswered) answeredCount++;
+
+                    if (isLocked) {
+                        return `
+                            <button onclick="app.jumpToQuestion(${idx})" title="Soal #${idx + 1} Terkunci — Upgrade ke Premium" class="h-10 rounded-xl border border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs flex flex-col items-center justify-center transition-all hover:bg-amber-500/20">
+                                <span class="font-bold">${idx + 1}</span>
+                                <i class="fa-solid fa-lock text-[9px] leading-none mt-0.5"></i>
+                            </button>
+                        `;
+                    }
 
                     // Find selected display letter if answered
                     let chosenLetter = '';
@@ -2175,13 +2883,19 @@
                     `;
                 }).join('');
 
-                document.getElementById('nav-answered-counter').textContent = `${answeredCount} / ${qList.length} Terjawab`;
-                const pct = qList.length > 0 ? Math.round((answeredCount / qList.length) * 100) : 0;
+                document.getElementById('nav-answered-counter').textContent = isPrem
+                    ? `${answeredCount} / ${qList.length} Terjawab`
+                    : `${answeredCount} / ${unlockedCount} Trial (${qList.length - unlockedCount} 🔒)`;
+                const pct = unlockedCount > 0 ? Math.round((answeredCount / unlockedCount) * 100) : 0;
                 document.getElementById('nav-progress-bar').style.width = `${pct}%`;
             },
 
             // ---------------- EXAM USER ACTIONS ----------------
             selectOption(questionId, origKey) {
+                if (!this.isQuestionUnlocked(this.session.currentQuestionIdx)) {
+                    this.openExamPaywallModal(this.session.currentQuestionIdx);
+                    return;
+                }
                 this.session.answers[questionId] = origKey;
                 this.renderCurrentExamQuestion();
             },
@@ -2208,8 +2922,13 @@
             },
 
             nextQuestion() {
-                if (this.session.currentQuestionIdx < this.session.activeQuestions.length - 1) {
-                    this.session.currentQuestionIdx++;
+                const nextIdx = this.session.currentQuestionIdx + 1;
+                if (nextIdx < this.session.activeQuestions.length) {
+                    if (!this.isQuestionUnlocked(nextIdx)) {
+                        this.openExamPaywallModal(nextIdx);
+                        return;
+                    }
+                    this.session.currentQuestionIdx = nextIdx;
                     this.renderCurrentExamQuestion();
                 } else {
                     this.confirmFinishSubtest();
@@ -2217,6 +2936,10 @@
             },
 
             jumpToQuestion(idx) {
+                if (!this.isQuestionUnlocked(idx)) {
+                    this.openExamPaywallModal(idx);
+                    return;
+                }
                 this.session.currentQuestionIdx = idx;
                 this.renderCurrentExamQuestion();
             },
@@ -2250,13 +2973,15 @@
 
             confirmFinishSubtest() {
                 const qList = this.session.activeQuestions;
-                const answered = qList.filter(q => !!this.session.answers[q.id]).length;
-                const unanswered = qList.length - answered;
+                const isPrem = this.isPremiumActive();
+                const accessibleList = isPrem ? qList : qList.slice(0, FREE_TRIAL_LIMIT);
+                const answered = accessibleList.filter(q => !!this.session.answers[q.id]).length;
+                const unanswered = accessibleList.length - answered;
                 const isLast = this.session.currentSubtestIdx === this.session.subtestQueue.length - 1;
 
                 const msg = unanswered > 0
                     ? `Masih ada ${unanswered} soal yang belum dijawab pada subtes ini. Apakah Anda yakin ingin mengakhiri subtes ini? (Anda tidak dapat kembali ke subtes yang sudah selesai).`
-                    : `Seluruh ${qList.length} soal pada subtes ini telah terjawab. Lanjutkan ${isLast ? 'ke hasil & pembahasan ujian' : 'ke subtes berikutnya'}?`;
+                    : `Seluruh ${accessibleList.length} soal ${isPrem ? '' : 'Free Trial '}pada subtes ini telah terjawab. Lanjutkan ${isLast ? 'ke hasil & pembahasan ujian' : 'ke subtes berikutnya'}?`;
 
                 this.showConfirm(
                     isLast ? 'Kumpulkan & Selesaikan Ujian?' : 'Akhiri Subtes Ini?',
@@ -2315,18 +3040,24 @@
                 this.stopAllTimers();
                 this.session.active = false;
 
+                const isPrem = this.isPremiumActive();
                 let totalQuestions = 0;
                 let totalCorrect = 0;
                 let totalWrong = 0;
                 let totalEmpty = 0;
+                let totalLockedQuestions = 0;
                 const subtestStats = [];
 
                 this.session.subtestQueue.forEach(subId => {
                     const subObj = this.subtests.find(s => s.id === subId);
-                    const qList = this.session.allSessionQuestionsBySubtest[subId] || [];
+                    const fullQList = this.session.allSessionQuestionsBySubtest[subId] || [];
+                    const evalList = isPrem ? fullQList : fullQList.slice(0, FREE_TRIAL_LIMIT);
+                    const lockedInSub = Math.max(0, fullQList.length - evalList.length);
+                    totalLockedQuestions += lockedInSub;
+
                     let c = 0, w = 0, e = 0;
 
-                    qList.forEach(q => {
+                    evalList.forEach(q => {
                         totalQuestions++;
                         const ans = this.session.answers[q.id];
                         if (!ans) {
@@ -2341,7 +3072,7 @@
                         }
                     });
 
-                    const acc = qList.length > 0 ? c / qList.length : 0;
+                    const acc = evalList.length > 0 ? c / evalList.length : 0;
                     // Simulasi skor UTBK per subtes (rentang 200 - 1000)
                     const subScore = Math.round(220 + acc * 780);
                     if (!this.subtestBestScores[subId] || subScore > this.subtestBestScores[subId]) {
@@ -2352,7 +3083,8 @@
                         subId,
                         name: subObj.name,
                         shortName: subObj.shortName,
-                        total: qList.length,
+                        total: evalList.length,
+                        lockedCount: lockedInSub,
                         correct: c,
                         wrong: w,
                         empty: e,
@@ -2370,6 +3102,8 @@
                     id: Date.now(),
                     timestamp: new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
                     mode: this.session.mode,
+                    isTrialAttempt: !isPrem,
+                    totalLockedQuestions,
                     subtestQueue: [...this.session.subtestQueue],
                     utbkScore: avgUtbkScore,
                     totalQuestions,
@@ -2396,7 +3130,7 @@
                 document.getElementById('res-wrong-count').textContent = `${attempt.totalWrong} Soal`;
                 document.getElementById('res-empty-count').textContent = `${attempt.totalEmpty} Soal`;
                 document.getElementById('res-accuracy-pct').textContent = `${attempt.overallAccuracy}%`;
-                document.getElementById('res-exam-timestamp').textContent = `Diselesaikan pada ${attempt.timestamp} • Urutan soal diacak`;
+                document.getElementById('res-exam-timestamp').textContent = `Diselesaikan pada ${attempt.timestamp} • ${attempt.isTrialAttempt ? `Mode Free Trial (${FREE_TRIAL_LIMIT} Soal/Subtes)` : 'Akses Penuh Premium'}`;
 
                 let catText = 'Perlu Penguatan Konsep (Skala 0–1000)';
                 if (attempt.utbkScore >= 750) catText = 'Sangat Kompetitif — PTN Favorit (Skala 0–1000)';
@@ -2433,6 +3167,7 @@
                 const attempt = this.activeReviewAttempt;
                 if (!attempt) return;
 
+                const isPrem = this.isPremiumActive();
                 const subFilter = document.getElementById('review-filter-subtest')?.value || 'ALL';
                 const statusFilter = document.getElementById('review-filter-status')?.value || 'ALL';
                 const container = document.getElementById('review-questions-container');
@@ -2442,8 +3177,10 @@
                     if (subFilter !== 'ALL' && subFilter !== subId) return;
                     const subObj = this.subtests.find(s => s.id === subId);
                     const qList = attempt.questionsSnapshot[subId] || [];
+                    const unlockedLimit = isPrem ? qList.length : Math.min(FREE_TRIAL_LIMIT, qList.length);
+                    const lockedCount = Math.max(0, qList.length - unlockedLimit);
 
-                    qList.forEach((q, idx) => {
+                    qList.slice(0, unlockedLimit).forEach((q, idx) => {
                         const userAns = attempt.answersSnapshot[q.id] || null;
                         const isCorrect = userAns === q.key;
                         const isEmpty = !userAns;
@@ -2524,6 +3261,29 @@
                             </div>
                         `);
                     });
+
+                    if (!isPrem && lockedCount > 0 && statusFilter === 'ALL') {
+                        cardsHtml.push(`
+                            <div class="bg-gradient-to-r from-amber-50 to-orange-50/80 dark:from-amber-950/40 dark:to-night-surface rounded-2xl border-2 border-amber-400/70 dark:border-amber-600/60 p-5 sm:p-6 soft-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <div class="space-y-1">
+                                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-900 dark:text-amber-300 text-xs font-extrabold">
+                                        <i class="fa-solid fa-lock"></i>
+                                        <span>${lockedCount} Soal & Pembahasan ${subObj.shortName} Terkunci</span>
+                                    </div>
+                                    <h4 class="font-bold text-sm sm:text-base text-soft-charcoal dark:text-night-text">
+                                        Buka Soal Nomor ${unlockedLimit + 1} s/d ${qList.length} beserta Pembahasan Lengkap
+                                    </h4>
+                                    <p class="text-xs text-soft-slate dark:text-night-subtext">
+                                        Upgrade ke Paket Premium mulai ${this.formatRupiah(this.paymentConfig.weeklyPrice)}/minggu untuk mengakses seluruh soal & pembahasan di 7 subtes.
+                                    </p>
+                                </div>
+                                <button onclick="app.openUpgradeModal()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs sm:text-sm shadow-sm transition-all shrink-0 flex items-center gap-2">
+                                    <i class="fa-solid fa-crown"></i>
+                                    <span>Upgrade ke Premium</span>
+                                </button>
+                            </div>
+                        `);
+                    }
                 });
 
                 container.innerHTML = cardsHtml.length > 0
@@ -3034,6 +3794,532 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                     });
                 });
                 this.subtestBestScores = best;
+            },
+
+            // ---------------- UPGRADE PLAN, PAYWALL & PANEL ADMIN ----------------
+            openExamPaywallModal(targetIdx = 3) {
+                const modal = document.getElementById('modal-exam-paywall');
+                if (!modal) return;
+
+                const qList = this.session.activeQuestions || [];
+                const totalSubQ = qList.length;
+                const priceStr = this.formatRupiah(this.paymentConfig.weeklyPrice);
+
+                const titleEl = document.getElementById('paywall-modal-title');
+                const descEl = document.getElementById('paywall-modal-desc');
+                const priceEl = document.getElementById('paywall-weekly-price-label');
+
+                if (titleEl) {
+                    titleEl.textContent = `Soal Nomor ${targetIdx + 1}–${totalSubQ} Khusus Member Premium`;
+                }
+                if (descEl) {
+                    descEl.innerHTML = `Akun <strong>Free Trial</strong> dibatasi maksimal <strong>${FREE_TRIAL_LIMIT} soal pertama per subtes</strong>. Upgrade ke <strong>Paket Premium</strong> untuk membuka seluruh soal Nomor ${FREE_TRIAL_LIMIT + 1} s/d ${totalSubQ}, seluruh 7 subtes, dan kunci pembahasan lengkap!`;
+                }
+                if (priceEl) {
+                    priceEl.textContent = `${priceStr} / 7 Hari`;
+                }
+
+                modal.classList.remove('hidden');
+            },
+
+            closeExamPaywallModal() {
+                document.getElementById('modal-exam-paywall')?.classList.add('hidden');
+            },
+
+            getPlanDefinition(planKey) {
+                const cfg = this.paymentConfig || DEFAULT_PAYMENT_CONFIG;
+                const plans = {
+                    weekly: {
+                        key: 'weekly',
+                        name: 'Paket Mingguan (7 Hari)',
+                        days: 7,
+                        price: Number(cfg.weeklyPrice) || 7000
+                    },
+                    monthly: {
+                        key: 'monthly',
+                        name: 'Paket Bulanan (30 Hari)',
+                        days: 30,
+                        price: Number(cfg.monthlyPrice) || 20000
+                    },
+                    snbt: {
+                        key: 'snbt',
+                        name: 'Paket Lulus SNBT (90 Hari)',
+                        days: 90,
+                        price: Number(cfg.snbtPrice) || 45000
+                    }
+                };
+                return plans[planKey] || plans.weekly;
+            },
+
+            openUpgradeModal(defaultPlan = '') {
+                if (defaultPlan) this.selectedUpgradePlan = defaultPlan;
+                if (!this.selectedUpgradePlan) this.selectedUpgradePlan = 'weekly';
+                this.renderUpgradeModalContent();
+                document.getElementById('modal-upgrade-plan')?.classList.remove('hidden');
+            },
+
+            closeUpgradeModal() {
+                document.getElementById('modal-upgrade-plan')?.classList.add('hidden');
+            },
+
+            selectUpgradePlan(planKey) {
+                this.selectedUpgradePlan = planKey;
+                this.renderUpgradeModalContent();
+            },
+
+            renderUpgradeModalContent() {
+                const cfg = this.paymentConfig || DEFAULT_PAYMENT_CONFIG;
+                const selected = this.getPlanDefinition(this.selectedUpgradePlan);
+
+                // Update prices on cards
+                const wEl = document.getElementById('upgrade-price-weekly');
+                const mEl = document.getElementById('upgrade-price-monthly');
+                const sEl = document.getElementById('upgrade-price-snbt');
+                if (wEl) wEl.textContent = this.formatRupiah(cfg.weeklyPrice);
+                if (mEl) mEl.textContent = this.formatRupiah(cfg.monthlyPrice);
+                if (sEl) sEl.textContent = this.formatRupiah(cfg.snbtPrice);
+
+                // Highlight selected plan card
+                ['weekly', 'monthly', 'snbt'].forEach(key => {
+                    const card = document.getElementById(`plan-card-${key}`);
+                    const radio = document.getElementById(`plan-radio-${key}`);
+                    if (!card) return;
+                    const isSel = key === selected.key;
+                    card.className = isSel
+                        ? 'cursor-pointer text-left p-4 sm:p-5 rounded-2xl border-2 border-amber-500 bg-amber-50/60 dark:bg-amber-950/30 transition-all relative flex flex-col justify-between gap-4 shadow-md'
+                        : 'cursor-pointer text-left p-4 sm:p-5 rounded-2xl border-2 border-soft-border dark:border-night-border bg-soft-bg/50 dark:bg-night-bg/50 hover:border-amber-400/60 transition-all relative flex flex-col justify-between gap-4';
+                    if (radio) {
+                        radio.className = isSel
+                            ? 'w-5 h-5 rounded-full border-2 border-amber-500 flex items-center justify-center text-amber-500 text-[10px]'
+                            : 'w-5 h-5 rounded-full border-2 border-soft-border dark:border-night-border flex items-center justify-center text-transparent text-[10px]';
+                    }
+                });
+
+                // Current user status banner inside modal
+                const statusBanner = document.getElementById('upgrade-current-status-banner');
+                if (statusBanner) {
+                    if (this.isPremiumActive()) {
+                        statusBanner.classList.remove('hidden');
+                        statusBanner.className = 'p-3.5 rounded-2xl border border-soft-sage/50 bg-soft-sageLight/60 dark:bg-night-sageLight text-xs sm:text-sm font-semibold flex items-center justify-between gap-3 text-soft-charcoal dark:text-night-text';
+                        statusBanner.innerHTML = `
+                            <span><i class="fa-solid fa-circle-check text-soft-sage mr-1.5"></i>Paket Premium Anda aktif hingga <strong>${this.formatDateId(this.subscription.premiumUntil)}</strong> (${this.getRemainingPremiumDays()} hari tersisa). Pembelian baru akan menambah masa aktif.</span>
+                        `;
+                    } else if (this.subscription?.requestedPlan) {
+                        statusBanner.classList.remove('hidden');
+                        statusBanner.className = 'p-3.5 rounded-2xl border border-amber-500/50 bg-amber-500/10 text-xs sm:text-sm font-semibold flex items-center justify-between gap-3 text-amber-900 dark:text-amber-300';
+                        statusBanner.innerHTML = `
+                            <span><i class="fa-solid fa-clock mr-1.5"></i>Permintaan aktivasi <strong>${this.escapeHtml(this.subscription.requestedPlan)}</strong> telah tercatat (${this.escapeHtml(this.subscription.requestedAt || 'Baru saja')}). Begitu Admin mengaktifkan di Panel Admin, akun Anda otomatis terbuka!</span>
+                        `;
+                    } else {
+                        statusBanner.classList.add('hidden');
+                    }
+                }
+
+                // QRIS & Payment Details
+                const qrisImg = document.getElementById('upgrade-qris-img');
+                const qrisEmpty = document.getElementById('upgrade-qris-placeholder');
+                if (qrisImg && qrisEmpty) {
+                    if (cfg.qrisImageUrl && cfg.qrisImageUrl.trim() !== '') {
+                        qrisImg.src = cfg.qrisImageUrl;
+                        qrisImg.classList.remove('hidden');
+                        qrisEmpty.classList.add('hidden');
+                    } else {
+                        qrisImg.src = '';
+                        qrisImg.classList.add('hidden');
+                        qrisEmpty.classList.remove('hidden');
+                    }
+                }
+
+                const merchEl = document.getElementById('upgrade-merchant-label');
+                const selNameEl = document.getElementById('upgrade-selected-name');
+                const selPriceEl = document.getElementById('upgrade-selected-price');
+                const emailEl = document.getElementById('upgrade-user-email');
+                const noteEl = document.getElementById('upgrade-payment-note-display');
+
+                if (merchEl) merchEl.textContent = cfg.merchantName || 'EduSoft SNBT Official';
+                if (selNameEl) selNameEl.textContent = selected.name;
+                if (selPriceEl) selPriceEl.textContent = this.formatRupiah(selected.price);
+                if (emailEl) emailEl.textContent = this.currentUser?.email || '-';
+                if (noteEl) noteEl.textContent = cfg.paymentNote || DEFAULT_PAYMENT_CONFIG.paymentNote;
+            },
+
+            async submitUpgradeRequestAndOpenWA() {
+                if (!this.currentUser) {
+                    this.showToast('Silakan masuk ke akun Anda terlebih dahulu.', 'error');
+                    return;
+                }
+
+                const selected = this.getPlanDefinition(this.selectedUpgradePlan);
+                const nowStr = new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+
+                this.subscription.requestedPlan = `${selected.name} - ${this.formatRupiah(selected.price)}`;
+                this.subscription.requestedAt = nowStr;
+
+                await this.saveData(false);
+                this.renderSubscriptionUI();
+                this.renderUpgradeModalContent();
+
+                const rawWa = String(this.paymentConfig.whatsappNumber || DEFAULT_PAYMENT_CONFIG.whatsappNumber).replace(/[^0-9]/g, '');
+                const waNum = rawWa.startsWith('0') ? '62' + rawWa.slice(1) : (rawWa || '6281229923834');
+                const userName = this.currentUser.displayName || this.currentUser.email.split('@')[0];
+                const message = [
+                    `Halo Admin EduSoft SNBT! 👋`,
+                    `Saya ingin konfirmasi pembayaran *Upgrade Paket Premium*:`,
+                    ``,
+                    `• *Nama:* ${userName}`,
+                    `• *Email Akun:* ${this.currentUser.email}`,
+                    `• *Paket Dipilih:* ${selected.name}`,
+                    `• *Nominal:* ${this.formatRupiah(selected.price)}`,
+                    `• *UID:* ${this.currentUser.uid}`,
+                    ``,
+                    `Berikut saya lampirkan bukti pembayarannya. Mohon bantuannya untuk mengaktifkan akun saya. Terima kasih! 🙏`
+                ].join('\n');
+
+                const waUrl = `https://wa.me/${waNum}?text=${encodeURIComponent(message)}`;
+                window.open(waUrl, '_blank', 'noopener,noreferrer');
+                this.showToast('Permintaan aktivasi tercatat! Membuka WhatsApp Admin...', 'success');
+            },
+
+            // ---------------- PANEL ADMIN & MEMBER MANAGEMENT ----------------
+            async refreshAdminData() {
+                if (!this.isAdmin()) return;
+                try {
+                    const masterSnap = await getDoc(MASTER_DOC_REF);
+                    if (masterSnap.exists()) {
+                        this.applyMasterPayload(masterSnap.data());
+                    }
+                    this.renderAdminPanel();
+                    this.renderSubscriptionUI();
+                    this.showToast('Data member & konfigurasi berhasil dimuat ulang dari Cloud.', 'success');
+                } catch (err) {
+                    console.error('Gagal memuat ulang data admin:', err);
+                    this.showToast('Gagal memuat ulang data dari Cloud.', 'error');
+                }
+            },
+
+            renderAdminPanel() {
+                if (!this.isAdmin()) return;
+
+                // Populate form inputs with current paymentConfig
+                const cfg = this.paymentConfig || DEFAULT_PAYMENT_CONFIG;
+                const waInput = document.getElementById('admin-cfg-wa');
+                const merchInput = document.getElementById('admin-cfg-merchant');
+                const noteInput = document.getElementById('admin-cfg-note');
+                const qrisUrlInput = document.getElementById('admin-cfg-qris-url');
+                const wPriceInput = document.getElementById('admin-price-weekly');
+                const mPriceInput = document.getElementById('admin-price-monthly');
+                const sPriceInput = document.getElementById('admin-price-snbt');
+
+                if (waInput && document.activeElement !== waInput) waInput.value = cfg.whatsappNumber || '';
+                if (merchInput && document.activeElement !== merchInput) merchInput.value = cfg.merchantName || '';
+                if (noteInput && document.activeElement !== noteInput) noteInput.value = cfg.paymentNote || '';
+                if (qrisUrlInput && document.activeElement !== qrisUrlInput) {
+                    qrisUrlInput.value = (cfg.qrisImageUrl && !cfg.qrisImageUrl.startsWith('data:')) ? cfg.qrisImageUrl : '';
+                }
+                if (wPriceInput && document.activeElement !== wPriceInput) wPriceInput.value = cfg.weeklyPrice || 7000;
+                if (mPriceInput && document.activeElement !== mPriceInput) mPriceInput.value = cfg.monthlyPrice || 20000;
+                if (sPriceInput && document.activeElement !== sPriceInput) sPriceInput.value = cfg.snbtPrice || 45000;
+
+                // QRIS Preview in Admin
+                const previewImg = document.getElementById('admin-qris-preview-img');
+                const emptyText = document.getElementById('admin-qris-empty-text');
+                if (previewImg && emptyText) {
+                    if (cfg.qrisImageUrl && cfg.qrisImageUrl.trim() !== '') {
+                        previewImg.src = cfg.qrisImageUrl;
+                        previewImg.classList.remove('hidden');
+                        emptyText.classList.add('hidden');
+                    } else {
+                        previewImg.src = '';
+                        previewImg.classList.add('hidden');
+                        emptyText.classList.remove('hidden');
+                    }
+                }
+
+                // Member stats & table
+                const now = Date.now();
+                const allUsers = Object.values(this.usersIndex || {}).filter(Boolean);
+                allUsers.sort((a, b) => {
+                    const aPend = (a.requestedPlan && !(Number(a.premiumUntil || 0) > now)) ? 1 : 0;
+                    const bPend = (b.requestedPlan && !(Number(b.premiumUntil || 0) > now)) ? 1 : 0;
+                    if (aPend !== bPend) return bPend - aPend;
+                    return Number(b.updatedAt || 0) - Number(a.updatedAt || 0);
+                });
+
+                let countPrem = 0;
+                let countPend = 0;
+                let countFree = 0;
+
+                allUsers.forEach(u => {
+                    const isPrem = Number(u.premiumUntil || 0) > now || OWNER_EMAILS.includes(String(u.email || '').toLowerCase());
+                    if (isPrem) countPrem++;
+                    else if (u.requestedPlan) countPend++;
+                    else countFree++;
+                });
+
+                const statTotal = document.getElementById('admin-stat-total-users');
+                const statPrem = document.getElementById('admin-stat-premium-users');
+                const statPend = document.getElementById('admin-stat-pending-users');
+                const statFree = document.getElementById('admin-stat-free-users');
+
+                if (statTotal) statTotal.textContent = allUsers.length;
+                if (statPrem) statPrem.textContent = countPrem;
+                if (statPend) statPend.textContent = countPend;
+                if (statFree) statFree.textContent = countFree;
+
+                // Filter & Search
+                const filterStatus = document.getElementById('admin-user-filter')?.value || 'ALL';
+                const searchQ = (document.getElementById('admin-user-search')?.value || '').toLowerCase().trim();
+
+                const filtered = allUsers.filter(u => {
+                    const isOwner = OWNER_EMAILS.includes(String(u.email || '').toLowerCase());
+                    const isPrem = isOwner || Number(u.premiumUntil || 0) > now;
+                    const isPend = !isPrem && !!u.requestedPlan;
+
+                    if (filterStatus === 'PENDING' && !isPend) return false;
+                    if (filterStatus === 'PREMIUM' && !isPrem) return false;
+                    if (filterStatus === 'FREE' && (isPrem || isPend)) return false;
+
+                    if (searchQ) {
+                        const matchEmail = String(u.email || '').toLowerCase().includes(searchQ);
+                        const matchName = String(u.displayName || '').toLowerCase().includes(searchQ);
+                        return matchEmail || matchName;
+                    }
+                    return true;
+                });
+
+                const listEl = document.getElementById('admin-users-list');
+                if (!listEl) return;
+
+                if (filtered.length === 0) {
+                    listEl.innerHTML = `<div class="p-8 text-center rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-slate text-xs sm:text-sm">Belum ada peserta yang sesuai dengan filter pencarian.</div>`;
+                    return;
+                }
+
+                listEl.innerHTML = filtered.map(u => {
+                    const isOwner = OWNER_EMAILS.includes(String(u.email || '').toLowerCase());
+                    const untilMs = Number(u.premiumUntil || 0);
+                    const isPrem = isOwner || untilMs > now;
+                    const remDays = untilMs > now ? Math.ceil((untilMs - now) / (1000 * 60 * 60 * 24)) : 0;
+
+                    let badgeHtml = '';
+                    if (isOwner) {
+                        badgeHtml = `<span class="px-2.5 py-0.5 rounded-full bg-soft-sage text-white text-[11px] font-extrabold">🛡️ Owner / Admin</span>`;
+                    } else if (isPrem) {
+                        badgeHtml = `<span class="px-2.5 py-0.5 rounded-full bg-emerald-600 text-white text-[11px] font-extrabold">👑 Premium (${remDays} Hari • s/d ${this.formatDateId(untilMs)})</span>`;
+                    } else if (u.requestedPlan) {
+                        badgeHtml = `<span class="px-2.5 py-0.5 rounded-full bg-amber-500 text-white text-[11px] font-extrabold animate-pulse">⏳ Menunggu Aktivasi: ${this.escapeHtml(u.requestedPlan)}</span>`;
+                    } else {
+                        badgeHtml = `<span class="px-2.5 py-0.5 rounded-full bg-soft-muted dark:bg-night-muted text-soft-slate dark:text-night-subtext text-[11px] font-bold">Free Trial</span>`;
+                    }
+
+                    return `
+                        <div class="p-4 rounded-2xl bg-soft-bg dark:bg-night-bg border ${(!isPrem && u.requestedPlan) ? 'border-2 border-amber-500/70' : 'border-soft-border dark:border-night-border'} flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                            <div class="space-y-1">
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <span class="font-bold text-sm text-soft-charcoal dark:text-night-text">${this.escapeHtml(u.displayName || 'Peserta')}</span>
+                                    <span class="text-xs font-mono text-soft-slate dark:text-night-subtext">${this.escapeHtml(u.email || '-')}</span>
+                                    ${badgeHtml}
+                                </div>
+                                <div class="text-[11px] text-soft-slate dark:text-night-subtext flex flex-wrap items-center gap-x-4 gap-y-1">
+                                    <span>Latihan: <strong>${u.attemptsCount || 0}x</strong></span>
+                                    <span>Skor Terbaik: <strong>${u.bestScore || '—'}</strong></span>
+                                    <span>Login Terakhir: ${this.escapeHtml(u.lastLogin || '-')}</span>
+                                    ${u.requestedAt ? `<span class="text-amber-600 dark:text-amber-400 font-semibold">Request Upgrade: ${this.escapeHtml(u.requestedAt)}</span>` : ''}
+                                </div>
+                            </div>
+
+                            <div class="flex flex-wrap items-center gap-1.5 shrink-0">
+                                <button onclick="app.adminActivateUser('${u.uid}', 7, 'Paket Mingguan (7 Hari)')" class="px-2.5 py-1.5 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white font-bold text-xs transition-all" title="Aktifkan / Tambah 7 Hari">
+                                    +7 Hari
+                                </button>
+                                <button onclick="app.adminActivateUser('${u.uid}', 30, 'Paket Bulanan (30 Hari)')" class="px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-all" title="Aktifkan / Tambah 30 Hari">
+                                    +30 Hari
+                                </button>
+                                <button onclick="app.adminActivateUser('${u.uid}', 90, 'Paket Lulus SNBT (90 Hari)')" class="px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs transition-all" title="Aktifkan / Tambah 90 Hari">
+                                    +90 Hari
+                                </button>
+                                <button onclick="app.adminPromptCustomDays('${u.uid}')" class="px-2.5 py-1.5 rounded-xl bg-soft-surface dark:bg-night-surface hover:bg-soft-muted border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text font-bold text-xs transition-all" title="Input Durasi Hari Custom">
+                                    Custom
+                                </button>
+                                ${(!isOwner && (isPrem || u.requestedPlan)) ? `
+                                    <button onclick="app.adminActivateUser('${u.uid}', 0, 'free')" class="px-2.5 py-1.5 rounded-xl bg-soft-terraLight hover:bg-soft-terra hover:text-white text-soft-terra font-bold text-xs transition-all" title="Cabut Status Premium / Reset ke Free Trial">
+                                        Reset Free
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            },
+
+            async adminActivateUser(uid, addDays, planLabel = 'Premium') {
+                if (!this.isAdmin() || !uid) return;
+
+                try {
+                    const userRef = doc(db, "uangku_data", `edusoft_snbt_${uid}`);
+                    const userSnap = await getDoc(userRef);
+                    const existingUserDoc = userSnap.exists() ? userSnap.data() : {};
+                    const currentIndexEntry = (this.usersIndex && this.usersIndex[uid]) ? this.usersIndex[uid] : {};
+
+                    const now = Date.now();
+                    let newUntil = 0;
+                    let newPlanName = 'free';
+
+                    if (Number(addDays) > 0) {
+                        const currentUntil = Math.max(
+                            Number(existingUserDoc?.subscription?.premiumUntil || 0),
+                            Number(currentIndexEntry?.premiumUntil || 0)
+                        );
+                        const baseTime = currentUntil > now ? currentUntil : now;
+                        newUntil = baseTime + (Number(addDays) * 24 * 60 * 60 * 1000);
+                        newPlanName = planLabel;
+                    }
+
+                    const newSubObj = {
+                        plan: newUntil > now ? newPlanName : 'free',
+                        premiumUntil: newUntil,
+                        requestedPlan: '',
+                        requestedAt: '',
+                        activatedBy: this.currentUser?.email || 'Admin',
+                        activatedAt: new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })
+                    };
+
+                    // 1. Update dokumen milik user tersebut
+                    await setDoc(userRef, {
+                        ...existingUserDoc,
+                        subscription: newSubObj,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+
+                    // 2. Update indeks di dokumen Master
+                    if (!this.usersIndex) this.usersIndex = {};
+                    this.usersIndex[uid] = {
+                        ...currentIndexEntry,
+                        uid,
+                        email: currentIndexEntry.email || existingUserDoc.userEmail || '',
+                        displayName: currentIndexEntry.displayName || existingUserDoc.userName || 'Peserta',
+                        plan: newSubObj.plan,
+                        premiumUntil: newUntil,
+                        requestedPlan: '',
+                        requestedAt: '',
+                        updatedAt: Date.now()
+                    };
+
+                    await setDoc(MASTER_DOC_REF, {
+                        usersIndex: this.usersIndex,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+
+                    // Jika yang diubah adalah akun sendiri
+                    if (this.currentUser && this.currentUser.uid === uid) {
+                        this.subscription = newSubObj;
+                    }
+
+                    this.renderAdminPanel();
+                    this.renderSubscriptionUI();
+
+                    if (newUntil > now) {
+                        this.showToast(`Berhasil mengaktifkan ${planLabel} hingga ${this.formatDateId(newUntil)}!`, 'success');
+                    } else {
+                        this.showToast('Status member telah direset kembali ke Free Trial.', 'warning');
+                    }
+                } catch (err) {
+                    console.error('Gagal mengubah status member:', err);
+                    this.showToast('Gagal menyimpan perubahan status member ke Cloud.', 'error');
+                }
+            },
+
+            adminPromptCustomDays(uid) {
+                const input = prompt('Masukkan jumlah hari aktif Premium yang ingin ditambahkan (contoh: 14 atau 60):', '14');
+                if (input === null) return;
+                const days = parseInt(input, 10);
+                if (isNaN(days) || days <= 0) {
+                    this.showToast('Jumlah hari harus berupa angka positif.', 'error');
+                    return;
+                }
+                this.adminActivateUser(uid, days, `Paket Custom (${days} Hari)`);
+            },
+
+            handleAdminQrisUpload(event) {
+                const file = event?.target?.files?.[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        // Kompres gambar QRIS ke ukuran maks 650px agar ringan disimpan di Firestore
+                        const canvas = document.createElement('canvas');
+                        const maxDim = 650;
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > maxDim || h > maxDim) {
+                            if (w > h) {
+                                h = Math.round((h * maxDim) / w);
+                                w = maxDim;
+                            } else {
+                                w = Math.round((w * maxDim) / h);
+                                h = maxDim;
+                            }
+                        }
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.84);
+
+                        this.paymentConfig.qrisImageUrl = dataUrl;
+                        const previewImg = document.getElementById('admin-qris-preview-img');
+                        const emptyText = document.getElementById('admin-qris-empty-text');
+                        if (previewImg && emptyText) {
+                            previewImg.src = dataUrl;
+                            previewImg.classList.remove('hidden');
+                            emptyText.classList.add('hidden');
+                        }
+                        this.showToast('Gambar QRIS berhasil dimuat. Klik "Simpan Konfigurasi ke Cloud" untuk menyimpan.', 'success');
+                    };
+                    img.src = ev.target.result;
+                };
+                reader.readAsDataURL(file);
+            },
+
+            clearAdminQrisImage() {
+                this.paymentConfig.qrisImageUrl = '';
+                const urlInput = document.getElementById('admin-cfg-qris-url');
+                if (urlInput) urlInput.value = '';
+                const previewImg = document.getElementById('admin-qris-preview-img');
+                const emptyText = document.getElementById('admin-qris-empty-text');
+                if (previewImg && emptyText) {
+                    previewImg.src = '';
+                    previewImg.classList.add('hidden');
+                    emptyText.classList.remove('hidden');
+                }
+            },
+
+            async saveAdminPaymentConfig() {
+                if (!this.isAdmin()) return;
+
+                const waVal = document.getElementById('admin-cfg-wa')?.value.trim() || DEFAULT_PAYMENT_CONFIG.whatsappNumber;
+                const merchVal = document.getElementById('admin-cfg-merchant')?.value.trim() || DEFAULT_PAYMENT_CONFIG.merchantName;
+                const noteVal = document.getElementById('admin-cfg-note')?.value.trim() || DEFAULT_PAYMENT_CONFIG.paymentNote;
+                const qrisUrlVal = document.getElementById('admin-cfg-qris-url')?.value.trim() || '';
+                const wPrice = Math.max(1000, Number(document.getElementById('admin-price-weekly')?.value) || 7000);
+                const mPrice = Math.max(1000, Number(document.getElementById('admin-price-monthly')?.value) || 20000);
+                const sPrice = Math.max(1000, Number(document.getElementById('admin-price-snbt')?.value) || 45000);
+
+                this.paymentConfig = {
+                    whatsappNumber: waVal,
+                    merchantName: merchVal,
+                    paymentNote: noteVal,
+                    qrisImageUrl: qrisUrlVal || this.paymentConfig.qrisImageUrl || '',
+                    weeklyPrice: wPrice,
+                    monthlyPrice: mPrice,
+                    snbtPrice: sPrice
+                };
+
+                await this.saveData(true);
+                this.renderAdminPanel();
+                this.showToast('Konfigurasi QRIS, WhatsApp & Harga Paket berhasil disimpan ke Cloud!', 'success');
             },
 
             // ---------------- UTILITIES (MODALS & TOASTS) ----------------
