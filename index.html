@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduSoft SNBT — CBT Simulator & App Builder</title>
+    <!-- PWA Installability & Mobile App Meta -->
+    <meta name="theme-color" content="#3D6B58">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="EduSoft SNBT">
+    <link rel="manifest" href="./manifest-snbt.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="./pwa-snbt/icon-192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="./pwa-snbt/icon-192.png">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Plus Jakarta Sans (UI) & Lora (Reading Passages) & JetBrains Mono (Timer/Code) -->
@@ -204,10 +213,16 @@
             </form>
 
             <!-- Switch Mode Footer -->
-            <div class="pt-3 border-t border-soft-border dark:border-night-border text-center text-xs sm:text-sm text-soft-slate dark:text-night-subtext">
-                <span id="auth-switch-text">Belum memiliki akun peserta?</span>
-                <button type="button" id="auth-switch-btn" onclick="app.toggleAuthMode()" class="ml-1 text-soft-sage dark:text-night-sage font-extrabold hover:underline">
-                    Daftar di sini
+            <div class="pt-3 border-t border-soft-border dark:border-night-border text-center text-xs sm:text-sm text-soft-slate dark:text-night-subtext space-y-2.5">
+                <div>
+                    <span id="auth-switch-text">Belum memiliki akun peserta?</span>
+                    <button type="button" id="auth-switch-btn" onclick="app.toggleAuthMode()" class="ml-1 text-soft-sage dark:text-night-sage font-extrabold hover:underline">
+                        Daftar di sini
+                    </button>
+                </div>
+                <button type="button" id="auth-install-pwa" onclick="window.installPwaApp()" class="hidden w-full py-2.5 px-4 rounded-xl border border-soft-sageBorder dark:border-night-border bg-soft-sageLight/70 dark:bg-night-sageLight/60 text-soft-sage dark:text-night-sage text-xs font-bold hover:bg-soft-sage hover:text-white transition-all items-center justify-center gap-2">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                    <span>Instal Sebagai Aplikasi di HP</span>
                 </button>
             </div>
         </div>
@@ -260,6 +275,12 @@
                         <div class="text-xs font-bold text-soft-charcoal dark:text-night-text truncate" id="user-display-name">Peserta</div>
                     </div>
                 </div>
+
+                <!-- Install PWA App Button (muncul otomatis saat browser siap menginstal) -->
+                <button onclick="window.installPwaApp()" id="btn-install-pwa" class="hidden px-2.5 sm:px-3 py-2 h-9 sm:h-10 rounded-xl border border-soft-sageBorder bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage hover:bg-soft-sage hover:text-white text-xs sm:text-sm font-bold transition-all items-center gap-1.5" title="Instal sebagai Aplikasi di HP/Perangkat">
+                    <i class="fa-solid fa-download"></i>
+                    <span class="hidden lg:inline">Instal App</span>
+                </button>
 
                 <!-- Theme Toggle -->
                 <button onclick="app.toggleTheme()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-soft-border dark:border-night-border flex items-center justify-center text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted transition-colors" title="Ganti Mode Siang / Malam">
@@ -3062,6 +3083,65 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
         // Ekspos ke global window agar seluruh handler onclick HTML dapat mengakses app
         window.app = app;
         app.init();
+
+        // ==================== PWA SERVICE WORKER & INSTALL PROMPT ====================
+        let deferredInstallPrompt = null;
+        const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+        function setInstallButtonsVisible(visible) {
+            ['btn-install-pwa', 'auth-install-pwa'].forEach((id) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (visible) {
+                    el.classList.remove('hidden');
+                    el.classList.add('inline-flex');
+                } else {
+                    el.classList.add('hidden');
+                    el.classList.remove('inline-flex');
+                }
+            });
+        }
+
+        window.addEventListener('beforeinstallprompt', (event) => {
+            event.preventDefault();
+            deferredInstallPrompt = event;
+            if (!isStandalone) setInstallButtonsVisible(true);
+        });
+
+        window.addEventListener('appinstalled', () => {
+            deferredInstallPrompt = null;
+            setInstallButtonsVisible(false);
+            app.showToast('EduSoft SNBT berhasil diinstal sebagai aplikasi!');
+        });
+
+        if (isIos && !isStandalone) {
+            setInstallButtonsVisible(true);
+        }
+
+        window.installPwaApp = async function () {
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                const choice = await deferredInstallPrompt.userChoice;
+                if (choice.outcome === 'accepted') {
+                    deferredInstallPrompt = null;
+                    setInstallButtonsVisible(false);
+                }
+                return;
+            }
+            if (isIos && !isStandalone) {
+                alert('Untuk menginstal di iPhone/iPad: ketuk tombol Bagikan (ikon kotak dengan panah ke atas) di Safari, lalu pilih "Tambah ke Layar Utama" (Add to Home Screen).');
+                return;
+            }
+            app.showToast('Buka menu browser (⋮) lalu pilih "Instal aplikasi".', 'warning');
+        };
+
+        if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw-snbt.js', { scope: './' })
+                    .catch((err) => console.warn('Pendaftaran Service Worker dilewati:', err));
+            });
+        }
     </script>
 </body>
 </html>
