@@ -114,44 +114,162 @@
 </head>
 <body class="min-h-screen flex flex-col selection:bg-soft-sage selection:text-white">
 
+    <!-- ==================== AUTHENTICATION OVERLAY (LOGIN & DAFTAR) ==================== -->
+    <div id="auth-overlay" class="fixed inset-0 z-[100] bg-soft-bg dark:bg-night-bg flex items-center justify-center p-4 transition-opacity duration-300 overflow-y-auto">
+        <!-- Decorative Soft Background Blobs -->
+        <div class="fixed -top-24 -left-24 w-80 h-80 rounded-full bg-soft-sageLight/80 dark:bg-night-sageLight/30 blur-3xl pointer-events-none"></div>
+        <div class="fixed -bottom-24 -right-24 w-80 h-80 rounded-full bg-soft-amberLight/80 dark:bg-night-sageLight/20 blur-3xl pointer-events-none"></div>
+
+        <!-- Theme Toggle on Auth Screen -->
+        <button type="button" onclick="app.toggleTheme()" class="fixed top-5 right-5 z-20 w-10 h-10 rounded-xl bg-soft-surface dark:bg-night-surface border border-soft-border dark:border-night-border flex items-center justify-center text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted soft-shadow transition-colors" title="Ganti Mode Siang / Malam">
+            <i id="auth-theme-icon" class="fa-solid fa-moon"></i>
+        </button>
+
+        <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-6 sm:p-9 w-full max-w-md soft-shadow relative z-10 space-y-6 animate-fade">
+            <!-- Brand Header -->
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 rounded-2xl bg-soft-sage mx-auto flex items-center justify-center text-white text-2xl shadow-md">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage text-[11px] font-bold uppercase tracking-wider border border-soft-sageBorder/50">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Cloud Sync Database
+                </div>
+                <h1 class="text-2xl font-extrabold text-soft-charcoal dark:text-night-text tracking-tight">
+                    EduSoft <span class="text-soft-sage dark:text-night-sage">SNBT</span>
+                </h1>
+                <p class="text-xs sm:text-sm text-soft-slate dark:text-night-subtext" id="auth-subtitle">
+                    Masuk ke akun Anda untuk menyinkronkan progres latihan & bank soal di Cloud
+                </p>
+            </div>
+
+            <!-- Mode Tabs (Masuk vs Daftar) -->
+            <div class="grid grid-cols-2 p-1 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border">
+                <button type="button" id="auth-tab-login" onclick="app.setAuthMode('login')" class="py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all bg-soft-sage text-white shadow-sm">
+                    <i class="fa-solid fa-right-to-bracket mr-1.5"></i>Masuk
+                </button>
+                <button type="button" id="auth-tab-register" onclick="app.setAuthMode('register')" class="py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all text-soft-slate dark:text-night-subtext hover:text-soft-charcoal dark:hover:text-night-text">
+                    <i class="fa-solid fa-user-plus mr-1.5"></i>Daftar Akun
+                </button>
+            </div>
+
+            <!-- Error Alert Box -->
+            <div id="auth-error" class="hidden p-3.5 rounded-2xl bg-soft-terraLight dark:bg-red-950/50 border border-soft-terra/40 text-soft-terra dark:text-red-300 text-xs sm:text-sm font-semibold flex items-start gap-2.5">
+                <i class="fa-solid fa-circle-exclamation text-base mt-0.5 shrink-0"></i>
+                <span id="auth-error-text">Email atau password tidak sesuai. Silakan periksa kembali.</span>
+            </div>
+
+            <!-- Auth Form -->
+            <form id="auth-form" class="space-y-4">
+                <!-- Name Input (Only visible in Register Mode) -->
+                <div id="auth-name-wrap" class="hidden">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-soft-slate dark:text-night-subtext mb-1.5">Nama Lengkap Peserta</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-soft-slate text-sm"></i>
+                        <input type="text" id="auth-name" placeholder="Contoh: Veno Putra" class="w-full pl-10 pr-4 py-3 rounded-xl text-sm bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text focus:outline-none focus:border-soft-sage transition-colors">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-soft-slate dark:text-night-subtext mb-1.5">Alamat Email</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-soft-slate text-sm"></i>
+                        <input type="email" id="auth-email" required placeholder="nama@email.com" class="w-full pl-10 pr-4 py-3 rounded-xl text-sm bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text focus:outline-none focus:border-soft-sage transition-colors">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-soft-slate dark:text-night-subtext mb-1.5">Password</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-soft-slate text-sm"></i>
+                        <input type="password" id="auth-password" required minlength="6" placeholder="Minimal 6 karakter" class="w-full pl-10 pr-11 py-3 rounded-xl text-sm bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text focus:outline-none focus:border-soft-sage transition-colors">
+                        <button type="button" id="toggle-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-soft-slate hover:text-soft-sage p-1 transition-colors" title="Tampilkan / Sembunyikan Password">
+                            <i class="fa-regular fa-eye" id="eye-icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Confirm Password Input (Only visible in Register Mode) -->
+                <div id="auth-confirm-wrap" class="hidden">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-soft-slate dark:text-night-subtext mb-1.5">Konfirmasi Password</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-shield-halved absolute left-3.5 top-1/2 -translate-y-1/2 text-soft-slate text-sm"></i>
+                        <input type="password" id="auth-confirm-password" placeholder="Ulangi password Anda" class="w-full pl-10 pr-4 py-3 rounded-xl text-sm bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text focus:outline-none focus:border-soft-sage transition-colors">
+                    </div>
+                </div>
+
+                <button type="submit" id="auth-submit-btn" class="w-full py-3.5 px-5 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white font-bold text-sm shadow-sm transition-all flex items-center justify-center gap-2 mt-2">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Masuk Sekarang</span>
+                </button>
+            </form>
+
+            <!-- Switch Mode Footer -->
+            <div class="pt-3 border-t border-soft-border dark:border-night-border text-center text-xs sm:text-sm text-soft-slate dark:text-night-subtext">
+                <span id="auth-switch-text">Belum memiliki akun peserta?</span>
+                <button type="button" id="auth-switch-btn" onclick="app.toggleAuthMode()" class="ml-1 text-soft-sage dark:text-night-sage font-extrabold hover:underline">
+                    Daftar di sini
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- ==================== GLOBAL HEADER (NON-EXAM VIEWS) ==================== -->
     <header id="main-header" class="sticky top-0 z-30 bg-soft-surface/95 dark:bg-night-surface/95 backdrop-blur-md border-b border-soft-border dark:border-night-border transition-colors">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-3">
             <!-- Brand Logo -->
-            <div class="flex items-center gap-3 cursor-pointer" onclick="app.navigate('dashboard')">
+            <div class="flex items-center gap-3 cursor-pointer shrink-0" onclick="app.navigate('dashboard')">
                 <div class="w-10 h-10 rounded-xl bg-soft-sage flex items-center justify-center text-white shadow-sm">
                     <i class="fa-solid fa-seedling text-lg"></i>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <span class="font-bold text-lg tracking-tight text-soft-charcoal dark:text-night-text">EduSoft <span class="text-soft-sage dark:text-night-sage">SNBT</span></span>
-                        <span class="hidden sm:inline-block text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage border border-soft-sageBorder/50">Soft Learn CBT</span>
+                        <span class="font-bold text-base sm:text-lg tracking-tight text-soft-charcoal dark:text-night-text">EduSoft <span class="text-soft-sage dark:text-night-sage">SNBT</span></span>
+                        <span id="cloud-sync-badge" class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage border border-soft-sageBorder/50" title="Status Sinkronisasi Firebase Cloud">
+                            <i class="fa-solid fa-cloud-check"></i>
+                            <span class="hidden sm:inline" id="cloud-sync-text">Cloud Sync</span>
+                        </span>
                     </div>
-                    <p class="text-xs text-soft-slate dark:text-night-subtext hidden sm:block">Simulator UTBK-SNBT & Question App Builder</p>
+                    <p class="text-xs text-soft-slate dark:text-night-subtext hidden xl:block">Simulator UTBK-SNBT & Question App Builder</p>
                 </div>
             </div>
 
-            <!-- Navigation Links -->
+            <!-- Navigation Links & User Profile -->
             <nav class="flex items-center gap-1.5 sm:gap-2">
-                <button onclick="app.navigate('dashboard')" id="nav-btn-dashboard" class="px-3.5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-soft-sage text-white">
+                <button onclick="app.navigate('dashboard')" id="nav-btn-dashboard" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 bg-soft-sage text-white">
                     <i class="fa-solid fa-house-laptop"></i>
-                    <span class="hidden md:inline">Dashboard Ujian</span>
+                    <span class="hidden md:inline">Dashboard</span>
                 </button>
-                <button onclick="app.navigate('builder')" id="nav-btn-builder" class="px-3.5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted">
+                <button onclick="app.navigate('builder')" id="nav-btn-builder" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted">
                     <i class="fa-solid fa-screwdriver-wrench"></i>
-                    <span class="hidden md:inline">App Builder Soal</span>
+                    <span class="hidden md:inline">App Builder</span>
                     <span id="header-question-badge" class="px-1.5 py-0.5 text-xs rounded-md bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage font-bold">130</span>
                 </button>
-                <button onclick="app.navigate('history')" id="nav-btn-history" class="px-3.5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted">
+                <button onclick="app.navigate('history')" id="nav-btn-history" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted">
                     <i class="fa-solid fa-chart-line"></i>
-                    <span class="hidden md:inline">Riwayat & Evaluasi</span>
+                    <span class="hidden md:inline">Riwayat</span>
                 </button>
 
-                <div class="h-6 w-[1px] bg-soft-border dark:bg-night-border mx-1"></div>
+                <div class="h-6 w-[1px] bg-soft-border dark:bg-night-border mx-0.5 sm:mx-1"></div>
+
+                <!-- User Info Pill -->
+                <div id="user-profile-badge" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border max-w-[180px]" title="Akun Peserta Aktif">
+                    <div class="w-6 h-6 rounded-lg bg-soft-sage text-white text-xs font-extrabold flex items-center justify-center shrink-0" id="user-avatar-initial">
+                        U
+                    </div>
+                    <div class="truncate">
+                        <div class="text-xs font-bold text-soft-charcoal dark:text-night-text truncate" id="user-display-name">Peserta</div>
+                    </div>
+                </div>
 
                 <!-- Theme Toggle -->
-                <button onclick="app.toggleTheme()" class="w-10 h-10 rounded-xl border border-soft-border dark:border-night-border flex items-center justify-center text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted transition-colors" title="Ganti Mode Siang / Malam">
+                <button onclick="app.toggleTheme()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-soft-border dark:border-night-border flex items-center justify-center text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted transition-colors" title="Ganti Mode Siang / Malam">
                     <i id="theme-icon" class="fa-solid fa-moon"></i>
+                </button>
+
+                <!-- Logout Button -->
+                <button onclick="app.confirmLogout()" id="btn-logout" class="px-3 py-2 h-9 sm:h-10 rounded-xl border border-soft-terra/30 bg-soft-terraLight/70 dark:bg-red-950/40 hover:bg-soft-terra hover:text-white text-soft-terra dark:text-red-300 text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5" title="Keluar dari Akun (Logout)">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span class="hidden lg:inline">Keluar</span>
                 </button>
             </nav>
         </div>
@@ -217,7 +335,7 @@
                                 <div class="text-sm font-semibold text-soft-charcoal dark:text-night-text">Acak Soal Tiap Subtes</div>
                                 <div class="text-xs text-soft-slate dark:text-night-subtext">Mengacak urutan soal & menjaga teks bacaan tetap menyatu dengan soalnya</div>
                             </div>
-                            <input type="checkbox" id="cfg-shuffle-questions" checked class="mt-1 w-5 h-5 accent-[#3D6B58] rounded cursor-pointer">
+                            <input type="checkbox" id="cfg-shuffle-questions" onchange="app.onConfigToggleChange()" checked class="mt-1 w-5 h-5 accent-[#3D6B58] rounded cursor-pointer">
                         </label>
 
                         <!-- Setting 2: Shuffle Options A-E -->
@@ -226,7 +344,7 @@
                                 <div class="text-sm font-semibold text-soft-charcoal dark:text-night-text">Acak Posisi Opsi Jawaban (A–E)</div>
                                 <div class="text-xs text-soft-slate dark:text-night-subtext">Mencegah hafal posisi abjad kunci jawaban saat mengerjakan ulang</div>
                             </div>
-                            <input type="checkbox" id="cfg-shuffle-options" class="mt-1 w-5 h-5 accent-[#3D6B58] rounded cursor-pointer">
+                            <input type="checkbox" id="cfg-shuffle-options" onchange="app.onConfigToggleChange()" class="mt-1 w-5 h-5 accent-[#3D6B58] rounded cursor-pointer">
                         </label>
 
                         <!-- Setting 3: Strict Blocking Timer -->
@@ -235,7 +353,7 @@
                                 <div class="text-sm font-semibold text-soft-charcoal dark:text-night-text">Timer Ketat SNBT (Blocking Time)</div>
                                 <div class="text-xs text-soft-slate dark:text-night-subtext">Pindah otomatis saat waktu subtes habis sesuai standar UTBK</div>
                             </div>
-                            <input type="checkbox" id="cfg-strict-timer" checked class="mt-1 w-5 h-5 accent-[#3D6B58] rounded cursor-pointer">
+                            <input type="checkbox" id="cfg-strict-timer" onchange="app.onConfigToggleChange()" checked class="mt-1 w-5 h-5 accent-[#3D6B58] rounded cursor-pointer">
                         </label>
 
                         <div class="pt-2 space-y-2.5">
@@ -707,14 +825,20 @@
 
         <!-- ==================== VIEW 6: ATTEMPT HISTORY ==================== -->
         <section id="view-history" class="hidden max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 animate-fade">
-            <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-6 soft-shadow flex items-center justify-between">
+            <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-6 soft-shadow flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <h1 class="text-2xl font-extrabold text-soft-charcoal dark:text-night-text">Riwayat Pengerjaan & Analitik Skor</h1>
-                    <p class="text-xs sm:text-sm text-soft-slate dark:text-night-subtext">Pantau perkembangan skor simulasi SNBT Anda dari waktu ke waktu</p>
+                    <p class="text-xs sm:text-sm text-soft-slate dark:text-night-subtext">Tersinkronisasi otomatis ke akun Cloud Firebase Anda</p>
                 </div>
-                <button onclick="app.navigate('dashboard')" class="px-4 py-2 rounded-xl bg-soft-sage text-white font-bold text-xs sm:text-sm">
-                    Mulai Latihan Baru
-                </button>
+                <div class="flex items-center gap-2">
+                    <button onclick="app.confirmClearHistory()" class="px-3.5 py-2 rounded-xl border border-soft-terra/30 bg-soft-terraLight/60 hover:bg-soft-terra hover:text-white text-soft-terra font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>Bersihkan Riwayat</span>
+                    </button>
+                    <button onclick="app.navigate('dashboard')" class="px-4 py-2 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white font-bold text-xs sm:text-sm transition-all">
+                        Mulai Latihan Baru
+                    </button>
+                </div>
             </div>
 
             <div id="history-list-container" class="space-y-3">
@@ -826,8 +950,33 @@
     <!-- ==================== TOAST NOTIFICATION ==================== -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- ==================== APPLICATION SCRIPT & 130 QUESTIONS DATASET ==================== -->
-    <script>
+    <!-- ==================== APPLICATION SCRIPT, FIREBASE CLOUD & 130 QUESTIONS DATASET ==================== -->
+    <script type="module">
+        // 1. Import Firebase SDK versi CDN Modular
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // 2. Konfigurasi Firebase milik Anda
+        const firebaseConfig = {
+            apiKey: "AIzaSyBRqtDo6I0JRBxV-2Cr4D0W8xRr0rDYXpI",
+            authDomain: "keuangan-project-91d0a.firebaseapp.com",
+            projectId: "keuangan-project-91d0a",
+            storageBucket: "keuangan-project-91d0a.firebasestorage.app",
+            messagingSenderId: "412887443168",
+            appId: "1:412887443168:web:bb38eb69e2b677df805285",
+            measurementId: "G-95KQYRMYCC"
+        };
+
+        // 3. Inisialisasi Firebase, Firestore & Authentication
+        const firebaseApp = initializeApp(firebaseConfig);
+        const db = getFirestore(firebaseApp);
+        const auth = getAuth(firebaseApp);
+
+        // Referensi dokumen Cloud per-user (diatur otomatis saat user login)
+        let DATABASE_REF = null;
+        let STORAGE_KEY = "edusoft_snbt_backup_guest";
+
         /**
          * ============================================================================
          * BAGIAN 1: DATA TEKS BACAAN (12 WACANA RESMI DARI DOKUMEN)
@@ -1065,12 +1214,16 @@
          * ============================================================================
          */
         const app = {
-            // In-memory state (sesuai standar lingkungan mandiri)
+            // In-memory state & Cloud Sync state
             subtests: JSON.parse(JSON.stringify(DEFAULT_SUBTESTS)),
             passages: JSON.parse(JSON.stringify(PASSAGES)),
             questions: JSON.parse(JSON.stringify(INITIAL_QUESTIONS)),
             attempts: [],
             subtestBestScores: {},
+
+            // Auth state
+            currentUser: null,
+            authMode: 'login', // 'login' | 'register'
 
             // UI & Readability preferences
             currentView: 'dashboard',
@@ -1107,6 +1260,396 @@
                 this.renderBuilderSubtestsConfig();
                 this.renderHistoryView();
                 this.setupKeyboardShortcuts();
+                this.setupAuthListeners();
+            },
+
+            // ---------------- FIREBASE CLOUD DATABASE (LOAD & SAVE) ----------------
+            setCloudSyncStatus(status) {
+                const badge = document.getElementById('cloud-sync-badge');
+                const text = document.getElementById('cloud-sync-text');
+                if (!badge || !text) return;
+
+                if (status === 'syncing') {
+                    badge.className = 'inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-soft-amberLight text-amber-800 border border-soft-amber/40';
+                    badge.innerHTML = `<i class="fa-solid fa-arrows-rotate fa-spin"></i><span class="hidden sm:inline" id="cloud-sync-text">Menyimpan...</span>`;
+                } else if (status === 'offline') {
+                    badge.className = 'inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-soft-terraLight text-soft-terra border border-soft-terra/40';
+                    badge.innerHTML = `<i class="fa-solid fa-cloud-Showers-heavy"></i><span class="hidden sm:inline" id="cloud-sync-text">Lokal / Offline</span>`;
+                } else {
+                    badge.className = 'inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage border border-soft-sageBorder/50';
+                    badge.innerHTML = `<i class="fa-solid fa-cloud-check"></i><span class="hidden sm:inline" id="cloud-sync-text">Cloud Sync</span>`;
+                }
+            },
+
+            buildCloudPayload() {
+                return {
+                    updatedAt: new Date().toISOString(),
+                    userEmail: this.currentUser?.email || '',
+                    userName: this.currentUser?.displayName || '',
+                    subtests: this.subtests,
+                    passages: this.passages,
+                    questions: this.questions,
+                    attempts: this.attempts,
+                    subtestBestScores: this.subtestBestScores,
+                    settings: {
+                        isDarkMode: this.isDarkMode,
+                        useSerifPassage: this.useSerifPassage,
+                        fontSizeScale: this.fontSizeScale,
+                        shuffleQuestions: document.getElementById('cfg-shuffle-questions')?.checked ?? true,
+                        shuffleOptions: document.getElementById('cfg-shuffle-options')?.checked ?? false,
+                        strictTimer: document.getElementById('cfg-strict-timer')?.checked ?? true
+                    }
+                };
+            },
+
+            applyLoadedPayload(saved) {
+                if (!saved || typeof saved !== 'object') return;
+
+                this.subtests = Array.isArray(saved.subtests) && saved.subtests.length > 0
+                    ? saved.subtests
+                    : JSON.parse(JSON.stringify(DEFAULT_SUBTESTS));
+                this.passages = saved.passages && Object.keys(saved.passages).length > 0
+                    ? { ...JSON.parse(JSON.stringify(PASSAGES)), ...saved.passages }
+                    : JSON.parse(JSON.stringify(PASSAGES));
+                this.questions = Array.isArray(saved.questions) && saved.questions.length > 0
+                    ? saved.questions
+                    : JSON.parse(JSON.stringify(INITIAL_QUESTIONS));
+                this.attempts = Array.isArray(saved.attempts) ? saved.attempts : [];
+                this.subtestBestScores = saved.subtestBestScores || {};
+
+                if (saved.settings) {
+                    this.isDarkMode = !!saved.settings.isDarkMode;
+                    this.useSerifPassage = saved.settings.useSerifPassage ?? true;
+                    this.fontSizeScale = Number(saved.settings.fontSizeScale) || 0;
+
+                    document.documentElement.classList.toggle('dark', this.isDarkMode);
+                    this.updateThemeIcons();
+
+                    const sizes = { '-1': '0.9rem', '0': '1rem', '1': '1.125rem', '2': '1.25rem' };
+                    document.documentElement.style.setProperty('--exam-font-size', sizes[String(this.fontSizeScale)] || '1rem');
+
+                    const sqEl = document.getElementById('cfg-shuffle-questions');
+                    const soEl = document.getElementById('cfg-shuffle-options');
+                    const stEl = document.getElementById('cfg-strict-timer');
+                    if (sqEl && typeof saved.settings.shuffleQuestions === 'boolean') sqEl.checked = saved.settings.shuffleQuestions;
+                    if (soEl && typeof saved.settings.shuffleOptions === 'boolean') soEl.checked = saved.settings.shuffleOptions;
+                    if (stEl && typeof saved.settings.strictTimer === 'boolean') stEl.checked = saved.settings.strictTimer;
+                }
+            },
+
+            // 4. Tarik Data dari Firebase Cloud
+            async loadData() {
+                if (!DATABASE_REF) return;
+                this.setCloudSyncStatus('syncing');
+
+                try {
+                    const docSnap = await getDoc(DATABASE_REF);
+                    if (docSnap.exists()) {
+                        const saved = docSnap.data();
+                        this.applyLoadedPayload(saved);
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.buildCloudPayload()));
+                    } else {
+                        // Pengguna baru: inisialisasi dokumen default di Cloud
+                        this.resetStateToDefaults();
+                        const initialPayload = this.buildCloudPayload();
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(initialPayload));
+                        await setDoc(DATABASE_REF, initialPayload);
+                    }
+                    this.setCloudSyncStatus('synced');
+                } catch (error) {
+                    console.error("Gagal menarik data dari Firebase:", error);
+                    this.setCloudSyncStatus('offline');
+                    const localBackup = localStorage.getItem(STORAGE_KEY);
+                    if (localBackup) {
+                        try {
+                            this.applyLoadedPayload(JSON.parse(localBackup));
+                            this.showToast("Mode Offline: Memuat data cadangan lokal.", "warning");
+                        } catch (e) {
+                            console.error("Backup lokal rusak:", e);
+                        }
+                    } else {
+                        this.showToast("Gagal memuat dari Cloud, menggunakan data bawaan.", "warning");
+                    }
+                }
+
+                this.populateFilterDropdowns();
+                this.renderDashboard();
+                this.renderBuilderQuestions();
+                this.renderBuilderSubtestsConfig();
+                this.renderHistoryView();
+            },
+
+            // 5. Simpan Data ke Firebase Cloud
+            async saveData(render = false) {
+                const payload = this.buildCloudPayload();
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+                } catch (e) {
+                    console.warn("Gagal menyimpan ke localStorage:", e);
+                }
+
+                if (render) {
+                    this.renderDashboard();
+                    this.renderBuilderQuestions();
+                    this.renderBuilderSubtestsConfig();
+                    this.renderHistoryView();
+                }
+
+                if (!DATABASE_REF) return;
+                this.setCloudSyncStatus('syncing');
+
+                try {
+                    await setDoc(DATABASE_REF, payload);
+                    this.setCloudSyncStatus('synced');
+                } catch (error) {
+                    console.error("Gagal menyimpan ke Firebase:", error);
+                    this.setCloudSyncStatus('offline');
+                    this.showToast("Gagal menyimpan ke Cloud (tersimpan di lokal).", "warning");
+                }
+            },
+
+            resetStateToDefaults() {
+                this.subtests = JSON.parse(JSON.stringify(DEFAULT_SUBTESTS));
+                this.passages = JSON.parse(JSON.stringify(PASSAGES));
+                this.questions = JSON.parse(JSON.stringify(INITIAL_QUESTIONS));
+                this.attempts = [];
+                this.subtestBestScores = {};
+                this.activeReviewAttempt = null;
+            },
+
+            onConfigToggleChange() {
+                this.readExamConfigFromUI();
+                this.saveData(false);
+            },
+
+            // ---------------- SISTEM DAFTAR, LOGIN & LOGOUT (FIREBASE AUTH) ----------------
+            setAuthMode(mode) {
+                this.authMode = mode === 'register' ? 'register' : 'login';
+                const isLogin = this.authMode === 'login';
+
+                const tabLogin = document.getElementById('auth-tab-login');
+                const tabRegister = document.getElementById('auth-tab-register');
+                const subtitle = document.getElementById('auth-subtitle');
+                const nameWrap = document.getElementById('auth-name-wrap');
+                const nameInput = document.getElementById('auth-name');
+                const confirmWrap = document.getElementById('auth-confirm-wrap');
+                const confirmInput = document.getElementById('auth-confirm-password');
+                const submitBtn = document.getElementById('auth-submit-btn');
+                const switchText = document.getElementById('auth-switch-text');
+                const switchBtn = document.getElementById('auth-switch-btn');
+                const errorBox = document.getElementById('auth-error');
+
+                if (errorBox) errorBox.classList.add('hidden');
+
+                if (tabLogin && tabRegister) {
+                    tabLogin.className = isLogin
+                        ? 'py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all bg-soft-sage text-white shadow-sm'
+                        : 'py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all text-soft-slate dark:text-night-subtext hover:text-soft-charcoal dark:hover:text-night-text';
+                    tabRegister.className = !isLogin
+                        ? 'py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all bg-soft-sage text-white shadow-sm'
+                        : 'py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all text-soft-slate dark:text-night-subtext hover:text-soft-charcoal dark:hover:text-night-text';
+                }
+
+                if (subtitle) {
+                    subtitle.textContent = isLogin
+                        ? 'Masuk ke akun Anda untuk menyinkronkan progres latihan & bank soal di Cloud'
+                        : 'Buat akun peserta baru untuk menyimpan riwayat skor UTBK & soal di Cloud';
+                }
+
+                if (nameWrap) nameWrap.classList.toggle('hidden', isLogin);
+                if (nameInput) nameInput.required = !isLogin;
+
+                if (confirmWrap) confirmWrap.classList.toggle('hidden', isLogin);
+                if (confirmInput) confirmInput.required = !isLogin;
+
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = isLogin
+                        ? `<i class="fa-solid fa-right-to-bracket"></i><span>Masuk Sekarang</span>`
+                        : `<i class="fa-solid fa-user-plus"></i><span>Daftar Akun Baru</span>`;
+                }
+
+                if (switchText) switchText.textContent = isLogin ? 'Belum memiliki akun peserta?' : 'Sudah punya akun peserta?';
+                if (switchBtn) switchBtn.textContent = isLogin ? 'Daftar di sini' : 'Masuk di sini';
+            },
+
+            toggleAuthMode() {
+                this.setAuthMode(this.authMode === 'login' ? 'register' : 'login');
+            },
+
+            formatAuthErrorMessage(error) {
+                const code = error?.code || '';
+                if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
+                    return 'Email atau password salah. Silakan periksa kembali atau daftar akun baru.';
+                }
+                if (code === 'auth/email-already-in-use') {
+                    return 'Email ini sudah terdaftar. Silakan gunakan tab Masuk.';
+                }
+                if (code === 'auth/weak-password') {
+                    return 'Password terlalu lemah. Gunakan minimal 6 karakter.';
+                }
+                if (code === 'auth/invalid-email') {
+                    return 'Format alamat email tidak valid.';
+                }
+                if (code === 'auth/too-many-requests') {
+                    return 'Terlalu banyak percobaan gagal. Silakan tunggu beberapa saat lalu coba lagi.';
+                }
+                return error?.message || 'Terjadi kesalahan saat memproses autentikasi.';
+            },
+
+            setupAuthListeners() {
+                const authForm = document.getElementById('auth-form');
+                const togglePasswordBtn = document.getElementById('toggle-password');
+                const passwordInput = document.getElementById('auth-password');
+                const confirmInput = document.getElementById('auth-confirm-password');
+                const eyeIcon = document.getElementById('eye-icon');
+                const errorBox = document.getElementById('auth-error');
+                const errorText = document.getElementById('auth-error-text');
+                const submitBtn = document.getElementById('auth-submit-btn');
+                const authOverlay = document.getElementById('auth-overlay');
+
+                if (togglePasswordBtn && passwordInput && eyeIcon) {
+                    togglePasswordBtn.addEventListener('click', () => {
+                        const isHidden = passwordInput.type === 'password';
+                        passwordInput.type = isHidden ? 'text' : 'password';
+                        if (confirmInput) confirmInput.type = isHidden ? 'text' : 'password';
+                        eyeIcon.className = isHidden ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+                    });
+                }
+
+                if (authForm) {
+                    authForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        if (errorBox) errorBox.classList.add('hidden');
+
+                        const email = document.getElementById('auth-email')?.value.trim() || '';
+                        const password = document.getElementById('auth-password')?.value || '';
+                        const fullName = document.getElementById('auth-name')?.value.trim() || '';
+                        const confirmPass = document.getElementById('auth-confirm-password')?.value || '';
+
+                        if (this.authMode === 'register') {
+                            if (password.length < 6) {
+                                if (errorText) errorText.textContent = 'Password wajib minimal 6 karakter.';
+                                if (errorBox) errorBox.classList.remove('hidden');
+                                return;
+                            }
+                            if (password !== confirmPass) {
+                                if (errorText) errorText.textContent = 'Konfirmasi password tidak cocok dengan password utama.';
+                                if (errorBox) errorBox.classList.remove('hidden');
+                                return;
+                            }
+                        }
+
+                        if (submitBtn) {
+                            submitBtn.disabled = true;
+                            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Memproses...</span>`;
+                        }
+
+                        try {
+                            if (this.authMode === 'login') {
+                                await signInWithEmailAndPassword(auth, email, password);
+                                this.showToast('Berhasil masuk! Menyinkronkan data Cloud...', 'success');
+                            } else {
+                                const userCred = await createUserWithEmailAndPassword(auth, email, password);
+                                if (fullName && userCred.user) {
+                                    try {
+                                        await updateProfile(userCred.user, { displayName: fullName });
+                                    } catch (profErr) {
+                                        console.warn('Gagal menyimpan displayName:', profErr);
+                                    }
+                                }
+                                this.updateUserHeaderBadge(userCred.user, fullName);
+                                this.showToast('Pendaftaran berhasil! Selamat datang di EduSoft SNBT.', 'success');
+                            }
+                        } catch (err) {
+                            console.error('Auth error:', err);
+                            if (errorText) errorText.textContent = this.formatAuthErrorMessage(err);
+                            if (errorBox) errorBox.classList.remove('hidden');
+                            if (submitBtn) {
+                                submitBtn.disabled = false;
+                                submitBtn.innerHTML = this.authMode === 'login'
+                                    ? `<i class="fa-solid fa-right-to-bracket"></i><span>Masuk Sekarang</span>`
+                                    : `<i class="fa-solid fa-user-plus"></i><span>Daftar Akun Baru</span>`;
+                            }
+                        }
+                    });
+                }
+
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        this.currentUser = user;
+                        this.updateUserHeaderBadge(user);
+
+                        // Gunakan koleksi uangku_data dengan ID unik edusoft_snbt_<uid> agar aman & terisolasi per akun
+                        DATABASE_REF = doc(db, "uangku_data", `edusoft_snbt_${user.uid}`);
+                        STORAGE_KEY = `edusoft_snbt_backup_${user.uid}`;
+
+                        if (authOverlay) {
+                            authOverlay.classList.add('opacity-0', 'pointer-events-none');
+                            setTimeout(() => {
+                                authOverlay.classList.add('hidden');
+                            }, 280);
+                        }
+
+                        await this.loadData();
+                    } else {
+                        this.stopAllTimers();
+                        this.session.active = false;
+                        this.currentUser = null;
+                        DATABASE_REF = null;
+                        STORAGE_KEY = "edusoft_snbt_backup_guest";
+
+                        this.resetStateToDefaults();
+                        this.switchView('dashboard');
+
+                        if (authForm) authForm.reset();
+                        if (passwordInput) passwordInput.type = 'password';
+                        if (confirmInput) confirmInput.type = 'password';
+                        if (eyeIcon) eyeIcon.className = 'fa-regular fa-eye';
+                        this.setAuthMode('login');
+
+                        if (authOverlay) {
+                            authOverlay.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+                        }
+                    }
+                });
+            },
+
+            updateUserHeaderBadge(user, customName = '') {
+                const nameEl = document.getElementById('user-display-name');
+                const avatarEl = document.getElementById('user-avatar-initial');
+                if (!user) return;
+
+                const label = customName || user.displayName || (user.email ? user.email.split('@')[0] : 'Peserta');
+                if (nameEl) {
+                    nameEl.textContent = label;
+                    nameEl.title = user.email || label;
+                }
+                if (avatarEl) {
+                    avatarEl.textContent = label.charAt(0).toUpperCase();
+                }
+            },
+
+            confirmLogout() {
+                const warningText = this.session.active
+                    ? 'Sesi latihan ujian sedang berjalan. Jika Anda keluar (logout), sesi yang sedang berjalan akan dihentikan. Lanjutkan keluar?'
+                    : 'Apakah Anda yakin ingin keluar dari akun EduSoft SNBT Anda? Data Anda sudah tersimpan aman di Cloud.';
+
+                this.showConfirm(
+                    'Keluar dari Akun (Logout)?',
+                    warningText,
+                    async () => {
+                        try {
+                            this.stopAllTimers();
+                            this.session.active = false;
+                            await signOut(auth);
+                            this.showToast('Anda telah berhasil keluar dari akun.', 'success');
+                        } catch (err) {
+                            console.error('Gagal logout:', err);
+                            this.showToast('Gagal keluar dari akun.', 'error');
+                        }
+                    }
+                );
             },
 
             // ---------------- NAVIGATION & THEME ----------------
@@ -1145,9 +1688,9 @@
                     const btn = document.getElementById(`nav-btn-${nav}`);
                     if (!btn) return;
                     if (nav === view) {
-                        btn.className = 'px-3.5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-soft-sage text-white';
+                        btn.className = 'px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 bg-soft-sage text-white';
                     } else {
-                        btn.className = 'px-3.5 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted';
+                        btn.className = 'px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted';
                     }
                 });
 
@@ -1160,13 +1703,19 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             },
 
+            updateThemeIcons() {
+                const iconClass = this.isDarkMode ? 'fa-solid fa-sun text-amber-400' : 'fa-solid fa-moon';
+                const icon = document.getElementById('theme-icon');
+                const authIcon = document.getElementById('auth-theme-icon');
+                if (icon) icon.className = iconClass;
+                if (authIcon) authIcon.className = iconClass;
+            },
+
             toggleTheme() {
                 this.isDarkMode = !this.isDarkMode;
                 document.documentElement.classList.toggle('dark', this.isDarkMode);
-                const icon = document.getElementById('theme-icon');
-                if (icon) {
-                    icon.className = this.isDarkMode ? 'fa-solid fa-sun text-amber-400' : 'fa-solid fa-moon';
-                }
+                this.updateThemeIcons();
+                this.saveData(false);
             },
 
             setExamFontSize(delta) {
@@ -1177,6 +1726,7 @@
                 }
                 const sizes = { '-1': '0.9rem', '0': '1rem', '1': '1.125rem', '2': '1.25rem' };
                 document.documentElement.style.setProperty('--exam-font-size', sizes[String(this.fontSizeScale)]);
+                this.saveData(false);
             },
 
             toggleSerifFont() {
@@ -1184,6 +1734,7 @@
                 const label = document.getElementById('font-style-label');
                 if (label) label.textContent = this.useSerifPassage ? 'Serif' : 'Sans';
                 this.renderCurrentExamQuestion();
+                this.saveData(false);
             },
 
             toggleMobileNavDrawer() {
@@ -1813,6 +2364,7 @@
                 this.attempts.unshift(attemptRecord);
                 this.activeReviewAttempt = attemptRecord;
 
+                this.saveData(false);
                 this.renderResultScreen(attemptRecord);
                 this.switchView('result');
             },
@@ -2079,6 +2631,8 @@
                 const sub = this.subtests.find(s => s.id === subId);
                 if (sub) {
                     sub.minutes = Math.max(1, parseInt(minutes, 10) || 15);
+                    this.saveData(false);
+                    this.renderDashboard();
                     this.showToast(`Durasi ${sub.shortName} diperbarui menjadi ${sub.minutes} menit.`, 'success');
                 }
             },
@@ -2165,7 +2719,7 @@
                             exp
                         };
                     }
-                    this.showToast('Soal berhasil diperbarui!', 'success');
+                    this.showToast('Soal berhasil diperbarui & disimpan ke Cloud!', 'success');
                 } else {
                     const nextId = this.questions.length > 0 ? Math.max(...this.questions.map(q => q.id)) + 1 : 1;
                     this.questions.push({
@@ -2179,22 +2733,20 @@
                         key,
                         exp
                     });
-                    this.showToast('Soal baru berhasil ditambahkan ke Bank Soal!', 'success');
+                    this.showToast('Soal baru berhasil ditambahkan & disimpan ke Cloud!', 'success');
                 }
 
                 this.closeQuestionModal();
-                this.renderBuilderQuestions();
-                this.renderDashboard();
+                this.saveData(true);
             },
 
             deleteQuestion(id) {
                 this.showConfirm(
                     'Hapus Soal Ini?',
-                    `Soal #${id} akan dihapus dari bank soal aktif.`,
+                    `Soal #${id} akan dihapus dari bank soal aktif dan Cloud.`,
                     () => {
                         this.questions = this.questions.filter(q => q.id !== id);
-                        this.renderBuilderQuestions();
-                        this.renderDashboard();
+                        this.saveData(true);
                         this.showToast(`Soal #${id} telah dihapus.`, 'success');
                     }
                 );
@@ -2212,8 +2764,7 @@
                         } else {
                             this.questions = this.questions.filter(q => q.subtest !== subFilter);
                         }
-                        this.renderBuilderQuestions();
-                        this.renderDashboard();
+                        this.saveData(true);
                         this.showToast(`Soal pada ${label} telah dikosongkan.`, 'success');
                     }
                 );
@@ -2222,13 +2773,12 @@
             confirmResetDefaultBank() {
                 this.showConfirm(
                     'Kembalikan 130 Soal Awal?',
-                    'Bank soal akan dikembalikan ke 130 soal bawaan dari dokumen Latihan_Soal_SNBT_130_Soal.docx.',
+                    'Bank soal akan dikembalikan ke 130 soal bawaan dari dokumen Latihan_Soal_SNBT_130_Soal.docx dan disinkronkan ke Cloud.',
                     () => {
                         this.questions = JSON.parse(JSON.stringify(INITIAL_QUESTIONS));
                         this.passages = JSON.parse(JSON.stringify(PASSAGES));
                         this.subtests = JSON.parse(JSON.stringify(DEFAULT_SUBTESTS));
-                        this.renderBuilderQuestions();
-                        this.renderDashboard();
+                        this.saveData(true);
                         this.showToast('130 Soal bawaan berhasil dipulihkan!', 'success');
                     }
                 );
@@ -2320,8 +2870,7 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
 
                 this.questions.push(...parsedQuestions);
                 document.getElementById('bulk-raw-textarea').value = '';
-                this.renderBuilderQuestions();
-                this.renderDashboard();
+                this.saveData(true);
                 this.switchBuilderTab('list');
                 this.showToast(`Berhasil mengimpor ${parsedQuestions.length} soal ke subtes ${targetSubtest}!`, 'success');
             },
@@ -2356,9 +2905,8 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                             this.questions = data.questions;
                             if (data.passages) this.passages = { ...this.passages, ...data.passages };
                             if (Array.isArray(data.subtests)) this.subtests = data.subtests;
-                            this.renderBuilderQuestions();
-                            this.renderDashboard();
-                            this.showToast(`Berhasil memuat ${this.questions.length} soal dari file JSON!`, 'success');
+                            this.saveData(true);
+                            this.showToast(`Berhasil memuat ${this.questions.length} soal dari file JSON & disimpan ke Cloud!`, 'success');
                         } else {
                             this.showToast('Struktur file JSON tidak valid.', 'error');
                         }
@@ -2400,13 +2948,16 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                                 Benar: ${att.totalCorrect} • Salah: ${att.totalWrong} • Kosong: ${att.totalEmpty} (Akurasi ${att.overallAccuracy}%)
                             </div>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <div class="text-right">
+                        <div class="flex items-center gap-2.5">
+                            <div class="text-right mr-1">
                                 <div class="text-[11px] text-soft-slate uppercase font-bold">Skor UTBK</div>
                                 <div class="text-2xl font-extrabold font-mono text-soft-sage">${att.utbkScore}</div>
                             </div>
                             <button onclick="app.openAttemptReview(${idx})" class="px-4 py-2.5 rounded-xl bg-soft-bg dark:bg-night-bg hover:bg-soft-muted border border-soft-border dark:border-night-border text-xs sm:text-sm font-bold text-soft-charcoal dark:text-night-text">
                                 Lihat Pembahasan
+                            </button>
+                            <button onclick="app.deleteAttempt(${att.id})" class="p-2.5 rounded-xl bg-soft-terraLight/60 hover:bg-soft-terra hover:text-white text-soft-terra text-xs font-bold transition-colors" title="Hapus Riwayat Ini">
+                                <i class="fa-solid fa-trash"></i>
                             </button>
                         </div>
                     </div>
@@ -2419,6 +2970,49 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                 this.activeReviewAttempt = att;
                 this.renderResultScreen(att);
                 this.switchView('result');
+            },
+
+            deleteAttempt(attemptId) {
+                this.showConfirm(
+                    'Hapus Sesi Riwayat Ini?',
+                    'Riwayat pengerjaan ini akan dihapus dari akun Cloud Anda.',
+                    () => {
+                        this.attempts = this.attempts.filter(a => a.id !== attemptId);
+                        this.recalculateBestScores();
+                        this.saveData(true);
+                        this.showToast('Riwayat sesi berhasil dihapus.', 'success');
+                    }
+                );
+            },
+
+            confirmClearHistory() {
+                if (this.attempts.length === 0) {
+                    this.showToast('Belum ada riwayat pengerjaan untuk dihapus.', 'warning');
+                    return;
+                }
+                this.showConfirm(
+                    'Bersihkan Seluruh Riwayat?',
+                    'Semua catatan riwayat pengerjaan dan skor tertinggi Anda di Cloud akan direset ke nol.',
+                    () => {
+                        this.attempts = [];
+                        this.subtestBestScores = {};
+                        this.activeReviewAttempt = null;
+                        this.saveData(true);
+                        this.showToast('Seluruh riwayat pengerjaan telah dibersihkan dari Cloud.', 'success');
+                    }
+                );
+            },
+
+            recalculateBestScores() {
+                const best = {};
+                this.attempts.forEach(att => {
+                    (att.subtestStats || []).forEach(st => {
+                        if (!best[st.subId] || st.utbkScore > best[st.subId]) {
+                            best[st.subId] = st.utbkScore;
+                        }
+                    });
+                });
+                this.subtestBestScores = best;
             },
 
             // ---------------- UTILITIES (MODALS & TOASTS) ----------------
@@ -2465,7 +3059,9 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
             }
         };
 
-        window.onload = () => app.init();
+        // Ekspos ke global window agar seluruh handler onclick HTML dapat mengakses app
+        window.app = app;
+        app.init();
     </script>
 </body>
 </html>
