@@ -71,6 +71,11 @@
             --exam-font-size: 1rem;
             --exam-line-height: 1.75;
         }
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100vw;
+        }
         body {
             background-color: #F6F5F0;
             color: #2B302C;
@@ -229,56 +234,37 @@
     </div>
 
     <!-- ==================== GLOBAL HEADER (NON-EXAM VIEWS) ==================== -->
-    <header id="main-header" class="sticky top-0 z-30 bg-soft-surface/95 dark:bg-night-surface/95 backdrop-blur-md border-b border-soft-border dark:border-night-border transition-colors">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-3">
-            <!-- Brand Logo -->
-            <div class="flex items-center gap-3 cursor-pointer shrink-0" onclick="app.navigate('dashboard')">
-                <div class="w-10 h-10 rounded-xl bg-soft-sage flex items-center justify-center text-white shadow-sm">
-                    <i class="fa-solid fa-seedling text-lg"></i>
+    <header id="main-header" class="sticky top-0 z-30 w-full bg-soft-surface/95 dark:bg-night-surface/95 backdrop-blur-md border-b border-soft-border dark:border-night-border transition-colors">
+        <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-2.5 md:py-0 md:h-16 flex flex-wrap md:flex-nowrap items-center justify-between gap-y-2.5 gap-x-2">
+            <!-- Brand Logo (Left) -->
+            <div class="order-1 flex items-center gap-2.5 sm:gap-3 cursor-pointer shrink-0" onclick="app.navigate('dashboard')">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-soft-sage flex items-center justify-center text-white shadow-sm shrink-0">
+                    <i class="fa-solid fa-seedling text-base sm:text-lg"></i>
                 </div>
-                <div>
+                <div class="min-w-0">
                     <div class="flex items-center gap-2">
-                        <span class="font-bold text-base sm:text-lg tracking-tight text-soft-charcoal dark:text-night-text">EduSoft <span class="text-soft-sage dark:text-night-sage">SNBT</span></span>
-                        <span id="cloud-sync-badge" class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage border border-soft-sageBorder/50" title="Status Sinkronisasi Firebase Cloud">
-                            <i class="fa-solid fa-cloud-check"></i>
-                            <span class="hidden sm:inline" id="cloud-sync-text">Cloud Sync</span>
+                        <span class="font-extrabold text-base sm:text-lg tracking-tight text-soft-charcoal dark:text-night-text whitespace-nowrap">EduSoft <span class="text-soft-sage dark:text-night-sage">SNBT</span></span>
+                        <span id="cloud-sync-badge" class="hidden sm:inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage border border-soft-sageBorder/50 whitespace-nowrap" title="Status Sinkronisasi Firebase Cloud">
+                            <i class="fa-solid fa-cloud"></i>
+                            <span id="cloud-sync-text">Cloud Sync</span>
                         </span>
                     </div>
                     <p class="text-xs text-soft-slate dark:text-night-subtext hidden xl:block">Simulator UTBK-SNBT & Question App Builder</p>
                 </div>
             </div>
 
-            <!-- Navigation Links & User Profile -->
-            <nav class="flex items-center gap-1.5 sm:gap-2">
-                <button onclick="app.navigate('dashboard')" id="nav-btn-dashboard" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 bg-soft-sage text-white">
-                    <i class="fa-solid fa-house-laptop"></i>
-                    <span class="hidden md:inline">Dashboard</span>
-                </button>
-                <button onclick="app.navigate('builder')" id="nav-btn-builder" class="hidden px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                    <span class="hidden md:inline">App Builder</span>
-                    <span id="header-question-badge" class="px-1.5 py-0.5 text-xs rounded-md bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage font-bold">130</span>
-                </button>
-                <button onclick="app.navigate('history')" id="nav-btn-history" class="px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <span class="hidden md:inline">Riwayat</span>
-                </button>
-                <button onclick="app.navigate('admin')" id="nav-btn-admin" class="hidden px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted">
-                    <i class="fa-solid fa-user-shield text-soft-amber"></i>
-                    <span class="hidden md:inline">Panel Admin</span>
-                    <span id="header-admin-pending-badge" class="hidden px-1.5 py-0.5 text-[10px] rounded-full bg-soft-amber text-white font-extrabold">0</span>
-                </button>
-
+            <!-- Right Action Controls (Plan CTA, Profile, PWA, Theme, Logout) -->
+            <div class="order-2 md:order-3 flex items-center gap-1.5 sm:gap-2 shrink-0 ml-auto md:ml-0">
                 <!-- Plan Badge / Upgrade CTA in Header -->
-                <button onclick="app.openUpgradeModal()" id="header-plan-btn" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-sm" title="Status Paket & Upgrade Plan">
-                    <i class="fa-solid fa-crown" id="header-plan-icon"></i>
+                <button onclick="app.openUpgradeModal()" id="header-plan-btn" class="px-3 sm:px-3.5 h-9 sm:h-10 rounded-xl text-xs font-extrabold transition-all inline-flex items-center justify-center gap-1.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white shadow-sm whitespace-nowrap shrink-0" title="Status Paket & Upgrade Plan">
+                    <i class="fa-solid fa-crown text-[11px]" id="header-plan-icon"></i>
                     <span id="header-plan-label">Upgrade Plan</span>
                 </button>
 
-                <div class="h-6 w-[1px] bg-soft-border dark:bg-night-border mx-0.5 sm:mx-1"></div>
+                <div class="hidden md:block h-6 w-[1px] bg-soft-border dark:bg-night-border mx-0.5"></div>
 
                 <!-- User Info Pill -->
-                <div id="user-profile-badge" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border max-w-[180px]" title="Akun Peserta Aktif">
+                <div id="user-profile-badge" class="hidden lg:flex items-center gap-2 px-3 py-1.5 h-10 rounded-xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border max-w-[170px]" title="Akun Peserta Aktif">
                     <div class="w-6 h-6 rounded-lg bg-soft-sage text-white text-xs font-extrabold flex items-center justify-center shrink-0" id="user-avatar-initial">
                         U
                     </div>
@@ -288,38 +274,60 @@
                 </div>
 
                 <!-- Install PWA App Button (muncul otomatis saat browser siap menginstal) -->
-                <button onclick="window.installPwaApp()" id="btn-install-pwa" class="hidden px-2.5 sm:px-3 py-2 h-9 sm:h-10 rounded-xl border border-soft-sageBorder bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage hover:bg-soft-sage hover:text-white text-xs sm:text-sm font-bold transition-all items-center gap-1.5" title="Instal sebagai Aplikasi di HP/Perangkat">
+                <button onclick="window.installPwaApp()" id="btn-install-pwa" class="hidden w-9 h-9 sm:w-auto sm:px-3 sm:h-10 rounded-xl border border-soft-sageBorder bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage hover:bg-soft-sage hover:text-white text-xs sm:text-sm font-bold transition-all items-center justify-center gap-1.5 shrink-0" title="Instal sebagai Aplikasi di HP/Perangkat">
                     <i class="fa-solid fa-download"></i>
                     <span class="hidden lg:inline">Instal App</span>
                 </button>
 
                 <!-- Theme Toggle -->
-                <button onclick="app.toggleTheme()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-soft-border dark:border-night-border flex items-center justify-center text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted transition-colors" title="Ganti Mode Siang / Malam">
-                    <i id="theme-icon" class="fa-solid fa-moon"></i>
+                <button onclick="app.toggleTheme()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-soft-border dark:border-night-border flex items-center justify-center text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted transition-colors shrink-0" title="Ganti Mode Siang / Malam">
+                    <i id="theme-icon" class="fa-solid fa-moon text-sm"></i>
                 </button>
 
                 <!-- Logout Button -->
-                <button onclick="app.confirmLogout()" id="btn-logout" class="px-3 py-2 h-9 sm:h-10 rounded-xl border border-soft-terra/30 bg-soft-terraLight/70 dark:bg-red-950/40 hover:bg-soft-terra hover:text-white text-soft-terra dark:text-red-300 text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5" title="Keluar dari Akun (Logout)">
-                    <i class="fa-solid fa-right-from-bracket"></i>
+                <button onclick="app.confirmLogout()" id="btn-logout" class="w-9 h-9 lg:w-auto lg:px-3 sm:h-10 rounded-xl border border-soft-terra/30 bg-soft-terraLight/70 dark:bg-red-950/40 hover:bg-soft-terra hover:text-white text-soft-terra dark:text-red-300 text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 shrink-0" title="Keluar dari Akun (Logout)">
+                    <i class="fa-solid fa-right-from-bracket text-sm"></i>
                     <span class="hidden lg:inline">Keluar</span>
+                </button>
+            </div>
+
+            <!-- Navigation Links (Centered 2nd row on mobile, Center inline on desktop) -->
+            <nav class="order-3 md:order-2 w-full md:w-auto flex items-center justify-center gap-1.5 pt-2 md:pt-0 border-t md:border-t-0 border-soft-border/80 dark:border-night-border/80">
+                <button onclick="app.navigate('dashboard')" id="nav-btn-dashboard" class="flex-1 md:flex-initial justify-center px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 bg-soft-sage text-white whitespace-nowrap">
+                    <i class="fa-solid fa-house-laptop"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button onclick="app.navigate('builder')" id="nav-btn-builder" class="hidden flex-1 md:flex-initial justify-center px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all items-center gap-1.5 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted whitespace-nowrap">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    <span>Builder</span>
+                    <span id="header-question-badge" class="px-1.5 py-0.5 text-[10px] rounded-md bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage font-bold">130</span>
+                </button>
+                <button onclick="app.navigate('history')" id="nav-btn-history" class="flex-1 md:flex-initial justify-center px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted whitespace-nowrap">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Riwayat</span>
+                </button>
+                <button onclick="app.navigate('admin')" id="nav-btn-admin" class="hidden flex-1 md:flex-initial justify-center px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all items-center gap-1.5 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted whitespace-nowrap">
+                    <i class="fa-solid fa-user-shield text-soft-amber"></i>
+                    <span>Admin</span>
+                    <span id="header-admin-pending-badge" class="hidden px-1.5 py-0.5 text-[10px] rounded-full bg-soft-amber text-white font-extrabold">0</span>
                 </button>
             </nav>
         </div>
     </header>
 
     <!-- ==================== MAIN CONTAINER ==================== -->
-    <main class="flex-1 flex flex-col">
+    <main class="flex-1 flex flex-col w-full max-w-full overflow-x-hidden">
 
         <!-- ==================== VIEW 1: DASHBOARD ==================== -->
-        <section id="view-dashboard" class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 animate-fade">
+        <section id="view-dashboard" class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-5 sm:space-y-6 animate-fade">
             
             <!-- Subscription / Freemium Status Banner -->
-            <div id="dashboard-plan-banner" class="rounded-3xl border border-amber-300/80 dark:border-amber-700/50 bg-gradient-to-r from-amber-50 via-soft-amberLight to-emerald-50/70 dark:from-amber-950/40 dark:via-night-surface dark:to-night-sageLight/30 p-4 sm:p-5 soft-shadow flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div id="dashboard-plan-banner" class="w-full">
                 <!-- Populated dynamically via app.renderSubscriptionUI() -->
             </div>
 
             <!-- Hero Banner & Simulator Config -->
-            <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-6 sm:p-8 soft-shadow relative overflow-hidden">
+            <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-5 sm:p-8 soft-shadow relative overflow-hidden">
                 <div class="absolute -right-12 -top-12 w-56 h-56 rounded-full bg-soft-sageLight/60 dark:bg-night-sageLight/30 blur-2xl pointer-events-none"></div>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
@@ -400,7 +408,7 @@
                             </button>
                             <button id="dashboard-secondary-cta" onclick="app.openUpgradeModal()" class="w-full py-2.5 px-4 rounded-xl bg-soft-amberLight dark:bg-amber-950/40 hover:bg-soft-amber hover:text-white text-amber-900 dark:text-amber-300 border border-soft-amber/40 font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2">
                                 <i class="fa-solid fa-crown text-soft-amber"></i>
-                                <span>Upgrade ke Premium (Mulai Rp 7.000/Minggu)</span>
+                                <span id="dashboard-secondary-cta-label">Upgrade ke Premium (Mulai Rp 7.000/Minggu)</span>
                             </button>
                         </div>
                     </div>
@@ -1261,9 +1269,15 @@
 
         const DEFAULT_PAYMENT_CONFIG = {
             whatsapp: "6281229923834",
+            whatsappNumber: "6281229923834",
+            merchantName: "EduSoft SNBT Official",
             qrisImageUrl: "",
             bankInfo: "QRIS Semua E-Wallet & M-Banking (GoPay, OVO, DANA, ShopeePay, BCA, Mandiri, BRI, SeaBank)",
+            paymentNote: "Scan kode QRIS di atas sesuai nominal paket pilihan Anda, lalu klik tombol Konfirmasi WhatsApp untuk mengirim bukti pembayaran agar langsung diaktifkan Admin.",
             paymentNotes: "Scan kode QRIS di atas sesuai nominal paket pilihan Anda, lalu klik tombol Konfirmasi WhatsApp untuk mengirim bukti pembayaran agar langsung diaktifkan Admin.",
+            weeklyPrice: 7000,
+            monthlyPrice: 20000,
+            snbtPrice: 45000,
             plans: {
                 weekly: {
                     id: "weekly",
@@ -1637,14 +1651,14 @@
                 if (!badge || !text) return;
 
                 if (status === 'syncing') {
-                    badge.className = 'inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-soft-amberLight text-amber-800 border border-soft-amber/40';
-                    badge.innerHTML = `<i class="fa-solid fa-arrows-rotate fa-spin"></i><span class="hidden sm:inline" id="cloud-sync-text">Menyimpan...</span>`;
+                    badge.className = 'hidden sm:inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-soft-amberLight text-amber-800 border border-soft-amber/40 whitespace-nowrap';
+                    badge.innerHTML = `<i class="fa-solid fa-arrows-rotate fa-spin"></i><span id="cloud-sync-text">Menyimpan...</span>`;
                 } else if (status === 'offline') {
-                    badge.className = 'inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-soft-terraLight text-soft-terra border border-soft-terra/40';
-                    badge.innerHTML = `<i class="fa-solid fa-cloud-Showers-heavy"></i><span class="hidden sm:inline" id="cloud-sync-text">Lokal / Offline</span>`;
+                    badge.className = 'hidden sm:inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-soft-terraLight text-soft-terra border border-soft-terra/40 whitespace-nowrap';
+                    badge.innerHTML = `<i class="fa-solid fa-cloud-bolt"></i><span id="cloud-sync-text">Lokal / Offline</span>`;
                 } else {
-                    badge.className = 'inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage border border-soft-sageBorder/50';
-                    badge.innerHTML = `<i class="fa-solid fa-cloud-check"></i><span class="hidden sm:inline" id="cloud-sync-text">Cloud Sync</span>`;
+                    badge.className = 'hidden sm:inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage border border-soft-sageBorder/50 whitespace-nowrap';
+                    badge.innerHTML = `<i class="fa-solid fa-cloud"></i><span id="cloud-sync-text">Cloud Sync</span>`;
                 }
             },
 
@@ -2234,9 +2248,9 @@
                     if (!btn) return;
                     const isHidden = !this.isAdmin() && (nav === 'builder' || nav === 'admin');
                     if (nav === view) {
-                        btn.className = `${isHidden ? 'hidden ' : ''}px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 bg-soft-sage text-white`;
+                        btn.className = `${isHidden ? 'hidden ' : 'flex '}flex-1 md:flex-initial justify-center px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all items-center gap-1.5 bg-soft-sage text-white whitespace-nowrap`;
                     } else {
-                        btn.className = `${isHidden ? 'hidden ' : ''}px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted`;
+                        btn.className = `${isHidden ? 'hidden ' : 'flex '}flex-1 md:flex-initial justify-center px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all items-center gap-1.5 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted whitespace-nowrap`;
                     }
                 });
 
@@ -2318,19 +2332,19 @@
                 const planLabel = document.getElementById('header-plan-label');
                 if (planBtn && planLabel) {
                     if (isAdmin) {
-                        planBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-soft-sage text-white text-xs font-extrabold shadow-sm hover:opacity-95 transition-all';
+                        planBtn.className = 'inline-flex items-center justify-center gap-1.5 px-3 sm:px-3.5 h-9 sm:h-10 rounded-xl bg-soft-sage text-white text-xs font-extrabold shadow-sm hover:opacity-95 transition-all whitespace-nowrap shrink-0';
                         planBtn.onclick = () => this.navigate('admin');
                         planLabel.textContent = 'Admin Owner';
                     } else if (isPrem) {
-                        planBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs font-extrabold shadow-sm hover:opacity-95 transition-all';
+                        planBtn.className = 'inline-flex items-center justify-center gap-1.5 px-3 sm:px-3.5 h-9 sm:h-10 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs font-extrabold shadow-sm hover:opacity-95 transition-all whitespace-nowrap shrink-0';
                         planBtn.onclick = () => this.openUpgradeModal();
                         planLabel.textContent = `Premium (${remDays} Hari)`;
                     } else if (this.subscription?.requestedPlan) {
-                        planBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 text-white text-xs font-extrabold shadow-sm hover:opacity-95 transition-all animate-pulse';
+                        planBtn.className = 'inline-flex items-center justify-center gap-1.5 px-3 sm:px-3.5 h-9 sm:h-10 rounded-xl bg-amber-500 text-white text-xs font-extrabold shadow-sm hover:opacity-95 transition-all whitespace-nowrap shrink-0 animate-pulse';
                         planBtn.onclick = () => this.openUpgradeModal();
-                        planLabel.textContent = 'Menunggu Verifikasi';
+                        planLabel.textContent = 'Verifikasi...';
                     } else {
-                        planBtn.className = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-extrabold shadow-sm transition-all';
+                        planBtn.className = 'inline-flex items-center justify-center gap-1.5 px-3 sm:px-3.5 h-9 sm:h-10 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white text-xs font-extrabold shadow-sm transition-all whitespace-nowrap shrink-0';
                         planBtn.onclick = () => this.openUpgradeModal();
                         planLabel.textContent = 'Upgrade Plan';
                     }
@@ -2339,6 +2353,7 @@
                 // Secondary CTA in Dashboard Config Panel
                 const secCta = document.getElementById('dashboard-secondary-cta');
                 const secCtaLabel = document.getElementById('dashboard-secondary-cta-label');
+                const weeklyPriceVal = Number(this.paymentConfig?.weeklyPrice) || 7000;
                 if (secCta && secCtaLabel) {
                     if (isAdmin) {
                         secCta.onclick = () => this.navigate('builder');
@@ -2348,7 +2363,7 @@
                         secCtaLabel.textContent = `Perpanjang Paket Premium (${remDays} Hari Tersisa)`;
                     } else {
                         secCta.onclick = () => this.openUpgradeModal();
-                        secCtaLabel.textContent = `Upgrade ke Premium (Mulai ${this.formatRupiah(this.paymentConfig.weeklyPrice)}/Minggu)`;
+                        secCtaLabel.textContent = `Upgrade ke Premium (Mulai ${this.formatRupiah(weeklyPriceVal)}/Minggu)`;
                     }
                 }
 
@@ -2360,7 +2375,7 @@
                         const now = Date.now();
                         const pendingUsers = Object.values(this.usersIndex || {}).filter(u => u && u.requestedPlan && !(Number(u.premiumUntil || 0) > now)).length;
                         bannerEl.innerHTML = `
-                            <div class="bg-soft-surface dark:bg-night-surface rounded-2xl border-2 border-soft-sage/50 p-4 sm:p-5 soft-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="w-full bg-soft-surface dark:bg-night-surface rounded-3xl border-2 border-soft-sage/50 p-5 sm:p-6 soft-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                 <div class="flex items-start sm:items-center gap-3.5">
                                     <div class="w-11 h-11 rounded-2xl bg-soft-sage text-white flex items-center justify-center text-lg shrink-0">
                                         <i class="fa-solid fa-user-shield"></i>
@@ -2375,20 +2390,21 @@
                                         </p>
                                     </div>
                                 </div>
-                                <div class="flex items-center gap-2 shrink-0">
-                                    <button onclick="app.navigate('admin')" class="px-4 py-2.5 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white font-bold text-xs sm:text-sm transition-all flex items-center gap-2">
+                                <div class="grid grid-cols-2 sm:flex items-center gap-2 w-full sm:w-auto shrink-0">
+                                    <button onclick="app.navigate('admin')" class="justify-center px-4 py-2.5 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white font-bold text-xs sm:text-sm transition-all flex items-center gap-2">
                                         <i class="fa-solid fa-crown"></i>
-                                        <span>Buka Panel Admin</span>
+                                        <span>Panel Admin</span>
                                     </button>
-                                    <button onclick="app.navigate('builder')" class="px-3.5 py-2.5 rounded-xl bg-soft-bg dark:bg-night-bg hover:bg-soft-muted dark:hover:bg-night-muted border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text font-bold text-xs sm:text-sm transition-all">
-                                        <i class="fa-solid fa-Sliders mr-1"></i>App Builder
+                                    <button onclick="app.navigate('builder')" class="justify-center px-3.5 py-2.5 rounded-xl bg-soft-bg dark:bg-night-bg hover:bg-soft-muted dark:hover:bg-night-muted border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5">
+                                        <i class="fa-solid fa-sliders"></i>
+                                        <span>App Builder</span>
                                     </button>
                                 </div>
                             </div>
                         `;
                     } else if (isPrem) {
                         bannerEl.innerHTML = `
-                            <div class="bg-gradient-to-r from-emerald-900/90 to-teal-800/90 text-white rounded-2xl p-4 sm:p-5 soft-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="w-full bg-gradient-to-r from-emerald-900/90 to-teal-800/90 text-white rounded-3xl p-5 sm:p-6 soft-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                 <div class="flex items-start sm:items-center gap-3.5">
                                     <div class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center text-amber-300 text-lg shrink-0">
                                         <i class="fa-solid fa-crown"></i>
@@ -2403,15 +2419,16 @@
                                         </p>
                                     </div>
                                 </div>
-                                <button onclick="app.openUpgradeModal()" class="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 border border-white/25 text-white font-bold text-xs sm:text-sm transition-all shrink-0">
-                                    <i class="fa-solid fa-rotate mr-1.5"></i>Perpanjang Paket
+                                <button onclick="app.openUpgradeModal()" class="w-full sm:w-auto justify-center px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 border border-white/25 text-white font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 shrink-0">
+                                    <i class="fa-solid fa-rotate"></i>
+                                    <span>Perpanjang Paket</span>
                                 </button>
                             </div>
                         `;
                     } else {
                         const isPending = !!this.subscription?.requestedPlan;
                         bannerEl.innerHTML = `
-                            <div class="bg-gradient-to-r from-amber-50 via-orange-50/80 to-amber-50 dark:from-amber-950/40 dark:via-night-surface dark:to-amber-950/30 rounded-2xl border-2 border-amber-400/70 dark:border-amber-600/60 p-4 sm:p-5 soft-shadow flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="w-full bg-gradient-to-r from-amber-50 via-orange-50/80 to-amber-50 dark:from-amber-950/40 dark:via-night-surface dark:to-amber-950/30 rounded-3xl border-2 border-amber-400/70 dark:border-amber-600/60 p-5 sm:p-6 soft-shadow flex flex-col md:flex-row md:items-center justify-between gap-4">
                                 <div class="flex items-start gap-3.5">
                                     <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white flex items-center justify-center text-lg shrink-0 shadow-sm">
                                         <i class="fa-solid fa-crown"></i>
@@ -2422,11 +2439,11 @@
                                             ${isPending ? `<span class="px-2.5 py-0.5 rounded-full bg-amber-500 text-white text-[11px] font-extrabold animate-pulse">Menunggu Konfirmasi Admin (${this.escapeHtml(this.subscription.requestedPlan)})</span>` : ''}
                                         </div>
                                         <p class="text-xs sm:text-sm text-soft-charcoal dark:text-night-text font-medium mt-1 leading-relaxed">
-                                            Anda dapat mencoba <strong>${FREE_TRIAL_LIMIT} soal pertama gratis</strong> di setiap subtes. Untuk membuka seluruh <strong>${this.questions.length}+ bank soal SNBT</strong> & pembahasan lengkap, silakan upgrade ke <strong>Premium mulai ${this.formatRupiah(this.paymentConfig.weeklyPrice)}/minggu</strong>.
+                                            Anda dapat mencoba <strong>${FREE_TRIAL_LIMIT} soal pertama gratis</strong> di setiap subtes. Untuk membuka seluruh <strong>${this.questions.length}+ bank soal SNBT</strong> & pembahasan lengkap, silakan upgrade ke <strong>Premium mulai ${this.formatRupiah(weeklyPriceVal)}/minggu</strong>.
                                         </p>
                                     </div>
                                 </div>
-                                <button onclick="app.openUpgradeModal()" class="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 shrink-0">
+                                <button onclick="app.openUpgradeModal()" class="w-full md:w-auto px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 shrink-0">
                                     <i class="fa-solid fa-bolt"></i>
                                     <span>${isPending ? 'Lihat Status / Konfirmasi WA' : 'Upgrade ke Premium'}</span>
                                 </button>
