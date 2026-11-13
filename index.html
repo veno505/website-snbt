@@ -782,10 +782,10 @@
             <!-- Builder Sub-Tabs -->
             <div class="flex flex-wrap items-center gap-2 border-b border-soft-border dark:border-night-border pb-3">
                 <button onclick="app.switchBuilderTab('list')" id="btab-list" class="px-4 py-2 rounded-xl text-sm font-bold bg-soft-sage text-white transition-all">
-                    <i class="fa-solid fa-list-check mr-1.5"></i> Daftar Soal (<span id="builder-count-label">130</span>)
+                    <i class="fa-solid fa-list-check mr-1.5"></i> Daftar Bank Soal (<span id="builder-count-label">130</span>)
                 </button>
                 <button onclick="app.switchBuilderTab('subtests')" id="btab-subtests" class="px-4 py-2 rounded-xl text-sm font-bold text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted transition-all">
-                    <i class="fa-solid fa-clock mr-1.5"></i> Pengaturan Waktu 7 Subtes
+                    <i class="fa-solid fa-sliders mr-1.5"></i> Kuota Soal Ujian & Waktu 7 Subtes
                 </button>
                 <button onclick="app.switchBuilderTab('bulk')" id="btab-bulk" class="px-4 py-2 rounded-xl text-sm font-bold text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted transition-all">
                     <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i> Smart Paste / Import Soal Cepat
@@ -819,11 +819,11 @@
                 </div>
             </div>
 
-            <!-- Builder Tab 2: Subtest Duration & Config -->
+            <!-- Builder Tab 2: Subtest Duration & Quota Config -->
             <div id="builder-panel-subtests" class="hidden bg-soft-surface dark:bg-night-surface rounded-2xl border border-soft-border dark:border-night-border p-6 space-y-4">
                 <div>
-                    <h3 class="font-bold text-base text-soft-charcoal dark:text-night-text">Atur Durasi Waktu Saran per Subtes</h3>
-                    <p class="text-xs text-soft-slate dark:text-night-subtext">Ubah alokasi menit setiap subtes sesuai kebutuhan simulasi Anda.</p>
+                    <h3 class="font-bold text-base text-soft-charcoal dark:text-night-text">Atur Kuota Soal Diujikan & Durasi Waktu per Subtes</h3>
+                    <p class="text-xs text-soft-slate dark:text-night-subtext">Bank Soal berfungsi sebagai tempat penyimpanan (pool cadangan). Walaupun Anda menambahkan banyak soal ke Bank Soal (misal 30–50 soal PU), jumlah soal yang keluar saat latihan/ujian akan tetap dibatasi sesuai <strong>Kuota Diujikan</strong> di bawah ini dan diambil secara acak bergantian setiap sesi.</p>
                 </div>
                 <div id="builder-subtests-config-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Injected via JS -->
@@ -1687,14 +1687,24 @@
          * BAGIAN 2: KONFIGURASI 7 SUBTES SNBT RESMI
          * ============================================================================
          */
+        const DEFAULT_SUBTEST_QUOTAS = {
+            PU: 20,
+            PPU: 15,
+            PBM: 15,
+            PK: 15,
+            LBI: 25,
+            LBE: 20,
+            PM: 20
+        };
+
         const DEFAULT_SUBTESTS = [
-            { id: 'PU', order: 1, category: 'TPS', name: 'Penalaran Umum', shortName: 'PU', minutes: 20, icon: 'fa-brain', desc: 'Penalaran logis, silogisme, analisis argumen, dan deret pola bilangan/huruf.' },
-            { id: 'PPU', order: 2, category: 'TPS', name: 'Pengetahuan & Pemahaman Umum', shortName: 'PPU', minutes: 11, icon: 'fa-lightbulb', desc: 'Pemahaman gagasan utama wacana, kosakata, dan simpulan logis bacaan.' },
-            { id: 'PBM', order: 3, category: 'TPS', name: 'Pemahaman Bacaan & Menulis', shortName: 'PBM', minutes: 15, icon: 'fa-pen-nib', desc: 'Kaidah ejaan baku (EYD), tanda baca, kalimat efektif, dan kepaduan paragraf.' },
-            { id: 'PK', order: 4, category: 'TPS', name: 'Pengetahuan Kuantitatif', shortName: 'PK', minutes: 15, icon: 'fa-square-root-variable', desc: 'Konsep dasar aljabar, aritmetika, geometri, peluang, dan statistika.' },
-            { id: 'LBI', order: 5, category: 'Literasi', name: 'Literasi dalam Bahasa Indonesia', shortName: 'LBI', minutes: 37, icon: 'fa-book-open', desc: 'Evaluasi mendalam teks sastra, sosial, sains populer, dan informasi publik.' },
-            { id: 'LBE', order: 6, category: 'Literasi', name: 'Literasi dalam Bahasa Inggris', shortName: 'LBE', minutes: 30, icon: 'fa-earth-americas', desc: 'Reading comprehension, inference, vocabulary in context, dan author attitude.' },
-            { id: 'PM', order: 7, category: 'Literasi', name: 'Penalaran Matematika', shortName: 'PM', minutes: 30, icon: 'fa-compass-drafting', desc: 'Pemecahan masalah matematika kontekstual dalam kehidupan sehari-hari.' }
+            { id: 'PU', order: 1, category: 'TPS', name: 'Penalaran Umum', shortName: 'PU', minutes: 20, examQuota: 20, icon: 'fa-brain', desc: 'Penalaran logis, silogisme, analisis argumen, dan deret pola bilangan/huruf.' },
+            { id: 'PPU', order: 2, category: 'TPS', name: 'Pengetahuan & Pemahaman Umum', shortName: 'PPU', minutes: 11, examQuota: 15, icon: 'fa-lightbulb', desc: 'Pemahaman gagasan utama wacana, kosakata, dan simpulan logis bacaan.' },
+            { id: 'PBM', order: 3, category: 'TPS', name: 'Pemahaman Bacaan & Menulis', shortName: 'PBM', minutes: 15, examQuota: 15, icon: 'fa-pen-nib', desc: 'Kaidah ejaan baku (EYD), tanda baca, kalimat efektif, dan kepaduan paragraf.' },
+            { id: 'PK', order: 4, category: 'TPS', name: 'Pengetahuan Kuantitatif', shortName: 'PK', minutes: 15, examQuota: 15, icon: 'fa-square-root-variable', desc: 'Konsep dasar aljabar, aritmetika, geometri, peluang, dan statistika.' },
+            { id: 'LBI', order: 5, category: 'Literasi', name: 'Literasi dalam Bahasa Indonesia', shortName: 'LBI', minutes: 37, examQuota: 25, icon: 'fa-book-open', desc: 'Evaluasi mendalam teks sastra, sosial, sains populer, dan informasi publik.' },
+            { id: 'LBE', order: 6, category: 'Literasi', name: 'Literasi dalam Bahasa Inggris', shortName: 'LBE', minutes: 30, examQuota: 20, icon: 'fa-earth-americas', desc: 'Reading comprehension, inference, vocabulary in context, dan author attitude.' },
+            { id: 'PM', order: 7, category: 'Literasi', name: 'Penalaran Matematika', shortName: 'PM', minutes: 30, examQuota: 20, icon: 'fa-compass-drafting', desc: 'Pemecahan masalah matematika kontekstual dalam kehidupan sehari-hari.' }
         ];
 
         /**
@@ -1953,6 +1963,34 @@
                 return questionIdx < FREE_TRIAL_LIMIT;
             },
 
+            normalizeSubtestsList(list) {
+                if (!Array.isArray(list) || list.length === 0) {
+                    return JSON.parse(JSON.stringify(DEFAULT_SUBTESTS));
+                }
+                return list.map(sub => {
+                    const def = DEFAULT_SUBTESTS.find(d => d.id === sub.id) || {};
+                    const fallbackQuota = DEFAULT_SUBTEST_QUOTAS[sub.id] || def.examQuota || 20;
+                    return {
+                        ...def,
+                        ...sub,
+                        minutes: Number(sub.minutes) || def.minutes || 15,
+                        examQuota: Number(sub.examQuota) > 0 ? Number(sub.examQuota) : fallbackQuota
+                    };
+                });
+            },
+
+            getSubtestExamQuota(subtestId) {
+                const sub = this.subtests.find(s => s.id === subtestId);
+                const configuredQuota = Number(sub?.examQuota) || DEFAULT_SUBTEST_QUOTAS[subtestId] || 20;
+                return Math.max(1, configuredQuota);
+            },
+
+            getSubtestSessionCount(subtestId) {
+                const bankCount = this.questions.filter(q => q.subtest === subtestId).length;
+                const quota = this.getSubtestExamQuota(subtestId);
+                return Math.min(bankCount, quota);
+            },
+
             formatRupiah(value) {
                 return 'Rp ' + Number(value || 0).toLocaleString('id-ID');
             },
@@ -2035,7 +2073,9 @@
 
                 // Hanya ambil bank soal dari dokumen user jika dia Admin atau jika Master belum ada
                 if (isAdminUser) {
-                    if (Array.isArray(saved.subtests) && saved.subtests.length > 0) this.subtests = saved.subtests;
+                    if (Array.isArray(saved.subtests) && saved.subtests.length > 0) {
+                        this.subtests = this.normalizeSubtestsList(saved.subtests);
+                    }
                     if (saved.passages && Object.keys(saved.passages).length > 0) {
                         this.passages = { ...JSON.parse(JSON.stringify(PASSAGES)), ...saved.passages };
                     }
@@ -2068,7 +2108,7 @@
             applyMasterPayload(masterData) {
                 if (!masterData || typeof masterData !== 'object') return;
                 if (Array.isArray(masterData.subtests) && masterData.subtests.length > 0) {
-                    this.subtests = masterData.subtests;
+                    this.subtests = this.normalizeSubtestsList(masterData.subtests);
                 }
                 if (masterData.passages && Object.keys(masterData.passages).length > 0) {
                     this.passages = { ...JSON.parse(JSON.stringify(PASSAGES)), ...masterData.passages };
@@ -2820,15 +2860,18 @@
             renderDashboard() {
                 this.renderSubscriptionUI();
 
-                const totalQ = this.questions.length;
+                const totalBankQ = this.questions.length;
+                const totalExamQ = this.subtests.reduce((acc, s) => acc + this.getSubtestSessionCount(s.id), 0);
                 const totalMin = this.subtests.reduce((acc, s) => acc + Number(s.minutes || 0), 0);
                 const isPrem = this.isPremiumActive();
                 const isAdmin = this.isAdmin();
 
-                document.getElementById('stat-total-questions').textContent = `${totalQ} Soal`;
+                document.getElementById('stat-total-questions').textContent = totalBankQ > totalExamQ
+                    ? `${totalExamQ} Ujian (${totalBankQ} Bank)`
+                    : `${totalExamQ} Soal`;
                 document.getElementById('stat-total-time').textContent = `${totalMin} Menit`;
-                document.getElementById('header-question-badge').textContent = totalQ;
-                document.getElementById('builder-count-label').textContent = totalQ;
+                document.getElementById('header-question-badge').textContent = totalBankQ;
+                document.getElementById('builder-count-label').textContent = totalBankQ;
                 document.getElementById('stat-attempts-count').textContent = `${this.attempts.length} Sesi`;
 
                 if (this.attempts.length > 0) {
@@ -2840,13 +2883,19 @@
 
                 const grid = document.getElementById('subtest-cards-grid');
                 grid.innerHTML = this.subtests.map(sub => {
-                    const qCount = this.questions.filter(q => q.subtest === sub.id).length;
+                    const bankCount = this.questions.filter(q => q.subtest === sub.id).length;
+                    const qCount = this.getSubtestSessionCount(sub.id);
+                    const spareCount = Math.max(0, bankCount - qCount);
                     const unlockedCount = isPrem ? qCount : Math.min(FREE_TRIAL_LIMIT, qCount);
                     const lockedCount = Math.max(0, qCount - unlockedCount);
                     const best = this.subtestBestScores[sub.id];
                     const categoryBadge = sub.category === 'TPS'
                         ? `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage">TPS • Subtes ${sub.order}</span>`
                         : `<span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-100/80 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300">Literasi • Subtes ${sub.order}</span>`;
+
+                    const poolBadge = spareCount > 0
+                        ? `<span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-slate dark:text-night-subtext" title="Terdapat ${bankCount} soal di Bank Soal (${spareCount} soal cadangan untuk rotasi acak tiap sesi)"><i class="fa-solid fa-database text-soft-sage"></i>Pool ${bankCount} Bank</span>`
+                        : '';
 
                     const quotaInfo = isPrem
                         ? `<span class="text-soft-sage dark:text-night-sage font-bold"><i class="fa-solid fa-unlock mr-1"></i>Akses Penuh (${qCount} Soal)</span>`
@@ -2859,8 +2908,11 @@
                     return `
                         <div class="bg-soft-surface dark:bg-night-surface rounded-2xl border border-soft-border dark:border-night-border p-5 soft-shadow flex flex-col justify-between gap-4 hover:border-soft-sage/60 transition-all">
                             <div class="space-y-3">
-                                <div class="flex items-center justify-between">
-                                    ${categoryBadge}
+                                <div class="flex items-center justify-between gap-1 flex-wrap">
+                                    <div class="flex items-center gap-1.5">
+                                        ${categoryBadge}
+                                        ${poolBadge}
+                                    </div>
                                     <span class="text-xs font-mono font-bold text-soft-slate dark:text-night-subtext"><i class="fa-regular fa-clock mr-1"></i>${sub.minutes} Menit</span>
                                 </div>
                                 <div class="flex items-start gap-3">
@@ -2904,17 +2956,20 @@
 
             // ---------------- SMART PASSAGE-AWARE RANDOMIZATION ENGINE ----------------
             /**
-             * Mengacak soal dalam satu subtes dengan tetap menjaga soal-soal yang memiliki
+             * Mengambil sampel soal sesuai kuota ujian subtes (examQuota) dari pool Bank Soal,
+             * dan mengacak urutan soal dengan tetap menjaga soal-soal yang memiliki
              * teks bacaan (passageId) tetap berada dalam satu kelompok utuh.
              */
             generateShuffledSubtestQuestions(subtestId, shouldShuffleQuestions, shouldShuffleOptions) {
+                const quota = this.getSubtestExamQuota(subtestId);
                 const rawList = this.questions
                     .filter(q => q.subtest === subtestId)
                     .map(q => JSON.parse(JSON.stringify(q)));
 
                 if (!shouldShuffleQuestions) {
-                    rawList.forEach(q => this.prepareQuestionOptionMapping(q, shouldShuffleOptions));
-                    return rawList;
+                    const sliced = rawList.slice(0, quota);
+                    sliced.forEach(q => this.prepareQuestionOptionMapping(q, shouldShuffleOptions));
+                    return sliced;
                 }
 
                 // Kelompokkan berdasarkan passageId (atau setiap soal mandiri menjadi 1 grup tersendiri)
@@ -2932,25 +2987,46 @@
                     }
                 });
 
-                // Gabungkan seluruh blok (blok wacana + blok soal mandiri)
+                // Gabungkan seluruh blok (blok wacana + blok soal mandiri) dari Bank Soal
                 const allBlocks = [...Array.from(groupsMap.values()), ...standaloneGroups];
 
-                // Fisher-Yates shuffle untuk urutan blok
+                // Fisher-Yates shuffle untuk urutan blok di pool Bank Soal
                 this.fisherYatesShuffle(allBlocks);
 
                 // Fisher-Yates shuffle untuk urutan soal di dalam masing-masing blok wacana
-                const finalQuestions = [];
                 allBlocks.forEach(block => {
                     if (block.length > 1) {
                         this.fisherYatesShuffle(block);
                     }
-                    block.forEach(q => {
-                        this.prepareQuestionOptionMapping(q, shouldShuffleOptions);
-                        finalQuestions.push(q);
-                    });
                 });
 
-                return finalQuestions;
+                // Pilih soal dari blok-blok yang sudah diacak hingga tepat mencapai kuota ujian (examQuota)
+                const selectedQuestions = [];
+                const deferredOversizedBlocks = [];
+
+                for (const block of allBlocks) {
+                    if (selectedQuestions.length >= quota) break;
+                    const remaining = quota - selectedQuestions.length;
+                    if (block.length <= remaining) {
+                        selectedQuestions.push(...block);
+                    } else {
+                        deferredOversizedBlocks.push(block);
+                    }
+                }
+
+                // Jika masih kurang dari kuota (karena blok tersisa merupakan wacana yang lebih panjang dari sisa slot),
+                // ambil sebagian soal dari blok wacana tersisa agar jumlah soal ujian selalu tepat sesuai kuota
+                for (const block of deferredOversizedBlocks) {
+                    if (selectedQuestions.length >= quota) break;
+                    const needed = quota - selectedQuestions.length;
+                    selectedQuestions.push(...block.slice(0, needed));
+                }
+
+                selectedQuestions.forEach(q => {
+                    this.prepareQuestionOptionMapping(q, shouldShuffleOptions);
+                });
+
+                return selectedQuestions;
             },
 
             fisherYatesShuffle(arr) {
@@ -3771,21 +3847,47 @@
                 if (!container) return;
 
                 container.innerHTML = this.subtests.map(sub => {
-                    const count = this.questions.filter(q => q.subtest === sub.id).length;
+                    const bankCount = this.questions.filter(q => q.subtest === sub.id).length;
+                    const quota = this.getSubtestExamQuota(sub.id);
+                    const spareCount = Math.max(0, bankCount - quota);
+                    const spareBadge = spareCount > 0
+                        ? `<span class="text-soft-sage dark:text-night-sage font-bold">+${spareCount} soal cadangan rotasi</span>`
+                        : `<span class="text-soft-slate">0 cadangan (tambahkan soal ke bank untuk rotasi)</span>`;
+
                     return `
-                        <div class="p-4 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border flex items-center justify-between gap-4">
-                            <div>
+                        <div class="p-4 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="space-y-0.5">
                                 <div class="text-xs font-bold text-soft-sage">${sub.category} • Subtes ${sub.order}</div>
                                 <div class="font-bold text-sm text-soft-charcoal dark:text-night-text">${sub.name} (${sub.shortName})</div>
-                                <div class="text-xs text-soft-slate">${count} Soal aktif di bank soal</div>
+                                <div class="text-xs text-soft-slate">Tersimpan di Bank: <strong>${bankCount} Soal</strong> • ${spareBadge}</div>
                             </div>
-                            <div class="flex items-center gap-2">
-                                <input type="number" min="1" max="180" value="${sub.minutes}" onchange="app.updateSubtestDuration('${sub.id}', this.value)" class="w-20 px-3 py-2 rounded-xl text-sm font-bold text-center bg-soft-surface dark:bg-night-surface border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
-                                <span class="text-xs font-semibold text-soft-slate">Menit</span>
+                            <div class="flex flex-wrap items-center gap-3 shrink-0">
+                                <div class="flex items-center gap-1.5" title="Jumlah soal yang dikeluarkan saat sesi latihan/ujian berlangsung">
+                                    <label class="text-[11px] font-bold text-soft-slate uppercase">Diujikan:</label>
+                                    <input type="number" min="1" max="100" value="${quota}" onchange="app.updateSubtestExamQuota('${sub.id}', this.value)" class="w-16 px-2.5 py-2 rounded-xl text-sm font-bold text-center bg-soft-surface dark:bg-night-surface border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
+                                    <span class="text-xs font-semibold text-soft-slate">Soal</span>
+                                </div>
+                                <div class="flex items-center gap-1.5" title="Durasi waktu pengerjaan subtes">
+                                    <label class="text-[11px] font-bold text-soft-slate uppercase">Waktu:</label>
+                                    <input type="number" min="1" max="180" value="${sub.minutes}" onchange="app.updateSubtestDuration('${sub.id}', this.value)" class="w-16 px-2.5 py-2 rounded-xl text-sm font-bold text-center bg-soft-surface dark:bg-night-surface border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
+                                    <span class="text-xs font-semibold text-soft-slate">Menit</span>
+                                </div>
                             </div>
                         </div>
                     `;
                 }).join('');
+            },
+
+            updateSubtestExamQuota(subId, quotaVal) {
+                const sub = this.subtests.find(s => s.id === subId);
+                if (sub) {
+                    const fallback = DEFAULT_SUBTEST_QUOTAS[subId] || 20;
+                    sub.examQuota = Math.max(1, parseInt(quotaVal, 10) || fallback);
+                    this.saveData(false);
+                    this.renderDashboard();
+                    this.renderBuilderSubtestsConfig();
+                    this.showToast(`Kuota soal ujian ${sub.shortName} diatur menjadi ${sub.examQuota} soal per sesi.`, 'success');
+                }
             },
 
             updateSubtestDuration(subId, minutes) {
@@ -4065,7 +4167,7 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                         if (Array.isArray(data.questions)) {
                             this.questions = data.questions;
                             if (data.passages) this.passages = { ...this.passages, ...data.passages };
-                            if (Array.isArray(data.subtests)) this.subtests = data.subtests;
+                            if (Array.isArray(data.subtests)) this.subtests = this.normalizeSubtestsList(data.subtests);
                             this.saveData(true);
                             this.showToast(`Berhasil memuat ${this.questions.length} soal dari file JSON & disimpan ke Cloud!`, 'success');
                         } else {
