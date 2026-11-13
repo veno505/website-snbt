@@ -1741,14 +1741,29 @@
                     this.questions = masterData.questions;
                 }
                 if (masterData.paymentConfig && typeof masterData.paymentConfig === 'object') {
+                    const loadedMonthlyPrice = Number(masterData.paymentConfig.monthlyPrice) || 23000;
+                    const loadedSnbtPrice = Number(masterData.paymentConfig.snbtPrice) || 80000;
+                    const loadedWeeklyPrice = Number(masterData.paymentConfig.weeklyPrice) || 7000;
+
                     this.paymentConfig = {
                         ...JSON.parse(JSON.stringify(DEFAULT_PAYMENT_CONFIG)),
                         ...masterData.paymentConfig,
+                        weeklyPrice: loadedWeeklyPrice,
+                        monthlyPrice: loadedMonthlyPrice,
+                        snbtPrice: loadedSnbtPrice,
                         plans: {
                             ...JSON.parse(JSON.stringify(DEFAULT_PAYMENT_CONFIG.plans)),
                             ...(masterData.paymentConfig.plans || {})
                         }
                     };
+                    if (this.paymentConfig.plans?.monthly) {
+                        this.paymentConfig.plans.monthly.price = loadedMonthlyPrice;
+                        this.paymentConfig.plans.monthly.name = 'Paket 1 Bulan (30 Hari)';
+                    }
+                    if (this.paymentConfig.plans?.snbt) {
+                        this.paymentConfig.plans.snbt.price = loadedSnbtPrice;
+                        this.paymentConfig.plans.snbt.name = 'Paket 3 Bulan (90 Hari)';
+                    }
                 }
                 if (masterData.usersIndex && typeof masterData.usersIndex === 'object') {
                     this.usersIndex = masterData.usersIndex;
