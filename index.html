@@ -999,12 +999,12 @@
                                     <input type="number" id="admin-price-weekly" step="500" class="w-full px-2.5 py-2 rounded-xl text-xs font-bold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-bold text-soft-slate mb-1">Bulanan (30Hr)</label>
+                                    <label class="block text-[11px] font-bold text-soft-slate mb-1">1 Bulan (30Hr)</label>
                                     <input type="number" id="admin-price-monthly" step="1000" class="w-full px-2.5 py-2 rounded-xl text-xs font-bold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
                                 </div>
                                 <div>
-                                    <label class="block text-[11px] font-bold text-soft-slate mb-1">90 Hari (SNBT)</label>
-                                    <input type="number" id="admin-price-intensive" step="1000" class="w-full px-2.5 py-2 rounded-xl text-xs font-bold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
+                                    <label class="block text-[11px] font-bold text-soft-slate mb-1">3 Bulan (90Hr)</label>
+                                    <input type="number" id="admin-price-snbt" step="1000" class="w-full px-2.5 py-2 rounded-xl text-xs font-bold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
                                 </div>
                             </div>
                         </div>
@@ -1276,12 +1276,12 @@
             paymentNote: "Scan kode QRIS di atas sesuai nominal paket pilihan Anda, lalu klik tombol Konfirmasi WhatsApp untuk mengirim bukti pembayaran agar langsung diaktifkan Admin.",
             paymentNotes: "Scan kode QRIS di atas sesuai nominal paket pilihan Anda, lalu klik tombol Konfirmasi WhatsApp untuk mengirim bukti pembayaran agar langsung diaktifkan Admin.",
             weeklyPrice: 7000,
-            monthlyPrice: 20000,
-            snbtPrice: 45000,
+            monthlyPrice: 23000,
+            snbtPrice: 80000,
             plans: {
                 weekly: {
                     id: "weekly",
-                    name: "Paket Mingguan",
+                    name: "Paket Mingguan (7 Hari)",
                     price: 7000,
                     days: 7,
                     badge: "Coba Intensif",
@@ -1289,19 +1289,19 @@
                 },
                 monthly: {
                     id: "monthly",
-                    name: "Paket Bulanan",
-                    price: 20000,
+                    name: "Paket 1 Bulan (30 Hari)",
+                    price: 23000,
                     days: 30,
-                    badge: "Paling Populer • Hemat 28%",
-                    desc: "Akses penuh seluruh 7 subtes, analisis skor IRT, & pembahasan selama 30 hari."
+                    badge: "Paling Populer",
+                    desc: "Akses penuh seluruh 7 subtes, analisis skor IRT, & pembahasan selama 1 bulan penuh (30 hari)."
                 },
-                intensive: {
-                    id: "intensive",
-                    name: "Paket Lulus SNBT",
-                    price: 45000,
+                snbt: {
+                    id: "snbt",
+                    name: "Paket 3 Bulan (90 Hari)",
+                    price: 80000,
                     days: 90,
-                    badge: "Best Value • 90 Hari",
-                    desc: "Akses penuh 90 hari sampai siap menghadapi UTBK-SNBT tanpa batas latihan."
+                    badge: "Best Value • 3 Bulan",
+                    desc: "Akses penuh 3 bulan (90 hari) sampai siap menghadapi UTBK-SNBT tanpa batas latihan."
                 }
             }
         };
@@ -3850,19 +3850,25 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                         key: 'weekly',
                         name: 'Paket Mingguan (7 Hari)',
                         days: 7,
+                        badge: 'Coba Intensif',
+                        desc: 'Buka seluruh 7 subtes, 130+ bank soal, & pembahasan lengkap selama 7 hari penuh.',
                         price: Number(cfg.weeklyPrice) || 7000
                     },
                     monthly: {
                         key: 'monthly',
-                        name: 'Paket Bulanan (30 Hari)',
+                        name: 'Paket 1 Bulan (30 Hari)',
                         days: 30,
-                        price: Number(cfg.monthlyPrice) || 20000
+                        badge: 'Paling Populer',
+                        desc: 'Akses penuh seluruh 7 subtes, analisis skor IRT, & pembahasan selama 1 bulan penuh (30 hari).',
+                        price: Number(cfg.monthlyPrice) || 23000
                     },
                     snbt: {
                         key: 'snbt',
-                        name: 'Paket Lulus SNBT (90 Hari)',
+                        name: 'Paket 3 Bulan (90 Hari)',
                         days: 90,
-                        price: Number(cfg.snbtPrice) || 45000
+                        badge: 'Best Value • 3 Bulan',
+                        desc: 'Akses penuh 3 bulan (90 hari) sampai siap menghadapi UTBK-SNBT tanpa batas latihan.',
+                        price: Number(cfg.snbtPrice) || 80000
                     }
                 };
                 return plans[planKey] || plans.weekly;
@@ -3870,7 +3876,7 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
 
             openUpgradeModal(defaultPlan = '') {
                 if (defaultPlan) this.selectedUpgradePlan = defaultPlan;
-                if (!this.selectedUpgradePlan) this.selectedUpgradePlan = 'weekly';
+                if (!this.selectedUpgradePlan) this.selectedUpgradePlan = 'monthly';
                 this.renderUpgradeModalContent();
                 document.getElementById('modal-upgrade-plan')?.classList.remove('hidden');
             },
@@ -3887,33 +3893,53 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
             renderUpgradeModalContent() {
                 const cfg = this.paymentConfig || DEFAULT_PAYMENT_CONFIG;
                 const selected = this.getPlanDefinition(this.selectedUpgradePlan);
+                const planKeys = ['weekly', 'monthly', 'snbt'];
 
-                // Update prices on cards
-                const wEl = document.getElementById('upgrade-price-weekly');
-                const mEl = document.getElementById('upgrade-price-monthly');
-                const sEl = document.getElementById('upgrade-price-snbt');
-                if (wEl) wEl.textContent = this.formatRupiah(cfg.weeklyPrice);
-                if (mEl) mEl.textContent = this.formatRupiah(cfg.monthlyPrice);
-                if (sEl) sEl.textContent = this.formatRupiah(cfg.snbtPrice);
+                // Render dynamic plan selection cards inside #upgrade-plans-grid
+                const gridEl = document.getElementById('upgrade-plans-grid');
+                if (gridEl) {
+                    gridEl.innerHTML = planKeys.map(key => {
+                        const plan = this.getPlanDefinition(key);
+                        const isSel = key === selected.key;
+                        const cardClasses = isSel
+                            ? 'cursor-pointer text-left p-4 sm:p-5 rounded-2xl border-2 border-amber-500 bg-amber-50/70 dark:bg-amber-950/40 transition-all relative flex flex-col justify-between gap-3 shadow-md'
+                            : 'cursor-pointer text-left p-4 sm:p-5 rounded-2xl border-2 border-soft-border dark:border-night-border bg-soft-bg/50 dark:bg-night-bg/50 hover:border-amber-400/60 transition-all relative flex flex-col justify-between gap-3';
 
-                // Highlight selected plan card
-                ['weekly', 'monthly', 'snbt'].forEach(key => {
-                    const card = document.getElementById(`plan-card-${key}`);
-                    const radio = document.getElementById(`plan-radio-${key}`);
-                    if (!card) return;
-                    const isSel = key === selected.key;
-                    card.className = isSel
-                        ? 'cursor-pointer text-left p-4 sm:p-5 rounded-2xl border-2 border-amber-500 bg-amber-50/60 dark:bg-amber-950/30 transition-all relative flex flex-col justify-between gap-4 shadow-md'
-                        : 'cursor-pointer text-left p-4 sm:p-5 rounded-2xl border-2 border-soft-border dark:border-night-border bg-soft-bg/50 dark:bg-night-bg/50 hover:border-amber-400/60 transition-all relative flex flex-col justify-between gap-4';
-                    if (radio) {
-                        radio.className = isSel
+                        const radioClasses = isSel
                             ? 'w-5 h-5 rounded-full border-2 border-amber-500 flex items-center justify-center text-amber-500 text-[10px]'
                             : 'w-5 h-5 rounded-full border-2 border-soft-border dark:border-night-border flex items-center justify-center text-transparent text-[10px]';
-                    }
-                });
 
-                // Current user status banner inside modal
-                const statusBanner = document.getElementById('upgrade-current-status-banner');
+                        const badgeColor = key === 'monthly'
+                            ? 'bg-amber-500 text-white'
+                            : (key === 'snbt' ? 'bg-soft-sage text-white' : 'bg-soft-sageLight text-soft-sage dark:bg-night-sageLight dark:text-night-sage');
+
+                        return `
+                            <div id="plan-card-${key}" onclick="app.selectUpgradePlan('${key}')" class="${cardClasses}">
+                                <div class="flex items-start justify-between gap-3">
+                                    <div class="space-y-1">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-sm sm:text-base font-extrabold text-soft-charcoal dark:text-night-text">${this.escapeHtml(plan.name)}</span>
+                                            <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wide ${badgeColor}">${plan.badge}</span>
+                                        </div>
+                                        <p class="text-xs text-soft-slate dark:text-night-subtext leading-relaxed">${this.escapeHtml(plan.desc)}</p>
+                                    </div>
+                                    <div id="plan-radio-${key}" class="${radioClasses}">
+                                        <i class="fa-solid fa-circle"></i>
+                                    </div>
+                                </div>
+                                <div class="flex items-baseline justify-between pt-2 border-t border-soft-border/70 dark:border-night-border/70">
+                                    <div class="text-xs font-semibold text-soft-slate dark:text-night-subtext">Durasi Aktif: <strong>${plan.days} Hari</strong></div>
+                                    <div class="text-base sm:text-lg font-black font-mono text-soft-sage dark:text-night-sage" id="upgrade-price-${key}">
+                                        ${this.formatRupiah(plan.price)}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                // Current user status banner inside modal (both id variants)
+                const statusBanner = document.getElementById('upgrade-current-status-banner') || document.getElementById('upgrade-modal-status-bar');
                 if (statusBanner) {
                     if (this.isPremiumActive()) {
                         statusBanner.classList.remove('hidden');
@@ -3925,39 +3951,61 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                         statusBanner.classList.remove('hidden');
                         statusBanner.className = 'p-3.5 rounded-2xl border border-amber-500/50 bg-amber-500/10 text-xs sm:text-sm font-semibold flex items-center justify-between gap-3 text-amber-900 dark:text-amber-300';
                         statusBanner.innerHTML = `
-                            <span><i class="fa-solid fa-clock mr-1.5"></i>Permintaan aktivasi <strong>${this.escapeHtml(this.subscription.requestedPlan)}</strong> telah tercatat (${this.escapeHtml(this.subscription.requestedAt || 'Baru saja')}). Begitu Admin mengaktifkan di Panel Admin, akun Anda otomatis terbuka!</span>
+                            <span><i class="fa-solid fa-clock mr-1.5"></i>Permintaan aktivasi <strong>${this.escapeHtml(this.subscription.requestedPlan)}</strong> telah tercatat (${this.escapeHtml(this.subscription.requestedAt || 'Baru saja')}). Begitu Admin mengonfirmasi di Panel Admin, akun Anda otomatis terbuka!</span>
                         `;
                     } else {
-                        statusBanner.classList.add('hidden');
+                        statusBanner.classList.remove('hidden');
+                        statusBanner.className = 'p-3.5 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm';
+                        statusBanner.innerHTML = `
+                            <span class="text-soft-charcoal dark:text-night-text font-medium"><i class="fa-solid fa-circle-info text-soft-sage mr-1.5"></i>Status Anda: <strong>Free Trial</strong> (3 Soal per Subtes). Pilih paket untuk membuka semua soal.</span>
+                            <span class="text-soft-slate text-xs">${this.currentUser?.email || ''}</span>
+                        `;
                     }
                 }
 
-                // QRIS & Payment Details
-                const qrisImg = document.getElementById('upgrade-qris-img');
-                const qrisEmpty = document.getElementById('upgrade-qris-placeholder');
-                if (qrisImg && qrisEmpty) {
+                // Checkout Details on Right Box
+                const checkoutNameEl = document.getElementById('checkout-selected-plan-name') || document.getElementById('upgrade-selected-name');
+                const checkoutPriceEl = document.getElementById('checkout-selected-plan-price') || document.getElementById('upgrade-selected-price');
+                const checkoutBankEl = document.getElementById('checkout-bank-info');
+                const checkoutNotesEl = document.getElementById('checkout-payment-notes');
+
+                if (checkoutNameEl) checkoutNameEl.textContent = selected.name;
+                if (checkoutPriceEl) checkoutPriceEl.textContent = this.formatRupiah(selected.price);
+                if (checkoutBankEl) checkoutBankEl.textContent = cfg.bankInfo || 'QRIS Semua E-Wallet & M-Banking';
+                if (checkoutNotesEl) checkoutNotesEl.textContent = cfg.paymentNote || cfg.paymentNotes || DEFAULT_PAYMENT_CONFIG.paymentNote;
+
+                // QRIS Image Box Rendering (handles both #checkout-qris-box and #upgrade-qris-img)
+                const qrisBox = document.getElementById('checkout-qris-box');
+                if (qrisBox) {
                     if (cfg.qrisImageUrl && cfg.qrisImageUrl.trim() !== '') {
-                        qrisImg.src = cfg.qrisImageUrl;
-                        qrisImg.classList.remove('hidden');
-                        qrisEmpty.classList.add('hidden');
+                        qrisBox.innerHTML = `
+                            <img src="${cfg.qrisImageUrl}" alt="QRIS Pembayaran" class="max-h-56 mx-auto rounded-xl object-contain shadow-sm">
+                            <div class="text-[11px] font-bold text-soft-slate">Scan QRIS via GoPay, OVO, DANA, ShopeePay, BCA, dsb.</div>
+                        `;
                     } else {
-                        qrisImg.src = '';
-                        qrisImg.classList.add('hidden');
-                        qrisEmpty.classList.remove('hidden');
+                        qrisBox.innerHTML = `
+                            <div class="py-8 text-center space-y-2">
+                                <i class="fa-solid fa-qrcode text-4xl text-soft-slate/40"></i>
+                                <div class="text-xs font-bold text-soft-charcoal">Barcode QRIS Belum Diunggah</div>
+                                <p class="text-[11px] text-soft-slate max-w-xs mx-auto">Admin dapat mengunggah gambar QRIS di tab <strong>Panel Admin</strong>. Anda tetap dapat melanjutkan konfirmasi via WhatsApp.</p>
+                            </div>
+                        `;
                     }
                 }
 
-                const merchEl = document.getElementById('upgrade-merchant-label');
-                const selNameEl = document.getElementById('upgrade-selected-name');
-                const selPriceEl = document.getElementById('upgrade-selected-price');
-                const emailEl = document.getElementById('upgrade-user-email');
-                const noteEl = document.getElementById('upgrade-payment-note-display');
-
-                if (merchEl) merchEl.textContent = cfg.merchantName || 'EduSoft SNBT Official';
-                if (selNameEl) selNameEl.textContent = selected.name;
-                if (selPriceEl) selPriceEl.textContent = this.formatRupiah(selected.price);
-                if (emailEl) emailEl.textContent = this.currentUser?.email || '-';
-                if (noteEl) noteEl.textContent = cfg.paymentNote || DEFAULT_PAYMENT_CONFIG.paymentNote;
+                const legacyQrisImg = document.getElementById('upgrade-qris-img');
+                const legacyQrisEmpty = document.getElementById('upgrade-qris-placeholder');
+                if (legacyQrisImg && legacyQrisEmpty) {
+                    if (cfg.qrisImageUrl && cfg.qrisImageUrl.trim() !== '') {
+                        legacyQrisImg.src = cfg.qrisImageUrl;
+                        legacyQrisImg.classList.remove('hidden');
+                        legacyQrisEmpty.classList.add('hidden');
+                    } else {
+                        legacyQrisImg.src = '';
+                        legacyQrisImg.classList.add('hidden');
+                        legacyQrisEmpty.classList.remove('hidden');
+                    }
+                }
             },
 
             async submitUpgradeRequestAndOpenWA() {
@@ -4034,8 +4082,8 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                     qrisUrlInput.value = (cfg.qrisImageUrl && !cfg.qrisImageUrl.startsWith('data:')) ? cfg.qrisImageUrl : '';
                 }
                 if (wPriceInput && document.activeElement !== wPriceInput) wPriceInput.value = cfg.weeklyPrice || 7000;
-                if (mPriceInput && document.activeElement !== mPriceInput) mPriceInput.value = cfg.monthlyPrice || 20000;
-                if (sPriceInput && document.activeElement !== sPriceInput) sPriceInput.value = cfg.snbtPrice || 45000;
+                if (mPriceInput && document.activeElement !== mPriceInput) mPriceInput.value = cfg.monthlyPrice || 23000;
+                if (sPriceInput && document.activeElement !== sPriceInput) sPriceInput.value = cfg.snbtPrice || 80000;
 
                 // QRIS Preview in Admin
                 const previewImg = document.getElementById('admin-qris-preview-img');
@@ -4149,11 +4197,11 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                                 <button onclick="app.adminActivateUser('${u.uid}', 7, 'Paket Mingguan (7 Hari)')" class="px-2.5 py-1.5 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white font-bold text-xs transition-all" title="Aktifkan / Tambah 7 Hari">
                                     +7 Hari
                                 </button>
-                                <button onclick="app.adminActivateUser('${u.uid}', 30, 'Paket Bulanan (30 Hari)')" class="px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-all" title="Aktifkan / Tambah 30 Hari">
-                                    +30 Hari
+                                <button onclick="app.adminActivateUser('${u.uid}', 30, 'Paket 1 Bulan (30 Hari)')" class="px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-all" title="Aktifkan / Tambah 1 Bulan (30 Hari)">
+                                    +1 Bulan
                                 </button>
-                                <button onclick="app.adminActivateUser('${u.uid}', 90, 'Paket Lulus SNBT (90 Hari)')" class="px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs transition-all" title="Aktifkan / Tambah 90 Hari">
-                                    +90 Hari
+                                <button onclick="app.adminActivateUser('${u.uid}', 90, 'Paket 3 Bulan (90 Hari)')" class="px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs transition-all" title="Aktifkan / Tambah 3 Bulan (90 Hari)">
+                                    +3 Bulan
                                 </button>
                                 <button onclick="app.adminPromptCustomDays('${u.uid}')" class="px-2.5 py-1.5 rounded-xl bg-soft-surface dark:bg-night-surface hover:bg-soft-muted border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text font-bold text-xs transition-all" title="Input Durasi Hari Custom">
                                     Custom
@@ -4321,8 +4369,8 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                 const noteVal = document.getElementById('admin-cfg-note')?.value.trim() || DEFAULT_PAYMENT_CONFIG.paymentNote;
                 const qrisUrlVal = document.getElementById('admin-cfg-qris-url')?.value.trim() || '';
                 const wPrice = Math.max(1000, Number(document.getElementById('admin-price-weekly')?.value) || 7000);
-                const mPrice = Math.max(1000, Number(document.getElementById('admin-price-monthly')?.value) || 20000);
-                const sPrice = Math.max(1000, Number(document.getElementById('admin-price-snbt')?.value) || 45000);
+                const mPrice = Math.max(1000, Number(document.getElementById('admin-price-monthly')?.value) || 23000);
+                const sPrice = Math.max(1000, Number(document.getElementById('admin-price-snbt')?.value) || 80000);
 
                 this.paymentConfig = {
                     whatsappNumber: waVal,
