@@ -263,15 +263,26 @@
 
                 <div class="hidden md:block h-6 w-[1px] bg-soft-border dark:bg-night-border mx-0.5"></div>
 
-                <!-- User Info Pill -->
-                <div id="user-profile-badge" class="hidden lg:flex items-center gap-2 px-3 py-1.5 h-10 rounded-xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border max-w-[170px]" title="Akun Peserta Aktif">
+                <!-- Mobile Profile Quick Button -->
+                <button onclick="app.navigate('profile')" id="btn-mobile-profile" class="lg:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl border border-soft-border dark:border-night-border flex items-center justify-center text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted transition-colors shrink-0" title="Buka Profil Siswa">
+                    <div class="w-6 h-6 rounded-lg bg-soft-sage text-white text-xs font-extrabold flex items-center justify-center" id="mobile-user-avatar-initial">
+                        U
+                    </div>
+                </button>
+
+                <!-- User Info Pill (Clickable -> View Profile) -->
+                <button onclick="app.navigate('profile')" id="user-profile-badge" class="hidden lg:flex items-center gap-2 px-3 py-1.5 h-10 rounded-xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border hover:border-soft-sage dark:hover:border-night-sage hover:bg-soft-muted dark:hover:bg-night-muted transition-all cursor-pointer max-w-[180px] text-left shrink-0" title="Klik untuk Buka Menu Profil Siswa">
                     <div class="w-6 h-6 rounded-lg bg-soft-sage text-white text-xs font-extrabold flex items-center justify-center shrink-0" id="user-avatar-initial">
                         U
                     </div>
                     <div class="truncate">
                         <div class="text-xs font-bold text-soft-charcoal dark:text-night-text truncate" id="user-display-name">Peserta</div>
+                        <div class="text-[10px] text-soft-slate dark:text-night-subtext leading-none flex items-center gap-1">
+                            <i class="fa-solid fa-user-graduate text-[9px] text-soft-sage"></i>
+                            <span>Profil Siswa</span>
+                        </div>
                     </div>
-                </div>
+                </button>
 
                 <!-- Install PWA App Button (muncul otomatis saat browser siap menginstal) -->
                 <button onclick="window.installPwaApp()" id="btn-install-pwa" class="hidden w-9 h-9 sm:w-auto sm:px-3 sm:h-10 rounded-xl border border-soft-sageBorder bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage hover:bg-soft-sage hover:text-white text-xs sm:text-sm font-bold transition-all items-center justify-center gap-1.5 shrink-0" title="Instal sebagai Aplikasi di HP/Perangkat">
@@ -305,6 +316,10 @@
                 <button onclick="app.navigate('history')" id="nav-btn-history" class="flex-1 md:flex-initial justify-center px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted whitespace-nowrap">
                     <i class="fa-solid fa-chart-line"></i>
                     <span>Riwayat</span>
+                </button>
+                <button onclick="app.navigate('profile')" id="nav-btn-profile" class="flex-1 md:flex-initial justify-center px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted whitespace-nowrap">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <span>Profil</span>
                 </button>
                 <button onclick="app.navigate('admin')" id="nav-btn-admin" class="hidden flex-1 md:flex-initial justify-center px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all items-center gap-1.5 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted whitespace-nowrap">
                     <i class="fa-solid fa-user-shield text-soft-amber"></i>
@@ -1018,6 +1033,311 @@
             </div>
         </section>
 
+        <!-- ==================== VIEW 8: PROFIL SISWA & TARGET STUDI SNBT ==================== -->
+        <section id="view-profile" class="hidden max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-6 animate-fade">
+            <!-- 1. Hero Card Profil Siswa -->
+            <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-6 sm:p-8 soft-shadow relative overflow-hidden">
+                <div class="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-soft-sageLight/50 dark:bg-night-sageLight/20 blur-3xl pointer-events-none"></div>
+
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                    <div class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-5">
+                        <!-- Avatar Bulat Besar -->
+                        <div class="relative shrink-0">
+                            <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-gradient-to-br from-soft-sage to-emerald-700 text-white text-3xl sm:text-4xl font-black flex items-center justify-center shadow-lg border-4 border-white dark:border-night-surface" id="profile-avatar-large">
+                                U
+                            </div>
+                            <div class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-soft-sage text-white text-xs flex items-center justify-center border-2 border-white dark:border-night-surface shadow-sm" title="Akun Terverifikasi">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                        </div>
+
+                        <!-- Data Diri & Akun -->
+                        <div class="space-y-2">
+                            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                                <h1 class="text-2xl sm:text-3xl font-extrabold text-soft-charcoal dark:text-night-text" id="profile-display-name-text">Peserta SNBT</h1>
+                                <span id="profile-badge-role" class="px-3 py-0.5 rounded-full text-xs font-black uppercase tracking-wide bg-amber-500 text-white">Free Trial</span>
+                            </div>
+
+                            <p class="text-xs sm:text-sm text-soft-slate dark:text-night-subtext flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1">
+                                <span><i class="fa-regular fa-envelope mr-1 text-soft-sage"></i><span id="profile-email-text">peserta@email.com</span></span>
+                                <span>•</span>
+                                <span class="inline-flex items-center gap-1 font-mono text-[11px] bg-soft-bg dark:bg-night-bg px-2 py-0.5 rounded-md border border-soft-border dark:border-night-border cursor-pointer hover:border-soft-sage" onclick="app.copyUidToClipboard()" title="Klik untuk Salin UID">
+                                    <i class="fa-solid fa-id-card text-soft-slate"></i>
+                                    <span id="profile-uid-text">UID: -</span>
+                                    <i class="fa-regular fa-copy text-[10px] text-soft-slate ml-0.5"></i>
+                                </span>
+                            </p>
+
+                            <p class="text-xs text-soft-slate dark:text-night-subtext max-w-xl">
+                                Akun resmi peserta CBT UTBK-SNBT EduSoft. Latihan secara teratur dengan sistem IRT resmi dan raih kampus impianmu!
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Action CTA Buttons -->
+                    <div class="flex flex-wrap items-center justify-center sm:justify-end gap-2.5 shrink-0 w-full md:w-auto">
+                        <button onclick="app.openUpgradeModal()" class="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs sm:text-sm shadow-sm transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-crown"></i>
+                            <span id="profile-cta-plan-btn">Upgrade Plan</span>
+                        </button>
+                        <button onclick="app.toggleTheme()" class="px-3.5 py-2.5 rounded-xl bg-soft-bg dark:bg-night-bg hover:bg-soft-muted dark:hover:bg-night-muted border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5" title="Ganti Mode Tampilan">
+                            <i class="fa-solid fa-circle-half-stroke"></i>
+                            <span>Tema</span>
+                        </button>
+                        <button onclick="app.confirmLogout()" class="px-3.5 py-2.5 rounded-xl border border-soft-terra/30 bg-soft-terraLight/70 dark:bg-red-950/40 hover:bg-soft-terra hover:text-white text-soft-terra dark:text-red-300 font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Keluar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Grid Dua Kolom: Target Kampus Impian & Status Paket Belajar -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Kolom Kiri (7 Cols): Target SNBT & Kampus Impian -->
+                <div class="lg:col-span-7 bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-6 soft-shadow space-y-5">
+                    <div class="flex items-center justify-between border-b border-soft-border dark:border-night-border pb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-bullseye"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-base sm:text-lg font-extrabold text-soft-charcoal dark:text-night-text">Target SNBT & Kampus Impian</h2>
+                                <p class="text-xs text-soft-slate dark:text-night-subtext">Tetapkan target PTN dan skor impian untuk mengukur kesiapan belajarmu</p>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-slate">
+                            Target UTBK
+                        </span>
+                    </div>
+
+                    <!-- Progress Target Skor -->
+                    <div class="p-4 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border space-y-3">
+                        <div class="flex items-center justify-between text-xs font-bold">
+                            <span class="text-soft-slate dark:text-night-subtext flex items-center gap-1.5">
+                                <i class="fa-solid fa-chart-simple text-soft-sage"></i> Ketercapaian Target Skor
+                            </span>
+                            <span class="text-soft-charcoal dark:text-night-text font-mono font-black" id="profile-target-score-progress-text">0 / 700 (0%)</span>
+                        </div>
+                        <div class="w-full bg-soft-border/60 dark:bg-night-border rounded-full h-3 overflow-hidden">
+                            <div id="profile-target-progress-bar" class="bg-gradient-to-r from-soft-sage to-emerald-600 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                        <div class="flex items-center justify-between text-[11px] text-soft-slate dark:text-night-subtext">
+                            <span id="profile-best-score-hint">Skor Tertinggi Anda: <strong>—</strong></span>
+                            <span id="profile-target-diff-hint">Target: <strong>700</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Form Target PTN & Skor -->
+                    <form id="profile-target-form" onsubmit="event.preventDefault(); app.saveProfileStudyTargets();" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-soft-charcoal dark:text-night-text mb-1">
+                                    <i class="fa-solid fa-graduation-cap text-soft-sage mr-1"></i>Pilihan 1: PTN Impian
+                                </label>
+                                <input type="text" id="profile-target-ptn1" placeholder="Contoh: Universitas Indonesia (UI)" class="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text focus:outline-none focus:border-soft-sage">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-soft-charcoal dark:text-night-text mb-1">
+                                    <i class="fa-solid fa-book-bookmark text-soft-sage mr-1"></i>Pilihan 1: Jurusan / Prodi
+                                </label>
+                                <input type="text" id="profile-target-prodi1" placeholder="Contoh: Pendidikan Dokter" class="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text focus:outline-none focus:border-soft-sage">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-soft-charcoal dark:text-night-text mb-1">
+                                    <i class="fa-solid fa-building-columns text-amber-500 mr-1"></i>Pilihan 2: PTN Alternatif
+                                </label>
+                                <input type="text" id="profile-target-ptn2" placeholder="Contoh: ITB / UGM / Undip" class="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text focus:outline-none focus:border-soft-sage">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-soft-charcoal dark:text-night-text mb-1">
+                                    <i class="fa-solid fa-award text-amber-500 mr-1"></i>Target Nilai UTBK (0 - 1000)
+                                </label>
+                                <input type="number" id="profile-target-score-input" min="300" max="1000" step="5" placeholder="Contoh: 720" class="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text focus:outline-none focus:border-soft-sage">
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end pt-1">
+                            <button type="submit" class="px-5 py-2.5 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white font-extrabold text-xs sm:text-sm transition-all flex items-center gap-2 shadow-sm">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                <span>Simpan Target SNBT</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Kolom Kanan (5 Cols): Status Paket Belajar & Fasilitas -->
+                <div class="lg:col-span-5 bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-6 soft-shadow space-y-5 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-soft-border dark:border-night-border pb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-lg">
+                                    <i class="fa-solid fa-medal"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-base sm:text-lg font-extrabold text-soft-charcoal dark:text-night-text">Paket Belajar Anda</h2>
+                                    <p class="text-xs text-soft-slate dark:text-night-subtext">Status fasilitas belajar & masa aktif akun</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Status Langganan -->
+                        <div id="profile-subscription-card" class="p-4 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border space-y-2">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+
+                        <!-- Daftar Fasilitas yang Terbuka -->
+                        <div class="space-y-2 text-xs">
+                            <div class="font-bold text-soft-slate text-[11px] uppercase tracking-wider">Fasilitas Belajar CBT:</div>
+                            <div class="flex items-center gap-2 text-soft-charcoal dark:text-night-text">
+                                <i class="fa-solid fa-circle-check text-soft-sage text-sm shrink-0"></i>
+                                <span>130+ Soal Terpadu 7 Subtes TPS & Literasi</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-soft-charcoal dark:text-night-text">
+                                <i class="fa-solid fa-circle-check text-soft-sage text-sm shrink-0"></i>
+                                <span>Kunci Jawaban & Pembahasan Lengkap</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-soft-charcoal dark:text-night-text">
+                                <i class="fa-solid fa-circle-check text-soft-sage text-sm shrink-0"></i>
+                                <span>Skor Standar IRT & Rasch Model SNPMB</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-soft-charcoal dark:text-night-text">
+                                <i class="fa-solid fa-circle-check text-soft-sage text-sm shrink-0"></i>
+                                <span>Bank Soal Acak Pintar (Passage-Aware)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-soft-border dark:border-night-border">
+                        <button onclick="app.openUpgradeModal()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs sm:text-sm shadow-sm transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-crown"></i>
+                            <span id="profile-card-upgrade-btn-text">Perpanjang / Upgrade Paket</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Rekam Jejak Prestasi & Statistik Belajar Siswa -->
+            <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-6 sm:p-8 soft-shadow space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-soft-border dark:border-night-border pb-4">
+                    <div>
+                        <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-soft-sage mb-1">
+                            <i class="fa-solid fa-chart-line"></i> Rekam Jejak & Performa Latihan
+                        </div>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-soft-charcoal dark:text-night-text">Statistik Belajar & Rekor Ujian</h2>
+                        <p class="text-xs sm:text-sm text-soft-slate dark:text-night-subtext">Pantau perkembangan skor untuk mengidentifikasi subtes yang sudah kamu kuasai</p>
+                    </div>
+                    <button onclick="app.navigate('history')" class="px-4 py-2 rounded-xl bg-soft-bg dark:bg-night-bg hover:bg-soft-muted dark:hover:bg-night-muted border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text font-bold text-xs sm:text-sm transition-all flex items-center gap-2 self-start sm:self-auto">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                        <span>Lihat Semua Riwayat Ujian</span>
+                    </button>
+                </div>
+
+                <!-- 4 Metrik Box -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="p-4 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border">
+                        <div class="text-xs text-soft-slate dark:text-night-subtext font-semibold">Total Sesi Selesai</div>
+                        <div class="text-2xl font-black text-soft-charcoal dark:text-night-text mt-1" id="profile-stat-total-attempts">0 Sesi</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-sageBorder/60">
+                        <div class="text-xs text-soft-sage dark:text-night-sage font-bold">Skor UTBK Tertinggi</div>
+                        <div class="text-2xl font-black text-soft-sage dark:text-night-sage mt-1" id="profile-stat-best-score">—</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border">
+                        <div class="text-xs text-soft-slate dark:text-night-subtext font-semibold">Rata-Rata Skor UTBK</div>
+                        <div class="text-2xl font-black text-soft-charcoal dark:text-night-text mt-1" id="profile-stat-avg-score">—</div>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border">
+                        <div class="text-xs text-soft-slate dark:text-night-subtext font-semibold">Akurasi Jawaban Benar</div>
+                        <div class="text-2xl font-black text-soft-charcoal dark:text-night-text mt-1" id="profile-stat-accuracy">—%</div>
+                    </div>
+                </div>
+
+                <!-- Breakdown Nilai Tertinggi per 7 Subtes -->
+                <div class="space-y-3 pt-2">
+                    <h3 class="text-sm font-extrabold text-soft-charcoal dark:text-night-text">Skor Tertinggi Tiap Subtes (Skala 0 - 1000):</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3" id="profile-subtests-scores-grid">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Pengaturan Akun & Personalisasi -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Ganti Nama Akun -->
+                <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-6 soft-shadow space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border flex items-center justify-center text-soft-charcoal dark:text-night-text">
+                            <i class="fa-solid fa-user-pen"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-extrabold text-soft-charcoal dark:text-night-text">Ubah Nama Profil</h3>
+                            <p class="text-xs text-soft-slate dark:text-night-subtext">Perbarui nama lengkap yang tampil di akun Anda</p>
+                        </div>
+                    </div>
+
+                    <form onsubmit="event.preventDefault(); app.saveProfileDisplayName();" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-soft-slate dark:text-night-subtext mb-1">Nama Tampilan</label>
+                            <input type="text" id="profile-edit-name-input" placeholder="Masukkan nama lengkap Anda..." class="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text focus:outline-none focus:border-soft-sage">
+                        </div>
+                        <button type="submit" class="px-4 py-2.5 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white font-bold text-xs sm:text-sm transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-check"></i>
+                            <span>Simpan Nama Baru</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Preferensi & Opsi Tambahan -->
+                <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-6 soft-shadow space-y-4 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border flex items-center justify-center text-soft-charcoal dark:text-night-text">
+                                <i class="fa-solid fa-gear"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-extrabold text-soft-charcoal dark:text-night-text">Preferensi Aplikasi</h3>
+                                <p class="text-xs text-soft-slate dark:text-night-subtext">Sesuaikan kenyamanan tampilan saat belajar</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2.5">
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border">
+                                <div>
+                                    <div class="text-xs font-bold text-soft-charcoal dark:text-night-text">Mode Gelap (Night Mode)</div>
+                                    <div class="text-[11px] text-soft-slate dark:text-night-subtext">Mengurangi silau mata saat belajar malam hari</div>
+                                </div>
+                                <button onclick="app.toggleTheme()" class="px-3 py-1.5 rounded-lg border border-soft-border dark:border-night-border text-xs font-bold text-soft-charcoal dark:text-night-text hover:bg-soft-muted">
+                                    Ganti Mode
+                                </button>
+                            </div>
+
+                            <div class="flex items-center justify-between p-3 rounded-xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border">
+                                <div>
+                                    <div class="text-xs font-bold text-soft-charcoal dark:text-night-text">Reset Riwayat Ujian</div>
+                                    <div class="text-[11px] text-soft-slate dark:text-night-subtext">Hapus catatan nilai & mulai statistik dari awal</div>
+                                </div>
+                                <button onclick="app.confirmClearHistory()" class="px-3 py-1.5 rounded-lg border border-soft-terra/40 text-xs font-bold text-soft-terra hover:bg-soft-terra hover:text-white transition-all">
+                                    Bersihkan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-soft-border dark:border-night-border flex items-center justify-between">
+                        <span class="text-xs text-soft-slate dark:text-night-subtext">Selesai belajar hari ini?</span>
+                        <button onclick="app.confirmLogout()" class="px-4 py-2 rounded-xl bg-soft-terraLight text-soft-terra hover:bg-soft-terra hover:text-white text-xs font-bold transition-all flex items-center gap-1.5">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <span>Keluar dari Akun</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- ==================== MODAL: ADD / EDIT QUESTION ==================== -->
@@ -1553,6 +1873,12 @@
             // Auth & Subscription state
             currentUser: null,
             authMode: 'login', // 'login' | 'register'
+            profile: {
+                targetPtn1: '',
+                targetProdi1: '',
+                targetPtn2: '',
+                targetScore: 700
+            },
             subscription: {
                 plan: 'free',
                 planLabel: 'Free Trial',
@@ -1667,6 +1993,7 @@
                     updatedAt: new Date().toISOString(),
                     userEmail: this.currentUser?.email || '',
                     userName: this.currentUser?.displayName || '',
+                    profile: this.profile,
                     subscription: this.subscription,
                     subtests: this.subtests,
                     passages: this.passages,
@@ -1686,6 +2013,15 @@
 
             applyLoadedPayload(saved, isAdminUser = false) {
                 if (!saved || typeof saved !== 'object') return;
+
+                if (saved.profile && typeof saved.profile === 'object') {
+                    this.profile = {
+                        targetPtn1: saved.profile.targetPtn1 || '',
+                        targetProdi1: saved.profile.targetProdi1 || '',
+                        targetPtn2: saved.profile.targetPtn2 || '',
+                        targetScore: Number(saved.profile.targetScore) || 700
+                    };
+                }
 
                 if (saved.subscription && typeof saved.subscription === 'object') {
                     this.subscription = {
@@ -1973,6 +2309,12 @@
                 this.attempts = [];
                 this.subtestBestScores = {};
                 this.activeReviewAttempt = null;
+                this.profile = {
+                    targetPtn1: '',
+                    targetProdi1: '',
+                    targetPtn2: '',
+                    targetScore: 700
+                };
                 this.subscription = {
                     plan: 'free',
                     planLabel: 'Free Trial',
@@ -2185,6 +2527,7 @@
             updateUserHeaderBadge(user, customName = '') {
                 const nameEl = document.getElementById('user-display-name');
                 const avatarEl = document.getElementById('user-avatar-initial');
+                const mobileAvatarEl = document.getElementById('mobile-user-avatar-initial');
                 if (!user) return;
 
                 const label = customName || user.displayName || (user.email ? user.email.split('@')[0] : 'Peserta');
@@ -2192,8 +2535,12 @@
                     nameEl.textContent = label;
                     nameEl.title = user.email || label;
                 }
+                const initial = label.charAt(0).toUpperCase();
                 if (avatarEl) {
-                    avatarEl.textContent = label.charAt(0).toUpperCase();
+                    avatarEl.textContent = initial;
+                }
+                if (mobileAvatarEl) {
+                    mobileAvatarEl.textContent = initial;
                 }
             },
 
@@ -2245,7 +2592,7 @@
                     view = 'dashboard';
                 }
                 this.currentView = view;
-                const views = ['dashboard', 'exam', 'transition', 'result', 'builder', 'history', 'admin'];
+                const views = ['dashboard', 'exam', 'transition', 'result', 'builder', 'history', 'admin', 'profile'];
                 views.forEach(v => {
                     const el = document.getElementById(`view-${v}`);
                     if (el) el.classList.toggle('hidden', v !== view);
@@ -2258,7 +2605,7 @@
                 }
 
                 // Update nav active states
-                ['dashboard', 'builder', 'history', 'admin'].forEach(nav => {
+                ['dashboard', 'builder', 'history', 'profile', 'admin'].forEach(nav => {
                     const btn = document.getElementById(`nav-btn-${nav}`);
                     if (!btn) return;
                     const isHidden = !this.isAdmin() && (nav === 'builder' || nav === 'admin');
@@ -2276,6 +2623,7 @@
                 }
                 if (view === 'history') this.renderHistoryView();
                 if (view === 'admin') this.renderAdminPanel();
+                if (view === 'profile') this.renderProfileView();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             },
 
@@ -3826,6 +4174,237 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                     });
                 });
                 this.subtestBestScores = best;
+            },
+
+            // ---------------- PROFIL SISWA & TARGET STUDI SNBT ----------------
+            renderProfileView() {
+                const user = this.currentUser;
+                const name = user?.displayName || (user?.email ? user.email.split('@')[0] : 'Peserta SNBT');
+                const email = user?.email || 'Belum masuk';
+                const uid = user?.uid || '-';
+                const initial = (name.charAt(0) || 'U').toUpperCase();
+                const isAdmin = this.isAdmin();
+                const isPrem = this.isPremiumActive();
+                const remDays = this.getRemainingPremiumDays();
+
+                // 1. Header Profil Siswa
+                const avatarLarge = document.getElementById('profile-avatar-large');
+                const nameText = document.getElementById('profile-display-name-text');
+                const emailText = document.getElementById('profile-email-text');
+                const uidText = document.getElementById('profile-uid-text');
+                const roleBadge = document.getElementById('profile-badge-role');
+                const ctaPlanBtn = document.getElementById('profile-cta-plan-btn');
+
+                if (avatarLarge) avatarLarge.textContent = initial;
+                if (nameText) nameText.textContent = name;
+                if (emailText) emailText.textContent = email;
+                if (uidText) uidText.textContent = `UID: ${uid.length > 14 ? uid.slice(0, 14) + '...' : uid}`;
+
+                if (roleBadge) {
+                    if (isAdmin) {
+                        roleBadge.className = 'px-3 py-0.5 rounded-full text-xs font-black uppercase tracking-wide bg-soft-sage text-white';
+                        roleBadge.innerHTML = '<i class="fa-solid fa-user-shield mr-1"></i>Owner & Admin';
+                    } else if (isPrem) {
+                        roleBadge.className = 'px-3 py-0.5 rounded-full text-xs font-black uppercase tracking-wide bg-gradient-to-r from-emerald-600 to-teal-600 text-white';
+                        roleBadge.innerHTML = `<i class="fa-solid fa-crown mr-1"></i>Siswa Premium (${remDays} Hari)`;
+                    } else {
+                        roleBadge.className = 'px-3 py-0.5 rounded-full text-xs font-black uppercase tracking-wide bg-amber-500 text-white';
+                        roleBadge.innerHTML = '<i class="fa-solid fa-lock mr-1"></i>Free Trial';
+                    }
+                }
+
+                if (ctaPlanBtn) {
+                    ctaPlanBtn.textContent = isAdmin ? 'Panel Admin' : (isPrem ? 'Perpanjang Paket' : 'Upgrade ke Premium');
+                }
+
+                // 2. Target SNBT & Kampus Impian
+                const ptn1Input = document.getElementById('profile-target-ptn1');
+                const prodi1Input = document.getElementById('profile-target-prodi1');
+                const ptn2Input = document.getElementById('profile-target-ptn2');
+                const scoreInput = document.getElementById('profile-target-score-input');
+                const ptnScoreProgText = document.getElementById('profile-target-score-progress-text');
+                const ptnProgBar = document.getElementById('profile-target-progress-bar');
+                const bestScoreHint = document.getElementById('profile-best-score-hint');
+                const targetDiffHint = document.getElementById('profile-target-diff-hint');
+
+                const targetScore = Number(this.profile?.targetScore) || 700;
+                if (ptn1Input) ptn1Input.value = this.profile?.targetPtn1 || '';
+                if (prodi1Input) prodi1Input.value = this.profile?.targetProdi1 || '';
+                if (ptn2Input) ptn2Input.value = this.profile?.targetPtn2 || '';
+                if (scoreInput) scoreInput.value = targetScore;
+
+                const maxScore = this.attempts.length > 0 ? Math.max(...this.attempts.map(a => a.utbkScore)) : 0;
+                const percent = Math.min(100, Math.round((maxScore / targetScore) * 100));
+
+                if (ptnScoreProgText) {
+                    ptnScoreProgText.textContent = `${maxScore} / ${targetScore} (${percent}%)`;
+                }
+                if (ptnProgBar) {
+                    ptnProgBar.style.width = `${percent}%`;
+                }
+                if (bestScoreHint) {
+                    bestScoreHint.innerHTML = `Skor Tertinggi Anda: <strong>${maxScore > 0 ? maxScore : '—'}</strong>`;
+                }
+                if (targetDiffHint) {
+                    if (maxScore >= targetScore && maxScore > 0) {
+                        targetDiffHint.innerHTML = `<span class="text-soft-sage dark:text-night-sage font-bold"><i class="fa-solid fa-circle-check mr-1"></i>Target Tercapai (+${maxScore - targetScore} poin)!</span>`;
+                    } else {
+                        const diff = Math.max(0, targetScore - maxScore);
+                        targetDiffHint.innerHTML = `Kurang <strong>${diff} poin</strong> menuju target ${targetScore}`;
+                    }
+                }
+
+                // 3. Status Paket Belajar Card
+                const subCard = document.getElementById('profile-subscription-card');
+                const cardUpgradeBtnText = document.getElementById('profile-card-upgrade-btn-text');
+                if (subCard) {
+                    if (isAdmin) {
+                        subCard.innerHTML = `
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-soft-sage"><i class="fa-solid fa-shield-halved mr-1"></i>Hak Akses Admin / Owner</span>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-soft-sageLight text-soft-sage">Full Control</span>
+                            </div>
+                            <p class="text-xs text-soft-charcoal dark:text-night-text font-semibold">Anda memiliki akses penuh ke 130+ soal, fitur App Builder, dan Panel Kelola Member.</p>
+                        `;
+                        if (cardUpgradeBtnText) cardUpgradeBtnText.textContent = 'Kelola Member di Panel Admin';
+                    } else if (isPrem) {
+                        subCard.innerHTML = `
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-soft-sage"><i class="fa-solid fa-circle-check mr-1"></i>Paket Premium Aktif</span>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-soft-sageLight text-soft-sage">Aktif ${remDays} Hari</span>
+                            </div>
+                            <p class="text-xs text-soft-charcoal dark:text-night-text font-semibold">Berlaku sampai: <strong>${this.formatDateId(this.subscription.premiumUntil)}</strong></p>
+                            <p class="text-[11px] text-soft-slate dark:text-night-subtext">Semua 7 subtes & kunci pembahasan terbuka penuh.</p>
+                        `;
+                        if (cardUpgradeBtnText) cardUpgradeBtnText.textContent = 'Perpanjang Masa Aktif Premium';
+                    } else {
+                        subCard.innerHTML = `
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-amber-600 dark:text-amber-400"><i class="fa-solid fa-lock mr-1"></i>Free Trial (Terbatas)</span>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">3 Soal / Subtes</span>
+                            </div>
+                            <p class="text-xs text-soft-charcoal dark:text-night-text">Anda hanya dapat mencoba 3 soal pertama per subtes. Upgrade untuk membuka seluruh 130+ bank soal SNBT!</p>
+                        `;
+                        if (cardUpgradeBtnText) cardUpgradeBtnText.textContent = 'Upgrade ke Premium Sekarang';
+                    }
+                }
+
+                // 4. Statistik Belajar Siswa
+                const statAttempts = document.getElementById('profile-stat-total-attempts');
+                const statBest = document.getElementById('profile-stat-best-score');
+                const statAvg = document.getElementById('profile-stat-avg-score');
+                const statAcc = document.getElementById('profile-stat-accuracy');
+
+                const totalAtt = this.attempts.length;
+                if (statAttempts) statAttempts.textContent = `${totalAtt} Sesi`;
+
+                if (totalAtt > 0) {
+                    const scores = this.attempts.map(a => a.utbkScore);
+                    const avgScore = Math.round(scores.reduce((a, b) => a + b, 0) / totalAtt);
+                    if (statBest) statBest.textContent = maxScore;
+                    if (statAvg) statAvg.textContent = avgScore;
+
+                    const totalCorrectAll = this.attempts.reduce((acc, cur) => acc + (cur.totalCorrect || 0), 0);
+                    const totalQuestionsAll = this.attempts.reduce((acc, cur) => acc + ((cur.totalCorrect || 0) + (cur.totalWrong || 0) + (cur.totalEmpty || 0)), 0);
+                    const avgAcc = totalQuestionsAll > 0 ? Math.round((totalCorrectAll / totalQuestionsAll) * 100) : 0;
+                    if (statAcc) statAcc.textContent = `${avgAcc}%`;
+                } else {
+                    if (statBest) statBest.textContent = '—';
+                    if (statAvg) statAvg.textContent = '—';
+                    if (statAcc) statAcc.textContent = '—%';
+                }
+
+                // 5. Grid Skor Tertinggi 7 Subtes
+                const subtestGrid = document.getElementById('profile-subtests-scores-grid');
+                if (subtestGrid) {
+                    subtestGrid.innerHTML = this.subtests.map(sub => {
+                        const best = this.subtestBestScores[sub.id] || 0;
+                        const percent = Math.min(100, Math.round((best / 1000) * 100));
+                        const colorClass = best >= 700 ? 'text-soft-sage dark:text-night-sage' : (best >= 550 ? 'text-amber-500' : 'text-soft-slate dark:text-night-subtext');
+                        const barColor = best >= 700 ? 'bg-soft-sage' : (best >= 550 ? 'bg-amber-500' : 'bg-soft-slate');
+
+                        return `
+                            <div class="p-3.5 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border space-y-2">
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="font-extrabold text-soft-charcoal dark:text-night-text truncate pr-2" title="${this.escapeHtml(sub.name)}">${sub.shortName}</span>
+                                    <span class="font-mono font-black ${colorClass}">${best > 0 ? best : '—'}</span>
+                                </div>
+                                <div class="w-full bg-soft-border/50 dark:bg-night-border rounded-full h-1.5 overflow-hidden">
+                                    <div class="${barColor} h-full rounded-full transition-all duration-300" style="width: ${percent}%"></div>
+                                </div>
+                                <div class="text-[10px] text-soft-slate dark:text-night-subtext flex justify-between">
+                                    <span>${sub.category}</span>
+                                    <span>${best > 0 ? `${percent}%` : 'Belum diuji'}</span>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                // 6. Form Edit Nama Default Value
+                const editNameInput = document.getElementById('profile-edit-name-input');
+                if (editNameInput) editNameInput.value = name;
+            },
+
+            async saveProfileStudyTargets() {
+                const ptn1 = (document.getElementById('profile-target-ptn1')?.value || '').trim();
+                const prodi1 = (document.getElementById('profile-target-prodi1')?.value || '').trim();
+                const ptn2 = (document.getElementById('profile-target-ptn2')?.value || '').trim();
+                const score = Number(document.getElementById('profile-target-score-input')?.value) || 700;
+
+                this.profile = {
+                    targetPtn1: ptn1,
+                    targetProdi1: prodi1,
+                    targetPtn2: ptn2,
+                    targetScore: score
+                };
+
+                await this.saveData(true);
+                this.renderProfileView();
+                this.showToast('🎯 Target kampus & nilai UTBK berhasil disimpan!', 'success');
+            },
+
+            async saveProfileDisplayName() {
+                const input = document.getElementById('profile-edit-name-input');
+                const newName = (input?.value || '').trim();
+                if (!newName) {
+                    this.showToast('Nama profil tidak boleh kosong.', 'warning');
+                    return;
+                }
+
+                try {
+                    if (this.currentUser && typeof updateProfile === 'function') {
+                        await updateProfile(this.currentUser, { displayName: newName });
+                    }
+                    if (this.currentUser) {
+                        this.currentUser.displayName = newName;
+                    }
+                    this.updateUserHeaderBadge(this.currentUser, newName);
+                    await this.syncUserToMasterIndex();
+                    await this.saveData(true);
+                    this.renderProfileView();
+                    this.showToast('✨ Nama profil berhasil diperbarui!', 'success');
+                } catch (err) {
+                    console.error('Gagal memperbarui nama profil:', err);
+                    this.showToast('Gagal memperbarui nama profil.', 'error');
+                }
+            },
+
+            copyUidToClipboard() {
+                const uid = this.currentUser?.uid || '';
+                if (!uid) {
+                    this.showToast('UID belum tersedia.', 'warning');
+                    return;
+                }
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(uid).then(() => {
+                        this.showToast('📋 UID Peserta berhasil disalin ke clipboard!', 'success');
+                    }).catch(() => {
+                        this.showToast(`UID: ${uid}`, 'info');
+                    });
+                } else {
+                    this.showToast(`UID: ${uid}`, 'info');
+                }
             },
 
             // ---------------- UPGRADE PLAN, PAYWALL & PANEL ADMIN ----------------
