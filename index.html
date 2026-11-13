@@ -1052,13 +1052,13 @@
                         </div>
 
                         <!-- Data Diri & Akun -->
-                        <div class="space-y-2">
-                            <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                                <h1 class="text-2xl sm:text-3xl font-extrabold text-soft-charcoal dark:text-night-text" id="profile-display-name-text">Peserta SNBT</h1>
-                                <span id="profile-badge-role" class="px-3 py-0.5 rounded-full text-xs font-black uppercase tracking-wide bg-amber-500 text-white">Free Trial</span>
+                        <div class="space-y-1.5">
+                            <h1 class="text-2xl sm:text-3xl font-extrabold text-soft-charcoal dark:text-night-text leading-tight" id="profile-display-name-text">Peserta SNBT</h1>
+                            <div class="flex items-center justify-center sm:justify-start">
+                                <span id="profile-badge-role" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-500 text-white">Free Trial</span>
                             </div>
 
-                            <p class="text-xs sm:text-sm text-soft-slate dark:text-night-subtext flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1">
+                            <p class="text-xs sm:text-sm text-soft-slate dark:text-night-subtext flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 pt-0.5">
                                 <span><i class="fa-regular fa-envelope mr-1 text-soft-sage"></i><span id="profile-email-text">peserta@email.com</span></span>
                                 <span>•</span>
                                 <span class="inline-flex items-center gap-1 font-mono text-[11px] bg-soft-bg dark:bg-night-bg px-2 py-0.5 rounded-md border border-soft-border dark:border-night-border cursor-pointer hover:border-soft-sage" onclick="app.copyUidToClipboard()" title="Klik untuk Salin UID">
@@ -4294,14 +4294,14 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
 
                 if (roleBadge) {
                     if (isAdmin) {
-                        roleBadge.className = 'px-3 py-0.5 rounded-full text-xs font-black uppercase tracking-wide bg-soft-sage text-white';
-                        roleBadge.innerHTML = '<i class="fa-solid fa-user-shield mr-1"></i>Owner & Admin';
+                        roleBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-soft-sage text-white';
+                        roleBadge.innerHTML = '<i class="fa-solid fa-user-shield mr-1 text-[9px]"></i>Owner & Admin';
                     } else if (isPrem) {
-                        roleBadge.className = 'px-3 py-0.5 rounded-full text-xs font-black uppercase tracking-wide bg-gradient-to-r from-emerald-600 to-teal-600 text-white';
-                        roleBadge.innerHTML = `<i class="fa-solid fa-crown mr-1"></i>Siswa Premium (${remDays} Hari)`;
+                        roleBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-gradient-to-r from-emerald-600 to-teal-600 text-white';
+                        roleBadge.innerHTML = `<i class="fa-solid fa-crown mr-1 text-[9px]"></i>Siswa Premium (${remDays} Hari)`;
                     } else {
-                        roleBadge.className = 'px-3 py-0.5 rounded-full text-xs font-black uppercase tracking-wide bg-amber-500 text-white';
-                        roleBadge.innerHTML = '<i class="fa-solid fa-lock mr-1"></i>Free Trial';
+                        roleBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-500 text-white';
+                        roleBadge.innerHTML = '<i class="fa-solid fa-lock mr-1 text-[9px]"></i>Free Trial';
                     }
                 }
 
