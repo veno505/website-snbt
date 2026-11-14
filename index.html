@@ -233,7 +233,8 @@
                         Daftar di sini
                     </button>
                 </div>
-                <button type="button" id="auth-install-pwa" onclick="window.installPwaApp()" class="hidden w-full py-2.5 px-4 rounded-xl border border-soft-sageBorder dark:border-night-border bg-soft-sageLight/70 dark:bg-night-sageLight/60 text-soft-sage dark:text-night-sage text-xs font-bold hover:bg-soft-sage hover:text-white transition-all items-center justify-center gap-2">
+                <!-- Tombol instal aplikasi: selalu muncul di HP / Mobile jika belum diinstal -->
+                <button type="button" id="auth-install-pwa" onclick="window.installPwaApp()" class="w-full py-2.5 px-4 rounded-xl border border-soft-sageBorder dark:border-night-border bg-soft-sageLight/80 dark:bg-night-sageLight/70 text-soft-sage dark:text-night-sage text-xs font-bold hover:bg-soft-sage hover:text-white transition-all inline-flex items-center justify-center gap-2 shadow-sm">
                     <i class="fa-solid fa-mobile-screen-button"></i>
                     <span>Instal Sebagai Aplikasi di HP</span>
                 </button>
@@ -295,10 +296,10 @@
                     </div>
                 </button>
 
-                <!-- Install PWA App Button (muncul otomatis saat browser siap menginstal) -->
-                <button onclick="window.installPwaApp()" id="btn-install-pwa" class="hidden w-9 h-9 sm:w-auto sm:px-3 sm:h-10 rounded-xl border border-soft-sageBorder bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage hover:bg-soft-sage hover:text-white text-xs sm:text-sm font-bold transition-all items-center justify-center gap-1.5 shrink-0" title="Instal sebagai Aplikasi di HP/Perangkat">
-                    <i class="fa-solid fa-download"></i>
-                    <span class="hidden lg:inline">Instal App</span>
+                <!-- Install PWA App Button (Muncul di Header HP & Desktop jika belum standalone) -->
+                <button onclick="window.installPwaApp()" id="btn-install-pwa" class="inline-flex w-9 h-9 sm:w-auto sm:px-3 sm:h-10 rounded-xl border border-soft-sageBorder bg-soft-sageLight/80 dark:bg-night-sageLight/70 text-soft-sage dark:text-night-sage hover:bg-soft-sage hover:text-white text-xs sm:text-sm font-bold transition-all items-center justify-center gap-1.5 shrink-0 shadow-sm" title="Instal sebagai Aplikasi di HP/Perangkat">
+                    <i class="fa-solid fa-mobile-screen-button sm:fa-download"></i>
+                    <span class="hidden sm:inline">Instal App</span>
                 </button>
 
                 <!-- Theme Toggle -->
@@ -347,6 +348,28 @@
         <!-- ==================== VIEW 1: DASHBOARD ==================== -->
         <section id="view-dashboard" class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-5 sm:space-y-6 animate-fade">
             
+            <!-- Mobile Install PWA Banner (Muncul di layar HP jika belum diinstal) -->
+            <div id="mobile-install-banner" class="hidden p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-soft-sageLight to-soft-bg dark:from-night-sageLight/50 dark:to-night-surface border border-soft-sageBorder/70 dark:border-night-border flex items-center justify-between gap-3 shadow-sm">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-xl bg-soft-sage text-white flex items-center justify-center text-lg shrink-0 shadow-sm">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="text-xs sm:text-sm font-extrabold text-soft-charcoal dark:text-night-text truncate">Instal SNBT EDU di HP</div>
+                        <div class="text-[11px] text-soft-slate dark:text-night-subtext truncate">Buka cepat seperti aplikasi tanpa buka browser</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <button onclick="window.installPwaApp()" class="px-3 py-1.5 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Instal</span>
+                    </button>
+                    <button onclick="document.getElementById('mobile-install-banner')?.remove()" class="w-7 h-7 rounded-lg hover:bg-soft-muted dark:hover:bg-night-muted flex items-center justify-center text-soft-slate text-xs" title="Tutup">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
             <!-- Subscription / Freemium Status Banner -->
             <div id="dashboard-plan-banner" class="w-full">
                 <!-- Populated dynamically via app.renderSubscriptionUI() -->
@@ -1672,6 +1695,53 @@
                     </button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL: PANDUAN INSTAL APLIKASI DI HP ==================== -->
+    <div id="modal-install-guide" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border max-w-md w-full p-6 sm:p-7 soft-shadow space-y-4 animate-fade">
+            <div class="flex items-center justify-between border-b border-soft-border dark:border-night-border pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-soft-sage text-white flex items-center justify-center text-sm">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                    </div>
+                    <h3 class="text-base font-extrabold text-soft-charcoal dark:text-night-text">Instal Aplikasi di HP</h3>
+                </div>
+                <button onclick="document.getElementById('modal-install-guide')?.classList.add('hidden')" class="w-8 h-8 rounded-lg hover:bg-soft-muted dark:hover:bg-night-muted flex items-center justify-center text-soft-slate">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 text-xs sm:text-sm text-soft-charcoal dark:text-night-text">
+                <div class="p-3 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border space-y-1.5">
+                    <div class="font-bold text-soft-sage flex items-center gap-1.5">
+                        <i class="fa-brands fa-android text-base"></i>
+                        <span>Pengguna Android (Google Chrome):</span>
+                    </div>
+                    <ol class="list-decimal list-inside text-xs text-soft-slate dark:text-night-subtext space-y-1">
+                        <li>Ketuk ikon <strong>titik tiga (⋮)</strong> di pojok kanan atas browser.</li>
+                        <li>Pilih opsi <strong>"Instal aplikasi"</strong> atau <strong>"Tambahkan ke Layar Utama"</strong>.</li>
+                        <li>Ketuk <strong>Instal</strong>. Aplikasi akan muncul di layar HP Anda.</li>
+                    </ol>
+                </div>
+
+                <div class="p-3 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border space-y-1.5">
+                    <div class="font-bold text-soft-sage flex items-center gap-1.5">
+                        <i class="fa-brands fa-apple text-base"></i>
+                        <span>Pengguna iPhone / iPad (Safari):</span>
+                    </div>
+                    <ol class="list-decimal list-inside text-xs text-soft-slate dark:text-night-subtext space-y-1">
+                        <li>Buka website ini menggunakan browser <strong>Safari</strong>.</li>
+                        <li>Ketuk tombol <strong>Bagikan (Share)</strong> <i class="fa-solid fa-arrow-up-from-bracket"></i> di bilah bawah.</li>
+                        <li>Gulir ke bawah lalu pilih <strong>"Tambah ke Layar Utama" (Add to Home Screen)</strong>.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <button onclick="document.getElementById('modal-install-guide')?.classList.add('hidden')" class="w-full py-2.5 rounded-xl bg-soft-sage text-white font-bold text-xs hover:bg-soft-sageHover transition-all">
+                Mengerti & Tutup
+            </button>
         </div>
     </div>
 
@@ -5799,17 +5869,23 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
         function setInstallButtonsVisible(visible) {
-            ['btn-install-pwa', 'auth-install-pwa'].forEach((id) => {
+            ['btn-install-pwa', 'auth-install-pwa', 'mobile-install-banner'].forEach((id) => {
                 const el = document.getElementById(id);
                 if (!el) return;
                 if (visible) {
                     el.classList.remove('hidden');
-                    el.classList.add('inline-flex');
+                    if (id !== 'mobile-install-banner') el.classList.add('inline-flex');
+                    else el.classList.add('flex');
                 } else {
                     el.classList.add('hidden');
-                    el.classList.remove('inline-flex');
+                    el.classList.remove('inline-flex', 'flex');
                 }
             });
+        }
+
+        // Tampilkan tombol instal di mobile / desktop jika belum dibuka dalam mode standalone
+        if (!isStandalone) {
+            setInstallButtonsVisible(true);
         }
 
         window.addEventListener('beforeinstallprompt', (event) => {
@@ -5824,10 +5900,6 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
             app.showToast('SNBT EDU berhasil diinstal sebagai aplikasi!');
         });
 
-        if (isIos && !isStandalone) {
-            setInstallButtonsVisible(true);
-        }
-
         window.installPwaApp = async function () {
             if (deferredInstallPrompt) {
                 deferredInstallPrompt.prompt();
@@ -5838,11 +5910,15 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                 }
                 return;
             }
-            if (isIos && !isStandalone) {
+            // Tampilkan modal panduan ramah pengguna agar mereka tahu persis cara memasangnya
+            const guideModal = document.getElementById('modal-install-guide');
+            if (guideModal) {
+                guideModal.classList.remove('hidden');
+            } else if (isIos) {
                 alert('Untuk menginstal di iPhone/iPad: ketuk tombol Bagikan (ikon kotak dengan panah ke atas) di Safari, lalu pilih "Tambah ke Layar Utama" (Add to Home Screen).');
-                return;
+            } else {
+                app.showToast('Buka menu browser (⋮) lalu pilih "Instal aplikasi".', 'info');
             }
-            app.showToast('Buka menu browser (⋮) lalu pilih "Instal aplikasi".', 'warning');
         };
 
         if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
