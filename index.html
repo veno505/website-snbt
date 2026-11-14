@@ -5168,73 +5168,58 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                 const bankAccVal = (cfg.bankAccount !== undefined ? cfg.bankAccount : DEFAULT_PAYMENT_CONFIG.bankAccount) || '';
                 const ewalletAccVal = (cfg.ewalletAccount !== undefined ? cfg.ewalletAccount : DEFAULT_PAYMENT_CONFIG.ewalletAccount) || '';
 
-                // Bank Transfer Card (Active vs Maintenance)
+                // Bank Transfer Card (Active vs Maintenance - dihilangkan saat maintenance)
                 if (bankAccWrap) {
-                    bankAccWrap.classList.remove('hidden');
-                    if (!bankEnabled) {
-                        if (bankStatusBadge) bankStatusBadge.classList.remove('hidden');
-                        if (bankCopyBtn) bankCopyBtn.classList.add('hidden');
-                        if (bankAccText) {
-                            bankAccText.textContent = '🛠️ Sistem pembayaran Transfer Rekening Bank sedang Maintenance. Silakan gunakan metode pembayaran lain yang aktif.';
-                            bankAccText.className = 'text-xs font-semibold text-amber-700 dark:text-amber-300 leading-relaxed whitespace-pre-line';
-                        }
+                    if (!bankEnabled || !bankAccVal.trim()) {
+                        bankAccWrap.classList.add('hidden');
                     } else {
+                        bankAccWrap.classList.remove('hidden');
                         if (bankStatusBadge) bankStatusBadge.classList.add('hidden');
                         if (bankCopyBtn) bankCopyBtn.classList.remove('hidden');
                         if (bankAccText) {
-                            bankAccText.textContent = bankAccVal || 'Belum diatur oleh Admin';
+                            bankAccText.textContent = bankAccVal;
                             bankAccText.className = 'text-xs sm:text-sm font-extrabold font-mono text-soft-charcoal dark:text-night-text leading-relaxed whitespace-pre-line';
                         }
                     }
                 }
 
-                // E-Wallet Card (Active vs Maintenance)
+                // E-Wallet Card (Active vs Maintenance - dihilangkan saat maintenance)
                 if (ewalletAccWrap) {
-                    ewalletAccWrap.classList.remove('hidden');
-                    if (!ewalletEnabled) {
-                        if (ewalletStatusBadge) ewalletStatusBadge.classList.remove('hidden');
-                        if (ewalletCopyBtn) ewalletCopyBtn.classList.add('hidden');
-                        if (ewalletAccText) {
-                            ewalletAccText.textContent = '🛠️ Sistem pembayaran Transfer E-Wallet sedang Maintenance. Silakan gunakan metode pembayaran lain yang aktif.';
-                            ewalletAccText.className = 'text-xs font-semibold text-amber-700 dark:text-amber-300 leading-relaxed whitespace-pre-line';
-                        }
+                    if (!ewalletEnabled || !ewalletAccVal.trim()) {
+                        ewalletAccWrap.classList.add('hidden');
                     } else {
+                        ewalletAccWrap.classList.remove('hidden');
                         if (ewalletStatusBadge) ewalletStatusBadge.classList.add('hidden');
                         if (ewalletCopyBtn) ewalletCopyBtn.classList.remove('hidden');
                         if (ewalletAccText) {
-                            ewalletAccText.textContent = ewalletAccVal || 'Belum diatur oleh Admin';
+                            ewalletAccText.textContent = ewalletAccVal;
                             ewalletAccText.className = 'text-xs sm:text-sm font-extrabold font-mono text-soft-charcoal dark:text-night-text leading-relaxed whitespace-pre-line';
                         }
                     }
                 }
 
-                // QRIS Image Box Rendering (Active vs Maintenance)
+                // QRIS Image Box Rendering (Active vs Maintenance - dihilangkan saat maintenance)
                 const qrisBox = document.getElementById('checkout-qris-box');
                 if (qrisBox) {
                     if (!qrisEnabled) {
-                        qrisBox.innerHTML = `
-                            <div class="py-5 px-3 text-center space-y-2">
-                                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-[11px] font-extrabold uppercase tracking-wider">
-                                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                                    <span>QRIS Sedang Maintenance</span>
-                                </div>
-                                <div class="text-xs font-bold text-soft-charcoal">Pembayaran via Scan QRIS Sementara Dinonaktifkan</div>
-                                <p class="text-[11px] text-soft-slate max-w-xs mx-auto">Silakan gunakan metode pembayaran <strong>E-Wallet (DANA / GoPay / OVO / ShopeePay)</strong> di bawah ini, lalu klik tombol konfirmasi WhatsApp.</p>
-                            </div>
-                        `;
-                    } else if (cfg.qrisImageUrl && cfg.qrisImageUrl.trim() !== '') {
-                        qrisBox.innerHTML = `
-                            <img src="${cfg.qrisImageUrl}" alt="QRIS Pembayaran" class="max-h-56 mx-auto rounded-xl object-contain shadow-sm">
-                            <div class="text-[11px] font-bold text-soft-slate">Scan QRIS via GoPay, OVO, DANA, ShopeePay, BCA, dsb.</div>
-                        `;
+                        qrisBox.classList.add('hidden');
+                        qrisBox.innerHTML = '';
                     } else {
-                        qrisBox.innerHTML = `
-                            <div class="py-6 text-center space-y-2">
-                                <i class="fa-solid fa-qrcode text-4xl text-soft-slate/40"></i>
-                                <div class="text-xs font-bold text-soft-charcoal">Gunakan Transfer Bank / E-Wallet di bawah atau QRIS</div>
-                                <p class="text-[11px] text-soft-slate max-w-xs mx-auto">Silakan transfer sesuai nominal paket ke Rekening Bank atau E-Wallet yang tertera di bawah, lalu konfirmasi via WhatsApp.</p>
-                            </div>
-                        `;
+                        qrisBox.classList.remove('hidden');
+                        if (cfg.qrisImageUrl && cfg.qrisImageUrl.trim() !== '') {
+                            qrisBox.innerHTML = `
+                                <img src="${cfg.qrisImageUrl}" alt="QRIS Pembayaran" class="max-h-56 mx-auto rounded-xl object-contain shadow-sm">
+                                <div class="text-[11px] font-bold text-soft-slate">Scan QRIS via GoPay, OVO, DANA, ShopeePay, BCA, dsb.</div>
+                            `;
+                        } else {
+                            qrisBox.innerHTML = `
+                                <div class="py-6 text-center space-y-2">
+                                    <i class="fa-solid fa-qrcode text-4xl text-soft-slate/40"></i>
+                                    <div class="text-xs font-bold text-soft-charcoal">Scan QRIS Pembayaran</div>
+                                    <p class="text-[11px] text-soft-slate max-w-xs mx-auto">Silakan transfer sesuai nominal paket ke QRIS atau rekening/e-wallet yang tersedia, lalu konfirmasi via WhatsApp.</p>
+                                </div>
+                            `;
+                        }
                     }
                 }
 
