@@ -1119,6 +1119,34 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Bagian Kritik & Saran dari Peserta -->
+            <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-5 sm:p-6 soft-shadow space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-soft-border dark:border-night-border pb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg font-extrabold text-soft-charcoal dark:text-night-text flex items-center gap-2">
+                                <span>Kritik & Saran dari Peserta</span>
+                                <span id="admin-stat-feedbacks-count" class="px-2 py-0.5 rounded-full text-xs font-bold bg-soft-sageLight text-soft-sage">0 Pesan</span>
+                            </h2>
+                            <p class="text-xs text-soft-slate dark:text-night-subtext">Masukan, keluhan, dan saran pengembangan fitur yang dikirimkan oleh siswa pengguna SNBT EDU.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="app.clearAllFeedbacks()" class="px-3.5 py-2 rounded-xl bg-soft-terraLight text-soft-terra hover:bg-soft-terra hover:text-white font-bold text-xs transition-all flex items-center gap-1.5" title="Hapus Semua Kritik & Saran">
+                            <i class="fa-solid fa-trash-can"></i>
+                            <span>Bersihkan Semua</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="admin-feedbacks-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+                    <!-- Injected via app.renderAdminFeedbacks() -->
+                </div>
+            </div>
         </section>
 
         <!-- ==================== VIEW 8: PROFIL SISWA & TARGET STUDI SNBT ==================== -->
@@ -1745,8 +1773,87 @@
         </div>
     </div>
 
+    <!-- ==================== FLOATING ACTION BUTTON: KRITIK & SARAN ==================== -->
+    <div id="floating-feedback-container" class="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 flex items-center justify-center">
+        <!-- Tooltip Mini saat Hover di Desktop -->
+        <div id="floating-feedback-tooltip" class="hidden sm:block absolute right-16 px-3 py-1.5 rounded-xl bg-soft-charcoal/90 text-white text-xs font-semibold whitespace-nowrap shadow-lg pointer-events-none opacity-0 transition-opacity duration-200">
+            Kritik & Saran
+        </div>
+        <!-- Tombol Lingkaran Floating -->
+        <button type="button" id="btn-floating-feedback" onclick="app.openFeedbackModal()" onmouseenter="document.getElementById('floating-feedback-tooltip')?.classList.remove('opacity-0')" onmouseleave="document.getElementById('floating-feedback-tooltip')?.classList.add('opacity-0')" class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-soft-sage hover:bg-soft-sageHover text-white shadow-xl hover:shadow-2xl border-2 border-white/60 dark:border-night-border flex items-center justify-center text-xl sm:text-2xl transition-all duration-300 hover:scale-105 active:scale-95 group" title="Kirim Kritik & Saran">
+            <i class="fa-solid fa-comment-dots group-hover:rotate-12 transition-transform"></i>
+            <span class="sr-only">Kritik & Saran</span>
+        </button>
+    </div>
+
+    <!-- ==================== MODAL: FORM KRITIK & SARAN ==================== -->
+    <div id="modal-feedback" class="fixed inset-0 z-50 hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border max-w-lg w-full p-6 sm:p-7 soft-shadow space-y-4 animate-fade relative my-auto">
+            <div class="flex items-center justify-between border-b border-soft-border dark:border-night-border pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-2xl bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-comment-dots"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-extrabold text-soft-charcoal dark:text-night-text">Kritik & Saran Peserta</h3>
+                        <p class="text-[11px] text-soft-slate dark:text-night-subtext">Masukan Anda langsung dibaca oleh tim SNBT EDU</p>
+                    </div>
+                </div>
+                <button type="button" onclick="app.closeFeedbackModal()" class="w-8 h-8 rounded-lg hover:bg-soft-muted dark:hover:bg-night-muted flex items-center justify-center text-soft-slate transition-colors" title="Tutup">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="feedback-form" onsubmit="event.preventDefault(); app.submitFeedback();" class="space-y-3.5 text-xs sm:text-sm">
+                <div>
+                    <label class="block text-xs font-bold text-soft-charcoal dark:text-night-text mb-1.5">Kategori Masukan</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="feedback-category" value="Saran Fitur" checked class="peer sr-only">
+                            <div class="p-2.5 rounded-xl border border-soft-border dark:border-night-border bg-soft-bg dark:bg-night-bg text-center text-xs font-bold peer-checked:border-soft-sage peer-checked:bg-soft-sageLight/70 peer-checked:text-soft-sage dark:peer-checked:bg-night-sageLight/60 transition-all">
+                                💡 Saran Fitur
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="feedback-category" value="Kritik & Kendala" class="peer sr-only">
+                            <div class="p-2.5 rounded-xl border border-soft-border dark:border-night-border bg-soft-bg dark:bg-night-bg text-center text-xs font-bold peer-checked:border-soft-amber peer-checked:bg-soft-amberLight/70 peer-checked:text-amber-800 dark:peer-checked:bg-amber-950/60 transition-all">
+                                ⚠️ Kendala / Bug
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="feedback-category" value="Koreksi Soal" class="peer sr-only">
+                            <div class="p-2.5 rounded-xl border border-soft-border dark:border-night-border bg-soft-bg dark:bg-night-bg text-center text-xs font-bold peer-checked:border-soft-terra peer-checked:bg-soft-terraLight/70 peer-checked:text-soft-terra transition-all">
+                                📝 Koreksi Soal
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-soft-charcoal dark:text-night-text mb-1">Nama Pengirim (Opsional)</label>
+                    <input type="text" id="feedback-sender-name" placeholder="Nama Anda (atau biarkan default)" class="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text focus:outline-none focus:border-soft-sage transition-colors">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-soft-charcoal dark:text-night-text mb-1">Pesan Kritik / Saran <span class="text-soft-terra">*</span></label>
+                    <textarea id="feedback-message" required rows="4" placeholder="Tuliskan saran perbaikan, kendala yang dihadapi, atau ide fitur baru di sini..." class="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text focus:outline-none focus:border-soft-sage transition-colors resize-none leading-relaxed"></textarea>
+                </div>
+
+                <div class="flex items-center justify-end gap-2 pt-2 border-t border-soft-border dark:border-night-border">
+                    <button type="button" onclick="app.closeFeedbackModal()" class="px-4 py-2.5 rounded-xl border border-soft-border dark:border-night-border text-soft-slate hover:bg-soft-muted text-xs font-bold transition-all">
+                        Batal
+                    </button>
+                    <button type="submit" id="feedback-submit-btn" class="px-5 py-2.5 rounded-xl bg-soft-sage hover:bg-soft-sageHover text-white text-xs font-bold shadow-sm transition-all flex items-center gap-1.5">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Kirim Masukan</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- ==================== TOAST NOTIFICATION ==================== -->
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+    <div id="toast-container" class="fixed bottom-20 right-5 sm:bottom-24 sm:right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <!-- ==================== APPLICATION SCRIPT, FIREBASE CLOUD & 130 QUESTIONS DATASET ==================== -->
     <script type="module">
@@ -2097,6 +2204,7 @@
             },
             paymentConfig: JSON.parse(JSON.stringify(DEFAULT_PAYMENT_CONFIG)),
             usersIndex: {},
+            feedbacks: [],
             selectedUpgradePlan: 'weekly',
             userDocUnsubscribe: null,
             masterDocUnsubscribe: null,
@@ -2310,6 +2418,10 @@
                     }
                     if (this.isModalOpen('modal-question-editor')) {
                         this.closeQuestionModal();
+                        return;
+                    }
+                    if (this.isModalOpen('modal-feedback')) {
+                        this.closeFeedbackModal();
                         return;
                     }
 
@@ -2580,6 +2692,9 @@
                 }
                 if (masterData.usersIndex && typeof masterData.usersIndex === 'object') {
                     this.usersIndex = masterData.usersIndex;
+                }
+                if (Array.isArray(masterData.feedbacks)) {
+                    this.feedbacks = masterData.feedbacks;
                 }
             },
 
@@ -3132,6 +3247,12 @@
                 const header = document.getElementById('main-header');
                 if (header) {
                     header.classList.toggle('hidden', view === 'exam' || view === 'transition');
+                }
+
+                // Sembunyikan floating feedback button saat sedang di layar ujian agar tidak mengganggu fokus
+                const floatBtn = document.getElementById('floating-feedback-container');
+                if (floatBtn) {
+                    floatBtn.classList.toggle('hidden', view === 'exam' || view === 'transition');
                 }
 
                 // Update nav active states
@@ -5503,6 +5624,9 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                 if (statPend) statPend.textContent = countPend;
                 if (statFree) statFree.textContent = countFree;
 
+                // Render Kritik & Saran di Panel Admin
+                this.renderAdminFeedbacks();
+
                 // Filter & Search
                 const filterStatus = document.getElementById('admin-user-filter')?.value || 'ALL';
                 const searchQ = (document.getElementById('admin-user-search')?.value || '').toLowerCase().trim();
@@ -5809,6 +5933,180 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                 this.renderAdminPanel();
                 this.renderUpgradeModalContent();
                 this.showToast('Konfigurasi Rekening Bank, E-Wallet, QRIS & Status Maintenance berhasil disimpan ke Cloud!', 'success');
+            },
+
+            // ---------------- FITUR KRITIK & SARAN ----------------
+            openFeedbackModal() {
+                const modal = document.getElementById('modal-feedback');
+                if (!modal) return;
+
+                // Prefill nama jika user sedang login
+                const nameInput = document.getElementById('feedback-sender-name');
+                if (nameInput && !nameInput.value) {
+                    nameInput.value = this.currentUser?.displayName || (this.currentUser?.email ? this.currentUser.email.split('@')[0] : '');
+                }
+
+                modal.classList.remove('hidden');
+                this.pushBackGuardState(this.currentView);
+            },
+
+            closeFeedbackModal() {
+                const modal = document.getElementById('modal-feedback');
+                if (modal) modal.classList.add('hidden');
+            },
+
+            async submitFeedback() {
+                const msgInput = document.getElementById('feedback-message');
+                const message = (msgInput?.value || '').trim();
+                if (!message) {
+                    this.showToast('Silakan tuliskan pesan kritik atau saran Anda.', 'warning');
+                    return;
+                }
+
+                const catRadio = document.querySelector('input[name="feedback-category"]:checked');
+                const category = catRadio ? catRadio.value : 'Saran Fitur';
+                const nameInput = document.getElementById('feedback-sender-name');
+                const senderName = (nameInput?.value || '').trim() || (this.currentUser?.displayName || (this.currentUser?.email ? this.currentUser.email.split('@')[0] : 'Anonim'));
+                const senderEmail = this.currentUser?.email || 'Tamu / Tanpa Email';
+
+                const newFeedback = {
+                    id: 'fb_' + Date.now().toString(36) + '_' + Math.random().toString(36).substr(2, 6),
+                    category,
+                    senderName,
+                    senderEmail,
+                    senderUid: this.currentUser?.uid || 'guest',
+                    message,
+                    createdAt: new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
+                    timestamp: Date.now()
+                };
+
+                const submitBtn = document.getElementById('feedback-submit-btn');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Mengirim...</span>`;
+                }
+
+                try {
+                    // Masukkan ke array feedbacks lokal
+                    if (!Array.isArray(this.feedbacks)) this.feedbacks = [];
+                    this.feedbacks.unshift(newFeedback);
+                    if (this.feedbacks.length > 100) this.feedbacks = this.feedbacks.slice(0, 100); // batas 100 masukan terbaru
+
+                    // Simpan ke Firestore dokumen master agar terbaca oleh Admin secara real-time
+                    await setDoc(MASTER_DOC_REF, {
+                        feedbacks: this.feedbacks,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+
+                    if (msgInput) msgInput.value = '';
+                    this.closeFeedbackModal();
+                    this.showToast('Terima kasih! Kritik & saran Anda berhasil dikirim ke Admin.', 'success');
+                    if (this.isAdmin() && this.currentView === 'admin') {
+                        this.renderAdminFeedbacks();
+                    }
+                } catch (err) {
+                    console.error('Gagal mengirim kritik & saran:', err);
+                    this.showToast('Gagal mengirim pesan ke server. Silakan coba lagi.', 'error');
+                } finally {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i><span>Kirim Masukan</span>`;
+                    }
+                }
+            },
+
+            renderAdminFeedbacks() {
+                if (!this.isAdmin()) return;
+                const countBadge = document.getElementById('admin-stat-feedbacks-count');
+                const listEl = document.getElementById('admin-feedbacks-list');
+                const list = Array.isArray(this.feedbacks) ? this.feedbacks : [];
+
+                if (countBadge) countBadge.textContent = `${list.length} Pesan`;
+                if (!listEl) return;
+
+                if (list.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="p-8 text-center rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-slate text-xs sm:text-sm">
+                            <i class="fa-solid fa-inbox text-3xl text-soft-slate/40 mb-2 block"></i>
+                            Belum ada kritik & saran yang dikirimkan oleh peserta.
+                        </div>
+                    `;
+                    return;
+                }
+
+                listEl.innerHTML = list.map(fb => {
+                    const isBug = fb.category === 'Kritik & Kendala';
+                    const isCorrection = fb.category === 'Koreksi Soal';
+                    const badgeClass = isBug
+                        ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300/60'
+                        : (isCorrection ? 'bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 border-red-300/60' : 'bg-soft-sageLight text-soft-sage dark:bg-night-sageLight dark:text-night-sage border-soft-sageBorder/60');
+
+                    return `
+                        <div class="p-4 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border space-y-2.5">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="space-y-0.5">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="font-extrabold text-sm text-soft-charcoal dark:text-night-text">${this.escapeHtml(fb.senderName || 'Anonim')}</span>
+                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold border ${badgeClass}">${this.escapeHtml(fb.category || 'Saran Fitur')}</span>
+                                    </div>
+                                    <div class="text-[11px] text-soft-slate dark:text-night-subtext flex flex-wrap items-center gap-x-3 gap-y-0.5">
+                                        <span><i class="fa-regular fa-envelope mr-1"></i>${this.escapeHtml(fb.senderEmail || '-')}</span>
+                                        <span><i class="fa-regular fa-clock mr-1"></i>${this.escapeHtml(fb.createdAt || '-')}</span>
+                                    </div>
+                                </div>
+                                <button onclick="app.deleteFeedback('${fb.id}')" class="px-2 py-1 rounded-lg hover:bg-soft-terraLight hover:text-soft-terra text-soft-slate text-xs font-semibold transition-all shrink-0" title="Hapus pesan ini">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                            <div class="text-xs sm:text-sm text-soft-charcoal dark:text-night-text bg-soft-surface dark:bg-night-surface p-3 rounded-xl border border-soft-border/70 dark:border-night-border/70 whitespace-pre-line leading-relaxed font-normal">
+                                ${this.escapeHtml(fb.message || '')}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            },
+
+            async deleteFeedback(fbId) {
+                if (!this.isAdmin() || !fbId) return;
+                this.feedbacks = (this.feedbacks || []).filter(f => f.id !== fbId);
+                try {
+                    await setDoc(MASTER_DOC_REF, {
+                        feedbacks: this.feedbacks,
+                        updatedAt: new Date().toISOString()
+                    }, { merge: true });
+                    this.renderAdminFeedbacks();
+                    this.showToast('Pesan berhasil dihapus.', 'success');
+                } catch (e) {
+                    console.error('Gagal menghapus pesan:', e);
+                    this.showToast('Gagal menghapus pesan.', 'error');
+                }
+            },
+
+            async clearAllFeedbacks() {
+                if (!this.isAdmin()) return;
+                if (!this.feedbacks || this.feedbacks.length === 0) {
+                    this.showToast('Tidak ada pesan untuk dibersihkan.', 'info');
+                    return;
+                }
+                this.showConfirm(
+                    'Bersihkan Semua Kritik & Saran?',
+                    'Seluruh daftar pesan kritik dan saran dari peserta akan dihapus secara permanen dari server.',
+                    async () => {
+                        this.feedbacks = [];
+                        try {
+                            await setDoc(MASTER_DOC_REF, {
+                                feedbacks: [],
+                                updatedAt: new Date().toISOString()
+                            }, { merge: true });
+                            this.renderAdminFeedbacks();
+                            this.showToast('Seluruh pesan kritik & saran berhasil dibersihkan.', 'success');
+                        } catch (e) {
+                            console.error('Gagal membersihkan pesan:', e);
+                            this.showToast('Gagal membersihkan pesan dari server.', 'error');
+                        }
+                    },
+                    'Ya, Bersihkan Semua'
+                );
             },
 
             // ---------------- UTILITIES (MODALS & TOASTS) ----------------
