@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "EduSoft SNBT — CBT Simulator",
-  "short_name": "EduSoft SNBT",
+  "name": "SNBT EDU — CBT Simulator",
+  "short_name": "SNBT EDU",
   "description": "Simulator CBT UTBK-SNBT & Bank Soal dengan sinkronisasi Cloud Firebase.",
   "start_url": "/",
   "scope": "/",
