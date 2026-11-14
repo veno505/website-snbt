@@ -124,12 +124,20 @@
         .animate-fade {
             animation: fadeIn 0.25s ease-out forwards;
         }
+
+        /* Saat belum login: sembunyikan seluruh app-shell agar tidak bocor/kelihatan saat scroll */
+        body.auth-pending #app-shell {
+            display: none !important;
+        }
+        body.auth-pending {
+            overflow: hidden !important;
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-soft-sage selection:text-white">
+<body class="auth-pending min-h-screen flex flex-col selection:bg-soft-sage selection:text-white">
 
     <!-- ==================== AUTHENTICATION OVERLAY (LOGIN & DAFTAR) ==================== -->
-    <div id="auth-overlay" class="fixed inset-0 z-[100] bg-soft-bg dark:bg-night-bg flex items-center justify-center p-4 transition-opacity duration-300 overflow-y-auto">
+    <div id="auth-overlay" class="fixed inset-0 z-[100] bg-soft-bg dark:bg-night-bg flex items-center justify-center p-4 transition-opacity duration-300 overflow-y-auto overscroll-contain">
         <!-- Decorative Soft Background Blobs -->
         <div class="fixed -top-24 -left-24 w-80 h-80 rounded-full bg-soft-sageLight/80 dark:bg-night-sageLight/30 blur-3xl pointer-events-none"></div>
         <div class="fixed -bottom-24 -right-24 w-80 h-80 rounded-full bg-soft-amberLight/80 dark:bg-night-sageLight/20 blur-3xl pointer-events-none"></div>
@@ -233,8 +241,11 @@
         </div>
     </div>
 
-    <!-- ==================== GLOBAL HEADER (NON-EXAM VIEWS) ==================== -->
-    <header id="main-header" class="sticky top-0 z-30 w-full bg-soft-surface/95 dark:bg-night-surface/95 backdrop-blur-md border-b border-soft-border dark:border-night-border transition-colors">
+    <!-- ==================== WRAPPER APP SHELL (HANYA AKTIF SETELAH LOGIN) ==================== -->
+    <div id="app-shell" class="flex-1 flex flex-col w-full min-h-screen">
+
+        <!-- ==================== GLOBAL HEADER (NON-EXAM VIEWS) ==================== -->
+        <header id="main-header" class="sticky top-0 z-30 w-full bg-soft-surface/95 dark:bg-night-surface/95 backdrop-blur-md border-b border-soft-border dark:border-night-border transition-colors">
         <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-2.5 md:py-0 md:h-16 flex flex-wrap md:flex-nowrap items-center justify-between gap-y-2.5 gap-x-2">
             <!-- Brand Logo (Left) -->
             <div class="order-1 flex items-center gap-2.5 sm:gap-3 cursor-pointer shrink-0" onclick="app.navigate('dashboard')">
@@ -1402,7 +1413,8 @@
             </div>
         </section>
 
-    </main>
+        </main>
+    </div>
 
     <!-- ==================== MODAL: ADD / EDIT QUESTION ==================== -->
     <div id="modal-question-editor" class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
@@ -2913,6 +2925,7 @@
 
                         this.updateUserHeaderBadge(user);
 
+                        document.body.classList.remove('auth-pending');
                         if (authOverlay) {
                             authOverlay.classList.add('opacity-0', 'pointer-events-none');
                             setTimeout(() => {
@@ -2922,6 +2935,7 @@
 
                         await this.loadData();
                     } else {
+                        document.body.classList.add('auth-pending');
                         this.stopAllTimers();
                         this.stopRealtimeListeners();
                         this.session.active = false;
