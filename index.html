@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SNBT EDU — CBT Simulator & App Builder</title>
+    <title>SNBT EDU — CBT Simulator UTBK-SNBT</title>
     <!-- PWA Installability & Mobile App Meta -->
     <meta name="theme-color" content="#3D6B58">
     <meta name="mobile-web-app-capable" content="yes">
@@ -249,7 +249,7 @@
                             <span id="cloud-sync-text">Cloud Sync</span>
                         </span>
                     </div>
-                    <p class="text-xs text-soft-slate dark:text-night-subtext hidden xl:block">Simulator UTBK-SNBT & Question App Builder</p>
+                    <p class="text-xs text-soft-slate dark:text-night-subtext hidden xl:block">Simulator CBT UTBK-SNBT</p>
                 </div>
             </div>
 
@@ -309,8 +309,8 @@
                     <span>Dashboard</span>
                 </button>
                 <button onclick="app.navigate('builder')" id="nav-btn-builder" class="hidden flex-1 md:flex-initial justify-center px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all items-center gap-1.5 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted whitespace-nowrap">
-                    <i class="fa-solid fa-screwdriver-wrench"></i>
-                    <span>Builder</span>
+                    <i class="fa-solid fa-database"></i>
+                    <span>Bank Soal</span>
                     <span id="header-question-badge" class="px-1.5 py-0.5 text-[10px] rounded-md bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage font-bold">130</span>
                 </button>
                 <button onclick="app.navigate('history')" id="nav-btn-history" class="flex-1 md:flex-initial justify-center px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 text-soft-charcoal dark:text-night-text hover:bg-soft-muted dark:hover:bg-night-muted whitespace-nowrap">
@@ -751,14 +751,14 @@
             </div>
         </section>
 
-        <!-- ==================== VIEW 5: APP BUILDER (BANK SOAL MANAGER) ==================== -->
+        <!-- ==================== VIEW 5: MANAJEMEN BANK SOAL ==================== -->
         <section id="view-builder" class="hidden max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 animate-fade">
             
-            <!-- Builder Header -->
+            <!-- Bank Soal Header -->
             <div class="bg-soft-surface dark:bg-night-surface rounded-3xl border border-soft-border dark:border-night-border p-6 soft-shadow flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-soft-sage dark:text-night-sage mb-1">
-                        <i class="fa-solid fa-layer-group"></i> SNBT Question App Builder
+                        <i class="fa-solid fa-layer-group"></i> Manajemen Bank Soal SNBT
                     </div>
                     <h1 class="text-2xl font-extrabold text-soft-charcoal dark:text-night-text">Manajemen Bank Soal & Konfigurasi Subtes</h1>
                     <p class="text-xs sm:text-sm text-soft-slate dark:text-night-subtext">Tambah soal baru Anda, kelola teks bacaan, atur waktu subtes, atau impor/ekspor paket soal dengan cepat.</p>
@@ -981,6 +981,50 @@
                     </div>
 
                     <div class="space-y-3">
+                        <!-- Kontrol Status Aktif / Maintenance Metode Pembayaran -->
+                        <div class="p-3.5 rounded-2xl bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border space-y-2.5">
+                            <div class="text-xs font-extrabold uppercase tracking-wider text-soft-sage dark:text-night-sage flex items-center gap-1.5">
+                                <i class="fa-solid fa-power-off"></i>
+                                <span>Status Sistem Pembayaran (Aktif / Maintenance)</span>
+                            </div>
+
+                            <!-- Toggle QRIS -->
+                            <label class="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-soft-surface dark:bg-night-surface border border-soft-border dark:border-night-border cursor-pointer select-none">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-qrcode text-soft-sage text-sm"></i>
+                                    <div>
+                                        <div class="text-xs font-bold text-soft-charcoal dark:text-night-text">Pembayaran QRIS</div>
+                                        <span id="admin-status-label-qris" class="text-[10px] font-extrabold text-amber-600">🛠️ Maintenance</span>
+                                    </div>
+                                </div>
+                                <input type="checkbox" id="admin-cfg-qris-enabled" onchange="app.onAdminPaymentToggleChange()" class="w-4 h-4 accent-[#3D6B58] rounded cursor-pointer">
+                            </label>
+
+                            <!-- Toggle Rekening Bank -->
+                            <label class="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-soft-surface dark:bg-night-surface border border-soft-border dark:border-night-border cursor-pointer select-none">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-building-columns text-soft-sage text-sm"></i>
+                                    <div>
+                                        <div class="text-xs font-bold text-soft-charcoal dark:text-night-text">Transfer Rekening Bank</div>
+                                        <span id="admin-status-label-bank" class="text-[10px] font-extrabold text-amber-600">🛠️ Maintenance</span>
+                                    </div>
+                                </div>
+                                <input type="checkbox" id="admin-cfg-bank-enabled" onchange="app.onAdminPaymentToggleChange()" class="w-4 h-4 accent-[#3D6B58] rounded cursor-pointer">
+                            </label>
+
+                            <!-- Toggle E-Wallet -->
+                            <label class="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-soft-surface dark:bg-night-surface border border-soft-border dark:border-night-border cursor-pointer select-none">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-wallet text-amber-500 text-sm"></i>
+                                    <div>
+                                        <div class="text-xs font-bold text-soft-charcoal dark:text-night-text">Transfer E-Wallet</div>
+                                        <span id="admin-status-label-ewallet" class="text-[10px] font-extrabold text-soft-sage">✅ Aktif</span>
+                                    </div>
+                                </div>
+                                <input type="checkbox" id="admin-cfg-ewallet-enabled" onchange="app.onAdminPaymentToggleChange()" checked class="w-4 h-4 accent-[#3D6B58] rounded cursor-pointer">
+                            </label>
+                        </div>
+
                         <div>
                             <label class="block text-xs font-bold text-soft-slate dark:text-night-subtext mb-1">Nomor WhatsApp Admin (Format 628...)</label>
                             <input type="text" id="admin-cfg-wa" placeholder="6281229923834" class="w-full px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-soft-bg dark:bg-night-bg border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text">
@@ -1564,9 +1608,14 @@
                                     <i class="fa-solid fa-building-columns text-soft-sage"></i>
                                     <span>Transfer Rekening Bank</span>
                                 </span>
-                                <button type="button" onclick="app.copyPaymentDetails('bank')" class="px-2 py-0.5 rounded-md bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage text-[10px] font-extrabold hover:bg-soft-sage hover:text-white transition-colors">
-                                    <i class="fa-regular fa-copy mr-1"></i>Salin
-                                </button>
+                                <div class="flex items-center gap-1.5">
+                                    <span id="checkout-bank-status-badge" class="hidden px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-300 text-[10px] font-extrabold">
+                                        <i class="fa-solid fa-screwdriver-wrench mr-1"></i>Maintenance
+                                    </span>
+                                    <button type="button" id="checkout-bank-copy-btn" onclick="app.copyPaymentDetails('bank')" class="px-2 py-0.5 rounded-md bg-soft-sageLight dark:bg-night-sageLight text-soft-sage dark:text-night-sage text-[10px] font-extrabold hover:bg-soft-sage hover:text-white transition-colors">
+                                        <i class="fa-regular fa-copy mr-1"></i>Salin
+                                    </button>
+                                </div>
                             </div>
                             <div id="checkout-bank-account-text" class="font-mono font-bold text-soft-charcoal dark:text-night-text whitespace-pre-line leading-relaxed pt-0.5">
                                 BCA: 1234567890 (a.n. Mr. V)
@@ -1580,9 +1629,14 @@
                                     <i class="fa-solid fa-wallet text-amber-500"></i>
                                     <span>Transfer ke E-Wallet</span>
                                 </span>
-                                <button type="button" onclick="app.copyPaymentDetails('ewallet')" class="px-2 py-0.5 rounded-md bg-soft-amberLight dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 text-[10px] font-extrabold hover:bg-amber-500 hover:text-white transition-colors">
-                                    <i class="fa-regular fa-copy mr-1"></i>Salin
-                                </button>
+                                <div class="flex items-center gap-1.5">
+                                    <span id="checkout-ewallet-status-badge" class="hidden px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-800 dark:text-amber-300 text-[10px] font-extrabold">
+                                        <i class="fa-solid fa-screwdriver-wrench mr-1"></i>Maintenance
+                                    </span>
+                                    <button type="button" id="checkout-ewallet-copy-btn" onclick="app.copyPaymentDetails('ewallet')" class="px-2 py-0.5 rounded-md bg-soft-amberLight dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 text-[10px] font-extrabold hover:bg-amber-500 hover:text-white transition-colors">
+                                        <i class="fa-regular fa-copy mr-1"></i>Salin
+                                    </button>
+                                </div>
                             </div>
                             <div id="checkout-ewallet-account-text" class="font-mono font-bold text-soft-charcoal dark:text-night-text whitespace-pre-line leading-relaxed pt-0.5">
                                 DANA / GoPay / ShopeePay: 081229923834 (a.n. Mr. V)
@@ -1641,18 +1695,21 @@
         let STORAGE_KEY = "edusoft_snbt_backup_guest";
         const OWNER_EMAILS = ["marveyno@gmail.com", "marveyno@gmail.comm"];
         const FREE_TRIAL_LIMIT = 3; // Akun Free hanya bisa akses 3 soal pertama per subtes
-        const MAX_DEVICES_PER_ACCOUNT = 2; // Tiap akun dibatasi maksimal login di 2 perangkat
+        const MAX_DEVICES_PER_ACCOUNT = 2; // 1 akun hanya boleh digunakan pada maksimal 2 perangkat terdaftar
 
         const DEFAULT_PAYMENT_CONFIG = {
             whatsapp: "6281229923834",
             whatsappNumber: "6281229923834",
             merchantName: "SNBT EDU Official",
+            qrisEnabled: false,
+            bankEnabled: false,
+            ewalletEnabled: true,
             qrisImageUrl: "",
             bankAccount: "BCA: 1234567890 (a.n. Mr. V)",
             ewalletAccount: "DANA / GoPay / ShopeePay: 081229923834 (a.n. Mr. V)",
-            bankInfo: "QRIS Semua E-Wallet & M-Banking (GoPay, OVO, DANA, ShopeePay, BCA, Mandiri, BRI, SeaBank)",
-            paymentNote: "Transfer sesuai nominal paket melalui QRIS, Rekening Bank, atau E-Wallet di atas, lalu klik tombol Konfirmasi WhatsApp untuk mengirim bukti pembayaran agar langsung diaktifkan oleh Mr. V.",
-            paymentNotes: "Transfer sesuai nominal paket melalui QRIS, Rekening Bank, atau E-Wallet di atas, lalu klik tombol Konfirmasi WhatsApp untuk mengirim bukti pembayaran agar langsung diaktifkan oleh Mr. V.",
+            bankInfo: "Transfer E-Wallet / Rekening Bank / QRIS",
+            paymentNote: "Transfer sesuai nominal paket melalui metode pembayaran yang aktif di atas, lalu klik tombol Konfirmasi WhatsApp untuk mengirim bukti pembayaran agar langsung diaktifkan oleh Mr. V.",
+            paymentNotes: "Transfer sesuai nominal paket melalui metode pembayaran yang aktif di atas, lalu klik tombol Konfirmasi WhatsApp untuk mengirim bukti pembayaran agar langsung diaktifkan oleh Mr. V.",
             weeklyPrice: 7000,
             monthlyPrice: 23000,
             snbtPrice: 80000,
@@ -2054,22 +2111,26 @@
                             ...devices[existingIdx],
                             deviceId: myDeviceId,
                             deviceName: myDeviceName,
+                            label: myDeviceName,
                             lastActive: nowMs,
-                            lastActiveStr: nowStr
+                            lastActiveStr: nowStr,
+                            lastSeenStr: nowStr
                         };
                     } else {
-                        // Cek apakah sudah mencapai batas maksimal 2 perangkat (kecuali Admin/Owner)
+                        // 1 akun hanya boleh digunakan pada maksimal 2 perangkat terdaftar secara permanen (kecuali Admin/Owner)
                         if (!this.isAdmin() && devices.length >= MAX_DEVICES_PER_ACCOUNT) {
-                            const usedNames = devices.map(d => d.deviceName || 'Perangkat Lain').join(' & ');
-                            this.deviceLimitBlockedMessage = `Akses ditolak! Akun ini sudah login di maksimal ${MAX_DEVICES_PER_ACCOUNT} perangkat (${usedNames}). Silakan Logout dari salah satu perangkat tersebut terlebih dahulu atau hubungi Mr. V.`;
+                            const usedNames = devices.map(d => d.deviceName || d.label || 'Perangkat Terdaftar').join(' & ');
+                            this.deviceLimitBlockedMessage = `Akses ditolak! 1 akun hanya boleh digunakan pada maksimal ${MAX_DEVICES_PER_ACCOUNT} perangkat yang sudah terdaftar (${usedNames}). Perangkat baru tidak dapat login ke akun ini. Hubungi Admin (Mr. V) jika Anda ganti perangkat.`;
                             return false;
                         }
                         devices.push({
                             deviceId: myDeviceId,
                             deviceName: myDeviceName,
+                            label: myDeviceName,
                             loginAt: nowStr,
                             lastActive: nowMs,
-                            lastActiveStr: nowStr
+                            lastActiveStr: nowStr,
+                            lastSeenStr: nowStr
                         });
                     }
 
@@ -2082,9 +2143,11 @@
                         this.activeDevices = [{
                             deviceId: myDeviceId,
                             deviceName: myDeviceName,
+                            label: myDeviceName,
                             loginAt: nowStr,
                             lastActive: nowMs,
-                            lastActiveStr: nowStr
+                            lastActiveStr: nowStr,
+                            lastSeenStr: nowStr
                         }];
                     }
                     return true;
@@ -2092,37 +2155,25 @@
             },
 
             async unregisterCurrentDevice() {
-                if (!this.currentUser || !DATABASE_REF) return;
-                const myDeviceId = this.getOrCreateDeviceId();
-                try {
-                    const docSnap = await getDoc(DATABASE_REF);
-                    const data = docSnap.exists() ? docSnap.data() : {};
-                    const currentList = Array.isArray(data.activeDevices) ? data.activeDevices : this.activeDevices;
-                    const updated = (currentList || []).filter(d => d && d.deviceId !== myDeviceId);
-                    this.activeDevices = updated;
-                    await setDoc(DATABASE_REF, { activeDevices: updated, updatedAt: new Date().toISOString() }, { merge: true });
-                    await this.syncUserToMasterIndex();
-                } catch (e) {
-                    console.warn('Gagal menghapus sesi perangkat saat logout:', e);
-                }
+                // Perangkat yang sudah pernah login tetap terdaftar permanen pada akun (maks 2 device per akun)
+                return;
             },
 
             async removeRegisteredDevice(targetDeviceId) {
-                if (!this.currentUser || !DATABASE_REF || !targetDeviceId) return;
-                const myDeviceId = this.getOrCreateDeviceId();
-                if (targetDeviceId === myDeviceId) {
-                    this.confirmLogout();
+                if (!this.isAdmin()) {
+                    this.showToast('Perangkat yang sudah terdaftar bersifat permanen (maks. 2 device). Hubungi Admin (Mr. V) untuk reset perangkat.', 'warning');
                     return;
                 }
+                if (!this.currentUser || !DATABASE_REF || !targetDeviceId) return;
                 const updated = (this.activeDevices || []).filter(d => d && d.deviceId !== targetDeviceId);
                 this.activeDevices = updated;
                 try {
                     await setDoc(DATABASE_REF, { activeDevices: updated, updatedAt: new Date().toISOString() }, { merge: true });
                     await this.syncUserToMasterIndex();
                     this.renderProfileView();
-                    this.showToast('Perangkat berhasil dikeluarkan dari akun Anda.', 'success');
+                    this.showToast('Perangkat berhasil dihapus.', 'success');
                 } catch (e) {
-                    this.showToast('Gagal mengeluarkan perangkat.', 'error');
+                    this.showToast('Gagal menghapus perangkat.', 'error');
                 }
             },
 
@@ -2425,6 +2476,9 @@
                     this.paymentConfig = {
                         ...JSON.parse(JSON.stringify(DEFAULT_PAYMENT_CONFIG)),
                         ...masterData.paymentConfig,
+                        qrisEnabled: typeof masterData.paymentConfig.qrisEnabled === 'boolean' ? masterData.paymentConfig.qrisEnabled : false,
+                        bankEnabled: typeof masterData.paymentConfig.bankEnabled === 'boolean' ? masterData.paymentConfig.bankEnabled : false,
+                        ewalletEnabled: typeof masterData.paymentConfig.ewalletEnabled === 'boolean' ? masterData.paymentConfig.ewalletEnabled : true,
                         weeklyPrice: loadedWeeklyPrice,
                         monthlyPrice: loadedMonthlyPrice,
                         snbtPrice: loadedSnbtPrice,
@@ -2923,7 +2977,7 @@
             confirmLogout() {
                 const warningText = this.session.active
                     ? 'Sesi latihan ujian sedang berjalan. Jika Anda keluar (logout), sesi yang sedang berjalan akan dihentikan. Lanjutkan keluar?'
-                    : 'Apakah Anda yakin ingin keluar dari akun SNBT EDU Anda? Perangkat ini akan dilepas dari kuota perangkat aktif.';
+                    : 'Apakah Anda yakin ingin keluar dari akun SNBT EDU Anda?';
 
                 this.showConfirm(
                     'Keluar dari Akun (Logout)?',
@@ -2932,7 +2986,6 @@
                         try {
                             this.stopAllTimers();
                             this.session.active = false;
-                            await this.unregisterCurrentDevice();
                             await signOut(auth);
                             this.showToast('Anda telah berhasil keluar dari akun.', 'success');
                         } catch (err) {
@@ -3114,7 +3167,7 @@
                 if (secCta && secCtaLabel) {
                     if (isAdmin) {
                         secCta.onclick = () => this.navigate('builder');
-                        secCtaLabel.textContent = 'Kelola Bank Soal (App Builder)';
+                        secCtaLabel.textContent = 'Kelola Bank Soal';
                     } else if (isPrem) {
                         secCta.onclick = () => this.openUpgradeModal();
                         secCtaLabel.textContent = `Perpanjang Paket Premium (${remDays} Hari Tersisa)`;
@@ -3143,7 +3196,7 @@
                                             ${pendingUsers > 0 ? `<span class="px-2.5 py-0.5 rounded-full bg-soft-terra text-white text-[11px] font-extrabold">${pendingUsers} Menunggu Aktivasi</span>` : ''}
                                         </div>
                                         <p class="text-xs sm:text-sm text-soft-charcoal dark:text-night-text font-semibold mt-1">
-                                            Akses penuh ke seluruh soal, <strong>App Builder</strong>, dan <strong>Panel Admin</strong> (${totalUsers} peserta terdaftar).
+                                            Akses penuh ke seluruh soal, <strong>Bank Soal</strong>, dan <strong>Panel Admin</strong> (${totalUsers} peserta terdaftar).
                                         </p>
                                     </div>
                                 </div>
@@ -3153,8 +3206,8 @@
                                         <span>Panel Admin</span>
                                     </button>
                                     <button onclick="app.navigate('builder')" class="justify-center px-3.5 py-2.5 rounded-xl bg-soft-bg dark:bg-night-bg hover:bg-soft-muted dark:hover:bg-night-muted border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5">
-                                        <i class="fa-solid fa-sliders"></i>
-                                        <span>App Builder</span>
+                                        <i class="fa-solid fa-database"></i>
+                                        <span>Bank Soal</span>
                                     </button>
                                 </div>
                             </div>
@@ -3416,7 +3469,7 @@
                     .map(s => s.id);
 
                 if (validSubtests.length === 0) {
-                    this.showToast('Bank soal masih kosong. Tambahkan soal terlebih dahulu di App Builder.', 'error');
+                    this.showToast('Bank soal masih kosong. Tambahkan soal terlebih dahulu di Bank Soal.', 'error');
                     return;
                 }
 
@@ -3427,7 +3480,7 @@
                 this.readExamConfigFromUI();
                 const count = this.questions.filter(q => q.subtest === subtestId).length;
                 if (count === 0) {
-                    this.showToast('Subtes ini belum memiliki soal. Silakan tambah soal di App Builder.', 'error');
+                    this.showToast('Subtes ini belum memiliki soal. Silakan tambah soal di Bank Soal.', 'error');
                     return;
                 }
                 this.beginExamSession('SINGLE', [subtestId]);
@@ -4717,7 +4770,7 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                                 <span class="text-xs font-bold text-soft-sage"><i class="fa-solid fa-shield-halved mr-1"></i>Hak Akses Admin / Owner</span>
                                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-soft-sageLight text-soft-sage">Full Control</span>
                             </div>
-                            <p class="text-xs text-soft-charcoal dark:text-night-text font-semibold">Anda memiliki akses penuh ke seluruh soal, fitur App Builder, dan Panel Kelola Member.</p>
+                            <p class="text-xs text-soft-charcoal dark:text-night-text font-semibold">Anda memiliki akses penuh ke seluruh soal, manajemen Bank Soal, dan Panel Kelola Member.</p>
                         `;
                         if (cardUpgradeBtnText) cardUpgradeBtnText.textContent = 'Kelola Member di Panel Admin';
                     } else if (isPrem) {
@@ -4803,7 +4856,7 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                     }).join('');
                 }
 
-                // 6. Form Edit Nama Default Value & Daftar Perangkat Aktif (Maks 2 Device)
+                // 6. Form Edit Nama Default Value & Daftar Perangkat Terdaftar (Maks 2 Device Permanen)
                 const editNameInput = document.getElementById('profile-edit-name-input');
                 if (editNameInput) editNameInput.value = name;
 
@@ -4813,34 +4866,37 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                 const devices = Array.isArray(this.activeDevices) ? this.activeDevices : [];
 
                 if (devBadge) {
-                    devBadge.textContent = `${devices.length} / ${MAX_DEVICES_PER_ACCOUNT} Device`;
+                    devBadge.textContent = `${devices.length} / ${MAX_DEVICES_PER_ACCOUNT} Device Terdaftar`;
                 }
                 if (devList) {
                     if (devices.length === 0) {
-                        devList.innerHTML = `<div class="text-xs text-soft-slate dark:text-night-subtext">Perangkat ini aktif.</div>`;
+                        devList.innerHTML = `<div class="text-xs text-soft-slate dark:text-night-subtext">Perangkat ini terdaftar.</div>`;
                     } else {
-                        devList.innerHTML = devices.map(d => {
+                        devList.innerHTML = devices.map((d, idx) => {
                             const isThis = d.deviceId === currentDevId;
+                            const devLabel = d.deviceName || d.label || `Perangkat #${idx + 1}`;
                             return `
                                 <div class="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-soft-surface dark:bg-night-surface border border-soft-border dark:border-night-border text-xs">
                                     <div class="flex items-center gap-2 min-w-0">
-                                        <i class="fa-solid ${d.label && d.label.includes('Desktop') ? 'fa-laptop' : 'fa-mobile-screen'} text-soft-sage"></i>
+                                        <i class="fa-solid ${devLabel.includes('Desktop') ? 'fa-laptop' : 'fa-mobile-screen'} text-soft-sage"></i>
                                         <div class="truncate">
                                             <div class="font-bold text-soft-charcoal dark:text-night-text truncate">
-                                                ${this.escapeHtml(d.label || 'Perangkat')}
+                                                ${this.escapeHtml(devLabel)}
                                                 ${isThis ? '<span class="ml-1 px-1.5 py-0.5 rounded bg-soft-sageLight text-soft-sage text-[10px]">Perangkat Ini</span>' : ''}
                                             </div>
-                                            <div class="text-[10px] text-soft-slate dark:text-night-subtext">Aktif: ${this.escapeHtml(d.lastSeenStr || '-')}</div>
+                                            <div class="text-[10px] text-soft-slate dark:text-night-subtext">Terdaftar: ${this.escapeHtml(d.registeredAtStr || d.lastSeenStr || '-')}</div>
                                         </div>
                                     </div>
-                                    ${!isThis ? `
-                                        <button onclick="app.removeRegisteredDevice('${this.escapeHtml(d.deviceId)}')" class="px-2.5 py-1 rounded-lg bg-soft-terraLight hover:bg-soft-terra hover:text-white text-soft-terra font-bold text-[11px] shrink-0 transition-all">
-                                            Hapus Akses
-                                        </button>
-                                    ` : ''}
+                                    <span class="px-2 py-0.5 rounded-lg bg-soft-muted dark:bg-night-muted text-soft-slate dark:text-night-subtext font-bold text-[10px] shrink-0">
+                                        <i class="fa-solid fa-lock mr-1"></i>Device #${idx + 1}
+                                    </span>
                                 </div>
                             `;
-                        }).join('');
+                        }).join('') + `
+                            <div class="text-[10px] text-soft-slate dark:text-night-subtext pt-1">
+                                <i class="fa-solid fa-shield-halved text-soft-sage mr-1"></i>1 akun hanya dapat terdaftar pada maksimal 2 perangkat secara permanen. Hubungi Admin jika Anda mengganti perangkat.
+                            </div>
+                        `;
                     }
                 }
             },
@@ -4987,6 +5043,14 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
 
             copyPaymentDetails(type) {
                 const cfg = this.paymentConfig || DEFAULT_PAYMENT_CONFIG;
+                if (type === 'bank' && cfg.bankEnabled !== true) {
+                    this.showToast('🛠️ Pembayaran Transfer Bank sedang Maintenance.', 'warning');
+                    return;
+                }
+                if (type === 'ewallet' && cfg.ewalletEnabled === false) {
+                    this.showToast('🛠️ Pembayaran E-Wallet sedang Maintenance.', 'warning');
+                    return;
+                }
                 const rawText = type === 'bank'
                     ? (cfg.bankAccount || DEFAULT_PAYMENT_CONFIG.bankAccount || '')
                     : (cfg.ewalletAccount || DEFAULT_PAYMENT_CONFIG.ewalletAccount || '');
@@ -5009,6 +5073,10 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                 const cfg = this.paymentConfig || DEFAULT_PAYMENT_CONFIG;
                 const selected = this.getPlanDefinition(this.selectedUpgradePlan);
                 const planKeys = ['weekly', 'monthly', 'snbt'];
+
+                const qrisEnabled = cfg.qrisEnabled === true;
+                const bankEnabled = cfg.bankEnabled === true;
+                const ewalletEnabled = cfg.ewalletEnabled !== false;
 
                 // Render dynamic plan selection cards inside #upgrade-plans-grid
                 const gridEl = document.getElementById('upgrade-plans-grid');
@@ -5085,8 +5153,12 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                 const checkoutNotesEl = document.getElementById('checkout-payment-notes');
                 const bankAccWrap = document.getElementById('checkout-bank-account-wrap');
                 const bankAccText = document.getElementById('checkout-bank-account-text');
+                const bankStatusBadge = document.getElementById('checkout-bank-status-badge');
+                const bankCopyBtn = document.getElementById('checkout-bank-copy-btn');
                 const ewalletAccWrap = document.getElementById('checkout-ewallet-account-wrap');
                 const ewalletAccText = document.getElementById('checkout-ewallet-account-text');
+                const ewalletStatusBadge = document.getElementById('checkout-ewallet-status-badge');
+                const ewalletCopyBtn = document.getElementById('checkout-ewallet-copy-btn');
 
                 if (checkoutNameEl) checkoutNameEl.textContent = selected.name;
                 if (checkoutPriceEl) checkoutPriceEl.textContent = this.formatRupiah(selected.price);
@@ -5096,22 +5168,61 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                 const bankAccVal = (cfg.bankAccount !== undefined ? cfg.bankAccount : DEFAULT_PAYMENT_CONFIG.bankAccount) || '';
                 const ewalletAccVal = (cfg.ewalletAccount !== undefined ? cfg.ewalletAccount : DEFAULT_PAYMENT_CONFIG.ewalletAccount) || '';
 
-                if (bankAccText) bankAccText.textContent = bankAccVal || 'Belum diatur oleh Admin';
+                // Bank Transfer Card (Active vs Maintenance)
                 if (bankAccWrap) {
-                    if (bankAccVal.trim() !== '') bankAccWrap.classList.remove('hidden');
-                    else bankAccWrap.classList.add('hidden');
+                    bankAccWrap.classList.remove('hidden');
+                    if (!bankEnabled) {
+                        if (bankStatusBadge) bankStatusBadge.classList.remove('hidden');
+                        if (bankCopyBtn) bankCopyBtn.classList.add('hidden');
+                        if (bankAccText) {
+                            bankAccText.textContent = '🛠️ Sistem pembayaran Transfer Rekening Bank sedang Maintenance. Silakan gunakan metode pembayaran lain yang aktif.';
+                            bankAccText.className = 'text-xs font-semibold text-amber-700 dark:text-amber-300 leading-relaxed whitespace-pre-line';
+                        }
+                    } else {
+                        if (bankStatusBadge) bankStatusBadge.classList.add('hidden');
+                        if (bankCopyBtn) bankCopyBtn.classList.remove('hidden');
+                        if (bankAccText) {
+                            bankAccText.textContent = bankAccVal || 'Belum diatur oleh Admin';
+                            bankAccText.className = 'text-xs sm:text-sm font-extrabold font-mono text-soft-charcoal dark:text-night-text leading-relaxed whitespace-pre-line';
+                        }
+                    }
                 }
 
-                if (ewalletAccText) ewalletAccText.textContent = ewalletAccVal || 'Belum diatur oleh Admin';
+                // E-Wallet Card (Active vs Maintenance)
                 if (ewalletAccWrap) {
-                    if (ewalletAccVal.trim() !== '') ewalletAccWrap.classList.remove('hidden');
-                    else ewalletAccWrap.classList.add('hidden');
+                    ewalletAccWrap.classList.remove('hidden');
+                    if (!ewalletEnabled) {
+                        if (ewalletStatusBadge) ewalletStatusBadge.classList.remove('hidden');
+                        if (ewalletCopyBtn) ewalletCopyBtn.classList.add('hidden');
+                        if (ewalletAccText) {
+                            ewalletAccText.textContent = '🛠️ Sistem pembayaran Transfer E-Wallet sedang Maintenance. Silakan gunakan metode pembayaran lain yang aktif.';
+                            ewalletAccText.className = 'text-xs font-semibold text-amber-700 dark:text-amber-300 leading-relaxed whitespace-pre-line';
+                        }
+                    } else {
+                        if (ewalletStatusBadge) ewalletStatusBadge.classList.add('hidden');
+                        if (ewalletCopyBtn) ewalletCopyBtn.classList.remove('hidden');
+                        if (ewalletAccText) {
+                            ewalletAccText.textContent = ewalletAccVal || 'Belum diatur oleh Admin';
+                            ewalletAccText.className = 'text-xs sm:text-sm font-extrabold font-mono text-soft-charcoal dark:text-night-text leading-relaxed whitespace-pre-line';
+                        }
+                    }
                 }
 
-                // QRIS Image Box Rendering (handles both #checkout-qris-box and #upgrade-qris-img)
+                // QRIS Image Box Rendering (Active vs Maintenance)
                 const qrisBox = document.getElementById('checkout-qris-box');
                 if (qrisBox) {
-                    if (cfg.qrisImageUrl && cfg.qrisImageUrl.trim() !== '') {
+                    if (!qrisEnabled) {
+                        qrisBox.innerHTML = `
+                            <div class="py-5 px-3 text-center space-y-2">
+                                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-[11px] font-extrabold uppercase tracking-wider">
+                                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                                    <span>QRIS Sedang Maintenance</span>
+                                </div>
+                                <div class="text-xs font-bold text-soft-charcoal">Pembayaran via Scan QRIS Sementara Dinonaktifkan</div>
+                                <p class="text-[11px] text-soft-slate max-w-xs mx-auto">Silakan gunakan metode pembayaran <strong>E-Wallet (DANA / GoPay / OVO / ShopeePay)</strong> di bawah ini, lalu klik tombol konfirmasi WhatsApp.</p>
+                            </div>
+                        `;
+                    } else if (cfg.qrisImageUrl && cfg.qrisImageUrl.trim() !== '') {
                         qrisBox.innerHTML = `
                             <img src="${cfg.qrisImageUrl}" alt="QRIS Pembayaran" class="max-h-56 mx-auto rounded-xl object-contain shadow-sm">
                             <div class="text-[11px] font-bold text-soft-slate">Scan QRIS via GoPay, OVO, DANA, ShopeePay, BCA, dsb.</div>
@@ -5130,7 +5241,7 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                 const legacyQrisImg = document.getElementById('upgrade-qris-img');
                 const legacyQrisEmpty = document.getElementById('upgrade-qris-placeholder');
                 if (legacyQrisImg && legacyQrisEmpty) {
-                    if (cfg.qrisImageUrl && cfg.qrisImageUrl.trim() !== '') {
+                    if (qrisEnabled && cfg.qrisImageUrl && cfg.qrisImageUrl.trim() !== '') {
                         legacyQrisImg.src = cfg.qrisImageUrl;
                         legacyQrisImg.classList.remove('hidden');
                         legacyQrisEmpty.classList.add('hidden');
@@ -5196,6 +5307,44 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                 }
             },
 
+            updateAdminPaymentToggleLabels(qrisOn, bankOn, ewalletOn) {
+                const setBadge = (elId, isOn) => {
+                    const el = document.getElementById(elId);
+                    if (!el) return;
+                    if (isOn) {
+                        el.textContent = '✅ Aktif';
+                        el.className = 'text-[11px] font-bold text-emerald-600 dark:text-emerald-400';
+                    } else {
+                        el.textContent = '🛠️ Maintenance (Nonaktif)';
+                        el.className = 'text-[11px] font-bold text-amber-600 dark:text-amber-400';
+                    }
+                };
+                setBadge('admin-status-label-qris', qrisOn);
+                setBadge('admin-status-label-bank', bankOn);
+                setBadge('admin-status-label-ewallet', ewalletOn);
+            },
+
+            async onAdminPaymentToggleChange() {
+                if (!this.isAdmin()) return;
+                const qrisChk = document.getElementById('admin-cfg-qris-enabled');
+                const bankChk = document.getElementById('admin-cfg-bank-enabled');
+                const ewalletChk = document.getElementById('admin-cfg-ewallet-enabled');
+
+                const qrisOn = qrisChk ? !!qrisChk.checked : (this.paymentConfig.qrisEnabled === true);
+                const bankOn = bankChk ? !!bankChk.checked : (this.paymentConfig.bankEnabled === true);
+                const ewalletOn = ewalletChk ? !!ewalletChk.checked : (this.paymentConfig.ewalletEnabled !== false);
+
+                this.paymentConfig.qrisEnabled = qrisOn;
+                this.paymentConfig.bankEnabled = bankOn;
+                this.paymentConfig.ewalletEnabled = ewalletOn;
+
+                this.updateAdminPaymentToggleLabels(qrisOn, bankOn, ewalletOn);
+                this.renderUpgradeModalContent();
+
+                await this.saveData(true);
+                this.showToast('Status metode pembayaran (Aktif / Maintenance) berhasil diperbarui!', 'success');
+            },
+
             renderAdminPanel() {
                 if (!this.isAdmin()) return;
 
@@ -5210,6 +5359,19 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                 const wPriceInput = document.getElementById('admin-price-weekly');
                 const mPriceInput = document.getElementById('admin-price-monthly');
                 const sPriceInput = document.getElementById('admin-price-snbt');
+
+                const qrisChk = document.getElementById('admin-cfg-qris-enabled');
+                const bankChk = document.getElementById('admin-cfg-bank-enabled');
+                const ewalletChk = document.getElementById('admin-cfg-ewallet-enabled');
+
+                const qrisOn = cfg.qrisEnabled === true;
+                const bankOn = cfg.bankEnabled === true;
+                const ewalletOn = cfg.ewalletEnabled !== false;
+
+                if (qrisChk) qrisChk.checked = qrisOn;
+                if (bankChk) bankChk.checked = bankOn;
+                if (ewalletChk) ewalletChk.checked = ewalletOn;
+                this.updateAdminPaymentToggleLabels(qrisOn, bankOn, ewalletOn);
 
                 if (waInput && document.activeElement !== waInput) waInput.value = cfg.whatsappNumber || '';
                 if (bankTitleInput && document.activeElement !== bankTitleInput) bankTitleInput.value = cfg.bankInfo || cfg.merchantName || '';
@@ -5330,7 +5492,7 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                                 <div class="text-[11px] text-soft-slate dark:text-night-subtext flex flex-wrap items-center gap-x-4 gap-y-1">
                                     <span>Latihan: <strong>${u.attemptsCount || 0}x</strong></span>
                                     <span>Skor Terbaik: <strong>${u.bestScore || '—'}</strong></span>
-                                    <span>Device Aktif: <strong>${devCount}/${MAX_DEVICES_PER_ACCOUNT}</strong></span>
+                                    <span>Device Terdaftar: <strong>${devCount}/${MAX_DEVICES_PER_ACCOUNT}</strong></span>
                                     <span>Login Terakhir: ${this.escapeHtml(u.lastLogin || '-')}</span>
                                     ${u.requestedAt ? `<span class="text-amber-600 dark:text-amber-400 font-semibold">Request Upgrade: ${this.escapeHtml(u.requestedAt)}</span>` : ''}
                                 </div>
@@ -5349,7 +5511,7 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                                 <button onclick="app.adminPromptCustomDays('${u.uid}')" class="px-2.5 py-1.5 rounded-xl bg-soft-surface dark:bg-night-surface hover:bg-soft-muted border border-soft-border dark:border-night-border text-soft-charcoal dark:text-night-text font-bold text-xs transition-all" title="Input Durasi Hari Custom">
                                     Custom
                                 </button>
-                                <button onclick="app.adminResetUserDevices('${u.uid}')" class="px-2.5 py-1.5 rounded-xl bg-soft-surface dark:bg-night-surface hover:bg-soft-muted border border-soft-border dark:border-night-border text-soft-slate dark:text-night-subtext font-bold text-xs transition-all" title="Reset Sesi Login Perangkat (Maks 2 Device)">
+                                <button onclick="app.adminResetUserDevices('${u.uid}')" class="px-2.5 py-1.5 rounded-xl bg-soft-surface dark:bg-night-surface hover:bg-soft-muted border border-soft-border dark:border-night-border text-soft-slate dark:text-night-subtext font-bold text-xs transition-all" title="Reset Perangkat Terdaftar (Maks 2 Device)">
                                     <i class="fa-solid fa-mobile-screen mr-1"></i>Reset Device
                                 </button>
                                 ${(!isOwner && (isPrem || u.requestedPlan)) ? `
@@ -5381,10 +5543,10 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                         }, { merge: true });
                     }
                     this.renderAdminPanel();
-                    this.showToast('Sesi perangkat peserta berhasil direset (0/2 device).', 'success');
+                    this.showToast('Daftar perangkat terdaftar peserta berhasil direset (0/2 device).', 'success');
                 } catch (err) {
                     console.error('Gagal mereset device peserta:', err);
-                    this.showToast('Gagal mereset sesi perangkat peserta.', 'error');
+                    this.showToast('Gagal mereset perangkat terdaftar peserta.', 'error');
                 }
             },
 
@@ -5549,12 +5711,23 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                 const mPrice = Math.max(1000, Number(document.getElementById('admin-price-monthly')?.value) || 23000);
                 const sPrice = Math.max(1000, Number(document.getElementById('admin-price-snbt')?.value) || 80000);
 
+                const qrisChk = document.getElementById('admin-cfg-qris-enabled');
+                const bankChk = document.getElementById('admin-cfg-bank-enabled');
+                const ewalletChk = document.getElementById('admin-cfg-ewallet-enabled');
+
+                const qrisOn = qrisChk ? !!qrisChk.checked : (this.paymentConfig.qrisEnabled === true);
+                const bankOn = bankChk ? !!bankChk.checked : (this.paymentConfig.bankEnabled === true);
+                const ewalletOn = ewalletChk ? !!ewalletChk.checked : (this.paymentConfig.ewalletEnabled !== false);
+
                 this.paymentConfig = {
                     whatsappNumber: waVal,
                     merchantName: bankInfoVal,
                     bankInfo: bankInfoVal,
                     bankAccount: bankAccVal,
                     ewalletAccount: ewalletAccVal,
+                    qrisEnabled: qrisOn,
+                    bankEnabled: bankOn,
+                    ewalletEnabled: ewalletOn,
                     paymentNote: noteVal,
                     qrisImageUrl: qrisUrlVal || this.paymentConfig.qrisImageUrl || '',
                     weeklyPrice: wPrice,
@@ -5562,10 +5735,11 @@ Pembahasan: 2(4)² - 3² = 2(16) - 9 = 32 - 9 = 23.`;
                     snbtPrice: sPrice
                 };
 
+                this.updateAdminPaymentToggleLabels(qrisOn, bankOn, ewalletOn);
                 await this.saveData(true);
                 this.renderAdminPanel();
                 this.renderUpgradeModalContent();
-                this.showToast('Konfigurasi Rekening Bank, E-Wallet, QRIS & Harga Paket berhasil disimpan ke Cloud!', 'success');
+                this.showToast('Konfigurasi Rekening Bank, E-Wallet, QRIS & Status Maintenance berhasil disimpan ke Cloud!', 'success');
             },
 
             // ---------------- UTILITIES (MODALS & TOASTS) ----------------
